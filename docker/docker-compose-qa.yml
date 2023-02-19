@@ -42,6 +42,8 @@ services:
       - postgres-db
     ports:
       - "7000:7000"
+    networks:
+      - pg-db-network
     restart: always
 
 networks:
