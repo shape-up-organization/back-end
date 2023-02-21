@@ -8,6 +8,6 @@ public class TesteController {
 
     @GetMapping
     public String healthCheck() {
-        return "UP31";
+        return "UP32";
     }
 }
