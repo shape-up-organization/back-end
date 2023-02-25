@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 @Entity
 @Table(name = "tb_user")
@@ -24,11 +23,9 @@ public class UserEntity {
     private String name;
     @Column
     private String lastName;
-    @Column
-    @Unique
+    @Column(unique = true)
     private String email;
-    @Column
-    @Unique
+    @Column(unique = true)
     private String cellPhone;
     @Column
     private String password;
