@@ -1,7 +1,7 @@
-package br.com.shapeup.core.port.output;
+package br.com.shapeup.core.ports.output;
 
 import br.com.shapeup.core.domain.User;
 
 public interface UserPersistanceOutput {
-    public void save(User user);
+    void save(User user);
 }
