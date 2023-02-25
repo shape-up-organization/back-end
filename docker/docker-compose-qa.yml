@@ -4,6 +4,7 @@ services:
   postgres-db:
     container_name: postgres-db
     image: postgres
+    tty: true
     volumes:
       - ./volumes/database/postgres-dev:/var/lib/postgresql
     environment:
