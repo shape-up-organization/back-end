@@ -1,4 +1,4 @@
-package br.com.shapeup.adapters.output.user;
+package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
