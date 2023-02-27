@@ -12,7 +12,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public void save(User user){
+    public void save(User user) {
         userPersistanceOutput.save(user);
     }
 }

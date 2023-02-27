@@ -9,9 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class UserPersistenceConfig {
 
     @Bean
-    public UserPersistanceUsecase userPersistanceUsecase(
-            UserPersistenceAdapter userPersistenceAdapter
-    ) {
+    public UserPersistanceUsecase userPersistanceUsecase(UserPersistenceAdapter userPersistenceAdapter) {
 
         return new UserPersistanceUsecase(userPersistenceAdapter);
     }

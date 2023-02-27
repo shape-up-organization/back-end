@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserRequest{
+public class UserRequest {
     @NotNull
     @NotBlank
     private String name;
     @NotNull
     @NotBlank
-    private String  lastName;
+    private String lastName;
     @NotNull
     @NotBlank
     private String email;
