@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
 public class UserPersistenceAdapter implements UserPersistanceOutput {
-    @Autowired
+
     private UserRepositoryJpa userRepositoryJpa;
-    @Autowired
+
     private UserMapper userMapper;
 
     @Override
