@@ -3,8 +3,11 @@ package br.com.shapeup.adapters.output.integration.user;
 import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
+import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.core.domain.User;
+import br.com.shapeup.factories.UserEntityFactory;
 import br.com.shapeup.factories.UserFactory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +19,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import org.springframework.util.Assert;
 
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -26,10 +28,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 class UserPersistenceAdapterTest {
     @Mock
     private UserRepositoryJpa userRepositoryJpa;
-    @Autowired
     private UserMapper userMapper;
     @InjectMocks
     private UserPersistenceAdapter userPersistenceAdapter;
+
     @BeforeEach
     void setUp() {
         userMapper = UserMapper.INSTANCE;
@@ -49,8 +51,16 @@ class UserPersistenceAdapterTest {
     }
 
     @Test
-    @DisplayName("Given a invalid user when create account the return an exception")
+    @DisplayName("Given a valid user when create account the return an user exists exception")
     void saveWithException() {
+        User userMock = UserFactory.getInstance().create();
+        UserEntity userEntityMock = UserEntityFactory.getInstance().create();
 
+        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail())).thenReturn(true);
+
+        UserExistsByEmailException exception = Assertions.assertThrows(UserExistsByEmailException.class, () -> userPersistenceAdapter.save(userMock));
+        Assertions.assertTrue(exception.getMessage().contains(userMock.getEmail()));
+
+        Mockito.verify(userRepositoryJpa, Mockito.never()).save(userEntityMock);
     }
 }
