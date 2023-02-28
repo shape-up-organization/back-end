@@ -4,6 +4,8 @@ import br.com.shapeup.adapters.input.web.controller.mapper.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import javax.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "users")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 public class UserController {
-
-    @Autowired
     private UserPersistanceInput userPersistanceInput;
 
-    @Autowired
     private UserHttpMapper userHttpMapper;
 
     @PostMapping
