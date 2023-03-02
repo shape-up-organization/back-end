@@ -7,17 +7,28 @@ import br.com.shapeup.core.domain.User;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.webjars.NotFoundException;
 
 @Component
 public class UserPersistenceAdapter implements UserPersistanceOutput {
-    @Autowired
-    private UserRepositoryJpa userRepositoryJpa;
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired private UserRepositoryJpa userRepositoryJpa;
+  @Autowired private UserMapper userMapper;
 
-    @Override
-    public void save(User user) {
-        UserEntity userEntity = userMapper.userToUserEntity(user);
-        userRepositoryJpa.save(userEntity);
-    }
+  @Override
+  public void save(User user) {
+    UserEntity userEntity = userMapper.userToUserEntity(user);
+    userRepositoryJpa.save(userEntity);
+  }
+
+  @Override
+  public void updatePassword(User userRequest) {
+    UserEntity userEntity = userRepositoryJpa.findByEmail(userRequest.getEmail());
+
+    if (userEntity == null)
+      throw new NotFoundException("Usuário não encontrado");
+
+    userEntity.setPassword(userRequest.getPassword());
+
+    userRepositoryJpa.save(userEntity);
+  }
 }
