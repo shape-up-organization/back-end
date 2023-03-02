@@ -62,14 +62,19 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         User user = (User) o;
 
-        if (!name.equals(user.name)) return false;
-        if (!lastName.equals(user.lastName)) return false;
-        if (!email.equals(user.email)) return false;
+        if (!name.equals(user.name))
+            return false;
+        if (!lastName.equals(user.lastName))
+            return false;
+        if (!email.equals(user.email))
+            return false;
         return password.equals(user.password);
     }
 
@@ -81,5 +86,4 @@ public class User {
         result = 31 * result + password.hashCode();
         return result;
     }
-
 }
