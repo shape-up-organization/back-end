@@ -25,12 +25,24 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void save(User user) {
         Boolean userExists = userRepositoryJpa.existsByEmail(user.getEmail());
-        if(userExists) {
+        if (userExists) {
             throw new UserExistsByEmailException(user.getEmail());
         }
 
         UserEntity userEntity = userMapper.userToUserEntity(user);
         log.info("Starting process to save user on database: {}", userEntity.getId());
+        userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
+    public void updatePassword(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail());
+
+        if (userEntity == null) {
+            throw new UserExistsByEmailException(user.getEmail());
+        }
+        userEntity.setPassword(user.getPassword());
+
         userRepositoryJpa.save(userEntity);
     }
 }
