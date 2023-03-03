@@ -1,7 +1,7 @@
 package br.com.shapeup.adapters.output.repository.mapper;
 
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
-import br.com.shapeup.core.domain.User;
+import br.com.shapeup.core.domain.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

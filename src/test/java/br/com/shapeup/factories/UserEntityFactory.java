@@ -15,8 +15,8 @@ public class UserEntityFactory {
 
     public UserEntity create() {
         var user = UserFactory.getInstance().create();
-        return new UserEntity(UUID.randomUUID(), user.getName(), user.getLastName(), user.getEmail(),
-                user.getCellPhone(), user.getPassword());
+        return new UserEntity(UUID.randomUUID(), user.getName(), user.getLastName(), user.getEmail().getValue(),
+                user.getCellPhone().getValue(), user.getPassword().getValue());
     }
 
 }

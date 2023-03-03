@@ -1,4 +1,4 @@
-package br.com.shapeup.core.domain.valueobjects.user;
+package br.com.shapeup.core.domain.user;
 
 public class Password {
     private String value;

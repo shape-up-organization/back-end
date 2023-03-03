@@ -4,7 +4,7 @@ import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
-import br.com.shapeup.core.domain.User;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.factories.UserEntityFactory;
 import br.com.shapeup.factories.UserFactory;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
 @SpringBootTest
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -44,7 +43,7 @@ class UserPersistenceAdapterTest {
     void saveWithSuccess() {
         User userMock = UserFactory.getInstance().create();
 
-        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail())).thenReturn(false);
+        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(false);
         userPersistenceAdapter.save(userMock);
 
         Mockito.verify(userRepositoryJpa, Mockito.times(1)).save(Mockito.any(UserEntity.class));
@@ -56,10 +55,10 @@ class UserPersistenceAdapterTest {
         User userMock = UserFactory.getInstance().create();
         UserEntity userEntityMock = UserEntityFactory.getInstance().create();
 
-        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail())).thenReturn(true);
+        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(true);
 
         UserExistsByEmailException exception = Assertions.assertThrows(UserExistsByEmailException.class, () -> userPersistenceAdapter.save(userMock));
-        Assertions.assertTrue(exception.getMessage().contains(userMock.getEmail()));
+        Assertions.assertTrue(exception.getMessage().contains(userMock.getEmail().getValue()));
 
         Mockito.verify(userRepositoryJpa, Mockito.never()).save(userEntityMock);
     }

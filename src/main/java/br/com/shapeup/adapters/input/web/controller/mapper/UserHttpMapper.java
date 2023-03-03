@@ -2,7 +2,7 @@ package br.com.shapeup.adapters.input.web.controller.mapper;
 
 import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
-import br.com.shapeup.core.domain.User;
+import br.com.shapeup.core.domain.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

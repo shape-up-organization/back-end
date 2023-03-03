@@ -1,24 +1,32 @@
-package br.com.shapeup.core.domain;
+package br.com.shapeup.core.domain.user;
 
-import br.com.shapeup.core.domain.valueobjects.user.CellPhone;
-import br.com.shapeup.core.domain.valueobjects.user.Email;
-import br.com.shapeup.core.domain.valueobjects.user.Password;
-import br.com.shapeup.core.domain.valueobjects.user.UserId;
+import br.com.shapeup.core.domain.Entity;
+import br.com.shapeup.core.domain.validation.ValidationHandler;
 
-public class User {
-    private UserId id;
+public class User extends Entity<UserId> {
     private String name;
     private String lastName;
     private Email email;
     private CellPhone cellPhone;
     private Password password;
 
-    public User(String name, String lastName, Email email, CellPhone cellPhone, Password password) {
+    public User(UserId id, String name, String lastName, Email email, CellPhone cellPhone, Password password) {
+        super(id);
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.cellPhone = cellPhone;
         this.password = password;
+    }
+
+    public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password) {
+        var id = UserId.unique();
+        return new User(id, name, lastName, email, cellPhone, password);
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new UserValidator(handler, this).validate();
     }
 
     public UserId getId() {

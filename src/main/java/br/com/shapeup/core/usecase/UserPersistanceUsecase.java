@@ -1,6 +1,6 @@
 package br.com.shapeup.core.usecase;
 
-import br.com.shapeup.core.domain.User;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 

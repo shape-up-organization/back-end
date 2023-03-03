@@ -1,9 +1,9 @@
-package br.com.shapeup.core.domain.valueobjects.user;
+package br.com.shapeup.core.domain.user;
 
-public class CellPhone {
+public class Email {
     private String value;
 
-    public CellPhone(String value) {
+    public Email(String value) {
         this.value = value;
     }
 

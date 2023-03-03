@@ -1,6 +1,6 @@
 package br.com.shapeup.factories;
 
-import br.com.shapeup.core.domain.User;
+import br.com.shapeup.core.domain.user.User;
 
 public class UserFactory {
     private static UserFactory instace = null;

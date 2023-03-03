@@ -1,5 +1,6 @@
-package br.com.shapeup.core.domain.valueobjects.user;
+package br.com.shapeup.core.domain.valueobjects;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 public class Address {
@@ -10,9 +11,9 @@ public class Address {
     private String neighborhood;
     private String number;
     private String complement;
-    private ZonedDateTime createdAt = ZonedDateTime.now();
-    private ZonedDateTime updatedAt = ZonedDateTime.now();
-    private ZonedDateTime deletedAt;
+    private Instant createdAt = Instant.now();
+    private Instant updatedAt = Instant.now();
+    private Instant deletedAt;
 
     public Address(String state, String city, String street, String uf, String neighborhood, String number, String complement) {
         this.state = state;
@@ -80,27 +81,27 @@ public class Address {
         this.complement = complement;
     }
 
-    public ZonedDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(ZonedDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public ZonedDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(ZonedDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public ZonedDateTime getDeletedAt() {
+    public Instant getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(ZonedDateTime deletedAt) {
+    public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 }
