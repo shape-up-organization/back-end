@@ -7,6 +7,10 @@ public class Email {
         this.value = value;
     }
 
+    Email createEmail(String email) {
+        return new Email(email);
+    }
+
     public String getValue() {
         return value;
     }

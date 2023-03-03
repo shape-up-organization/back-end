@@ -1,6 +1,6 @@
 package br.com.shapeup.core.domain.validation;
 
-public class Validator {
+public abstract class Validator {
     private final ValidationHandler handler;
     protected Validator(final ValidationHandler anHandler) {
         this.handler = anHandler;
