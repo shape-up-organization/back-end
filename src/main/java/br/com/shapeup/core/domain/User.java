@@ -1,18 +1,28 @@
 package br.com.shapeup.core.domain;
 
+import br.com.shapeup.core.domain.valueobjects.user.CellPhone;
+import br.com.shapeup.core.domain.valueobjects.user.Email;
+import br.com.shapeup.core.domain.valueobjects.user.Password;
+import br.com.shapeup.core.domain.valueobjects.user.UserId;
+
 public class User {
+    private UserId id;
     private String name;
     private String lastName;
-    private String email;
-    private String cellPhone;
-    private String password;
+    private Email email;
+    private CellPhone cellPhone;
+    private Password password;
 
-    public User(String name, String lastName, String email, String cellPhone, String password) {
+    public User(String name, String lastName, Email email, CellPhone cellPhone, Password password) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.cellPhone = cellPhone;
         this.password = password;
+    }
+
+    public UserId getId() {
+        return id;
     }
 
     public String getName() {
@@ -31,27 +41,27 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
-    public String getCellPhone() {
+    public CellPhone getCellPhone() {
         return cellPhone;
     }
 
-    public void setCellPhone(String cellPhone) {
+    public void setCellPhone(CellPhone cellPhone) {
         this.cellPhone = cellPhone;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(Password password) {
         this.password = password;
     }
 
