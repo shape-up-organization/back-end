@@ -30,10 +30,6 @@ public interface UserMapper {
     @Mapping(source = "cellPhone", target = "cellPhone", qualifiedByName = "cellPhoneToString")
     UserEntity userToUserEntity(User user);
 
-    default Email toEmail(String email) {
-        return Email.create(email);
-    }
-
     @Named("uuidToUserId")
     public static UserId uuidToUserId(UUID uuid) {
         return UserId.from(uuid);
