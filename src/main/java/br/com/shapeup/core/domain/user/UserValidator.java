@@ -29,7 +29,7 @@ public class UserValidator extends Validator {
         }
 
         final int lenght = name.trim().length();
-        if(lenght > 255 || lenght < 3) {
+        if(lenght > 255 || lenght < 2) {
             this.validationHandler().append(new Error("'name' must be between 3 and 255 characters"));
             return;
         }
