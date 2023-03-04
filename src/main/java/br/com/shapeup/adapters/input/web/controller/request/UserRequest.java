@@ -28,4 +28,7 @@ public class UserRequest {
     @NotNull
     @NotBlank
     private String password;
+    @NotNull
+    @NotBlank
+    private String birth;
 }

@@ -1,10 +1,14 @@
 package br.com.shapeup.adapters.output.repository.model;
 
+import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,4 +38,7 @@ public class UserEntity {
 
     @Column
     private String password;
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date birth;
 }
