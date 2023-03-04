@@ -9,7 +9,6 @@ import br.com.shapeup.core.domain.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.Qualifier;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public interface UserHttpMapper {
 
     @Named("stringToEmail")
     public static Email toEmail(String email) {
-        return new Email(email);
+        return Email.create(email);
     }
 
     @Named("emailToString")
@@ -42,12 +41,12 @@ public interface UserHttpMapper {
 
     @Named("stringToCellPhone")
     public static CellPhone stringToCellPhone(String cellPhone) {
-        return new CellPhone(cellPhone);
+        return CellPhone.create(cellPhone);
     }
 
     @Named("stringToPassword")
     public static Password stringToPassword(String password) {
-        return new Password(password);
+        return Password.create(password);
     }
 
     @Named("passwordToString")

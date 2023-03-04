@@ -3,11 +3,11 @@ package br.com.shapeup.core.domain.user;
 public class Email {
     private String value;
 
-    public Email(String value) {
+    private Email(String value) {
         this.value = value;
     }
 
-    Email createEmail(String email) {
+    public static Email create(String email) {
         return new Email(email);
     }
 

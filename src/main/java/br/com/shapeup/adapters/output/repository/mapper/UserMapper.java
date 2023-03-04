@@ -31,7 +31,7 @@ public interface UserMapper {
     UserEntity userToUserEntity(User user);
 
     default Email toEmail(String email) {
-        return new Email(email);
+        return Email.create(email);
     }
 
     @Named("uuidToUserId")
@@ -50,7 +50,7 @@ public interface UserMapper {
 
     @Named(("stringToEmail"))
     public static Email stringToEmail(String email) {
-        return new Email(email);
+        return Email.create(email);
     }
 
 
@@ -61,7 +61,7 @@ public interface UserMapper {
 
     @Named("stringToCellphone")
     public static CellPhone stringToCellphone(String cellPhone) {
-        return new CellPhone(cellPhone);
+        return CellPhone.create(cellPhone);
     }
 
     @Named("passwordToString")
@@ -71,6 +71,6 @@ public interface UserMapper {
 
     @Named("stringToPassword")
     public static Password toPassword(String password) {
-        return new Password(password);
+        return Password.create(password);
     }
 }
