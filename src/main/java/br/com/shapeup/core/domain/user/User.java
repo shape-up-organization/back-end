@@ -9,19 +9,23 @@ public class User extends Entity<UserId> {
     private Email email;
     private CellPhone cellPhone;
     private Password password;
+    private Birth birth;
 
-    public User(UserId id, String name, String lastName, Email email, CellPhone cellPhone, Password password) {
-        super(id);
+    public User(String name, String lastName, Email email, CellPhone cellPhone, Password password,
+                Birth birth) {
+        super(UserId.unique());
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.cellPhone = cellPhone;
         this.password = password;
+        this.birth = birth;
     }
 
-    public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password) {
+    public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password,
+                               Birth birth) {
         var id = UserId.unique();
-        return new User(id, name, lastName, email, cellPhone, password);
+        return new User(name, lastName, email, cellPhone, password, birth);
     }
 
     @Override
@@ -73,6 +77,14 @@ public class User extends Entity<UserId> {
         this.password = password;
     }
 
+    public Birth getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Birth birth) {
+        this.birth = birth;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -88,6 +100,8 @@ public class User extends Entity<UserId> {
             return false;
         if (!email.equals(user.email))
             return false;
+        if (!birth.equals(user.birth))
+            return false;
         return password.equals(user.password);
     }
 
@@ -97,6 +111,7 @@ public class User extends Entity<UserId> {
         result = 31 * result + lastName.hashCode();
         result = 31 * result + email.hashCode();
         result = 31 * result + password.hashCode();
+        result = 31 * result + birth.hashCode();
         return result;
     }
 }

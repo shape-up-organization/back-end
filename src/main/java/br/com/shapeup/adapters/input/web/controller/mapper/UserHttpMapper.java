@@ -2,6 +2,7 @@ package br.com.shapeup.adapters.input.web.controller.mapper;
 
 import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
+import br.com.shapeup.core.domain.user.Birth;
 import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
 import br.com.shapeup.core.domain.user.Password;
@@ -11,6 +12,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
+import java.text.ParseException;
 
 @Mapper(componentModel = "spring", uses = { UserHttpMapper.class })
 @Component
@@ -20,6 +22,7 @@ public interface UserHttpMapper {
     @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
     @Mapping(source = "cellPhone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
     @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
+    @Mapping(source = "birth", target = "birth", qualifiedByName = "stringToBirth")
     User toUser(UserRequest userRequest);
 
     @Mapping(target = "name", ignore = true)
@@ -52,5 +55,10 @@ public interface UserHttpMapper {
     @Named("passwordToString")
     public static String stringToPassword(Password password) {
         return password.getValue();
+    }
+
+    @Named("stringToBirth")
+    public static Birth stringToBirth(String birth) throws ParseException {
+        return Birth.create(birth);
     }
 }
