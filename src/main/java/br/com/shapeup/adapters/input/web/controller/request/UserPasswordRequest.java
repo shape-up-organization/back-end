@@ -14,6 +14,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserPasswordRequest {
-  @NotNull @NotBlank private String email;
-  @NotNull @NotBlank private String password;
+    @NotNull
+    @NotBlank
+    private String email;
+    @NotNull
+    @NotBlank
+    private String password;
 }

@@ -1,18 +1,36 @@
-package br.com.shapeup.core.domain;
+package br.com.shapeup.core.domain.user;
 
-public class User {
+import br.com.shapeup.common.domain.Entity;
+import br.com.shapeup.core.domain.validation.ValidationHandler;
+
+public class User extends Entity<UserId> {
     private String name;
     private String lastName;
-    private String email;
-    private String cellPhone;
-    private String password;
+    private Email email;
+    private CellPhone cellPhone;
+    private Password password;
 
-    public User(String name, String lastName, String email, String cellPhone, String password) {
+    public User(UserId id, String name, String lastName, Email email, CellPhone cellPhone, Password password) {
+        super(id);
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.cellPhone = cellPhone;
         this.password = password;
+    }
+
+    public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password) {
+        var id = UserId.unique();
+        return new User(id, name, lastName, email, cellPhone, password);
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new UserValidator(handler, this).validate();
+    }
+
+    public UserId getId() {
+        return id;
     }
 
     public String getName() {
@@ -31,27 +49,27 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
-    public String getCellPhone() {
+    public CellPhone getCellPhone() {
         return cellPhone;
     }
 
-    public void setCellPhone(String cellPhone) {
+    public void setCellPhone(CellPhone cellPhone) {
         this.cellPhone = cellPhone;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(Password password) {
         this.password = password;
     }
 
