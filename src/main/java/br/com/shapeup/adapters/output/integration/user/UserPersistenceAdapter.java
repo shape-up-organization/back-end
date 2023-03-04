@@ -7,19 +7,18 @@ import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
 public class UserPersistenceAdapter implements UserPersistanceOutput {
-
+    @Autowired
     private UserRepositoryJpa userRepositoryJpa;
 
+    @Autowired
     private UserMapper userMapper;
 
     @Override

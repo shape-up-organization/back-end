@@ -11,9 +11,9 @@ public class User extends Entity<UserId> {
     private Password password;
     private Birth birth;
 
-    public User(UserId id, String name, String lastName, Email email, CellPhone cellPhone, Password password,
+    public User(String name, String lastName, Email email, CellPhone cellPhone, Password password,
                 Birth birth) {
-        super(id);
+        super(UserId.unique());
         this.name = name;
         this.lastName = lastName;
         this.email = email;
@@ -25,7 +25,7 @@ public class User extends Entity<UserId> {
     public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password,
                                Birth birth) {
         var id = UserId.unique();
-        return new User(id, name, lastName, email, cellPhone, password, birth);
+        return new User(name, lastName, email, cellPhone, password, birth);
     }
 
     @Override

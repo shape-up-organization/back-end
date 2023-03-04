@@ -12,9 +12,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
-
 import java.text.ParseException;
-import java.util.Date;
 
 @Mapper(componentModel = "spring", uses = { UserHttpMapper.class })
 @Component
