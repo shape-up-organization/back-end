@@ -1,6 +1,6 @@
 package br.com.shapeup.core.domain.exceptions;
 
-public class NoStackTraceException  extends RuntimeException{
+public class NoStackTraceException extends RuntimeException{
 
     public NoStackTraceException(final String message) {
         this(message, null);
