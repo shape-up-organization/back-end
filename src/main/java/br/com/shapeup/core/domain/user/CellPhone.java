@@ -1,6 +1,8 @@
 package br.com.shapeup.core.domain.user;
 
-public class CellPhone {
+import br.com.shapeup.common.domain.ValueObject;
+
+public class CellPhone extends ValueObject {
     private String value;
 
     private CellPhone(String value) {

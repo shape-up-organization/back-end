@@ -1,4 +1,4 @@
-package br.com.shapeup.core.domain;
+package br.com.shapeup.common.domain;
 
 public abstract class ValueObject {
 }

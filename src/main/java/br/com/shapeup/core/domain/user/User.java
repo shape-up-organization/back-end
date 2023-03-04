@@ -1,6 +1,6 @@
 package br.com.shapeup.core.domain.user;
 
-import br.com.shapeup.core.domain.Entity;
+import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
 
 public class User extends Entity<UserId> {

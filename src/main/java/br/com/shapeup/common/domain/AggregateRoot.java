@@ -1,4 +1,4 @@
-package br.com.shapeup.core.domain;
+package br.com.shapeup.common.domain;
 
 import br.com.shapeup.core.domain.validation.ValidationHandler;
 

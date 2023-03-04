@@ -1,6 +1,8 @@
 package br.com.shapeup.core.domain.user;
 
-public class Password {
+import br.com.shapeup.common.domain.ValueObject;
+
+public class Password extends ValueObject {
     private String value;
 
     private Password(String value) {

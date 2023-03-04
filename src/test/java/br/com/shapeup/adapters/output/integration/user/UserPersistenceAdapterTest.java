@@ -60,7 +60,8 @@ class UserPersistenceAdapterTest {
 
         Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(true);
 
-        UserExistsByEmailException exception = Assertions.assertThrows(UserExistsByEmailException.class, () -> userPersistenceAdapter.save(userMock));
+        UserExistsByEmailException exception = Assertions.assertThrows(UserExistsByEmailException.class,
+                () -> userPersistenceAdapter.save(userMock));
         Assertions.assertTrue(exception.getMessage().contains(userMock.getEmail().getValue()));
 
         Mockito.verify(userRepositoryJpa, Mockito.never()).save(userEntityMock);

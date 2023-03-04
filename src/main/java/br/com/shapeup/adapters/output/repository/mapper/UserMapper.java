@@ -13,7 +13,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", uses = { UserMapper.class })
 @Component
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
@@ -34,6 +34,7 @@ public interface UserMapper {
     public static UserId uuidToUserId(UUID uuid) {
         return UserId.from(uuid);
     }
+
     @Named("userIdToUuid")
     public static UUID userIdToUuid(UserId userId) {
         return UUID.fromString(userId.getValue());
@@ -48,7 +49,6 @@ public interface UserMapper {
     public static Email stringToEmail(String email) {
         return Email.create(email);
     }
-
 
     @Named("cellPhoneToString")
     public static String cellPhoneToString(CellPhone cellPhone) {

@@ -3,7 +3,7 @@ package br.com.shapeup.core.domain.exceptions;
 import br.com.shapeup.core.domain.validation.Error;
 import java.util.List;
 
-public class DomainException extends NoStackTraceException{
+public class DomainException extends NoStackTraceException {
     private final List<Error> errors;
 
     public DomainException(final String aMessage, List<Error> anErrors) {

@@ -17,6 +17,7 @@ public class UserFactory {
     }
 
     public User create() {
-        return new User(UserId.unique(), "Iara", "Alves", Email.create("iara@gmail.com"), CellPhone.create("11983323932"), Password.create("iara123"));
+        return new User(UserId.unique(), "Iara", "Alves", Email.create("iara@gmail.com"),
+                CellPhone.create("11983323932"), Password.create("iara123"));
     }
 }

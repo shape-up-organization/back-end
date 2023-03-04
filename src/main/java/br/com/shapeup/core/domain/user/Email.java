@@ -1,6 +1,8 @@
 package br.com.shapeup.core.domain.user;
 
-public class Email {
+import br.com.shapeup.common.domain.ValueObject;
+
+public class Email extends ValueObject {
     private String value;
 
     private Email(String value) {

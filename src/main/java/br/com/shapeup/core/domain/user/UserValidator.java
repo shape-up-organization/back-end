@@ -6,6 +6,7 @@ import br.com.shapeup.core.domain.validation.Validator;
 
 public class UserValidator extends Validator {
     private final User user;
+
     protected UserValidator(ValidationHandler anHandler, User user) {
         super(anHandler);
         this.user = user;
@@ -18,18 +19,18 @@ public class UserValidator extends Validator {
 
     private void checkNameConstraints() {
         final var name = this.user.getName();
-        if(name == null) {
+        if (name == null) {
             this.validationHandler().append(new Error("'name' should not be null"));
             return;
         }
 
-        if(name.isBlank()) {
+        if (name.isBlank()) {
             this.validationHandler().append(new Error("'name' should not be empty"));
             return;
         }
 
         final int lenght = name.trim().length();
-        if(lenght > 255 || lenght < 2) {
+        if (lenght > 255 || lenght < 2) {
             this.validationHandler().append(new Error("'name' must be between 3 and 255 characters"));
             return;
         }

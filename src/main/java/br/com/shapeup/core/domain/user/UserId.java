@@ -1,6 +1,6 @@
 package br.com.shapeup.core.domain.user;
 
-import br.com.shapeup.core.domain.Identifier;
+import br.com.shapeup.common.domain.Identifier;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -8,6 +8,7 @@ public class UserId extends Identifier {
     private final String value;
 
     private UserId(String value) {
+        super(value);
         Objects.requireNonNull(value);
         this.value = value;
     }
@@ -30,8 +31,10 @@ public class UserId extends Identifier {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         UserId userId = (UserId) o;
         return getValue().equals(userId.getValue());
     }

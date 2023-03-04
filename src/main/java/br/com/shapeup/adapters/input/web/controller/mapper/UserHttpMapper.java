@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {UserHttpMapper.class})
+@Mapper(componentModel = "spring", uses = { UserHttpMapper.class })
 @Component
 public interface UserHttpMapper {
     UserHttpMapper INSTANCE = Mappers.getMapper(UserHttpMapper.class);
