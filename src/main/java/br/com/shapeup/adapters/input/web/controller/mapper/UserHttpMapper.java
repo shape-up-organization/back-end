@@ -30,7 +30,7 @@ public interface UserHttpMapper {
     User toUser(UserPasswordRequest userPasswordRequest);
 
     @Named("stringToEmail")
-    public static Email toEmail(String email) {
+    public static Email stringToEmail(String email) {
         return Email.create(email);
     }
 
