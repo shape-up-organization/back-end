@@ -3,7 +3,7 @@ package br.com.shapeup.common.exceptions;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<String> errors = exception.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
 
         var apiErrorMessage = new ApiErrorMessage(status, errors);
         return new ResponseEntity<>(apiErrorMessage, apiErrorMessage.getHttpStatus());

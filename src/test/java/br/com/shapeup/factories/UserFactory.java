@@ -1,10 +1,12 @@
 package br.com.shapeup.factories;
 
+import br.com.shapeup.core.domain.user.Birth;
 import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
-import br.com.shapeup.core.domain.user.UserId;
+import java.time.Instant;
+import java.util.Date;
 
 public class UserFactory {
     private static UserFactory instace = null;
@@ -17,7 +19,7 @@ public class UserFactory {
     }
 
     public User create() {
-        return new User(UserId.unique(), "Iara", "Alves", Email.create("iara@gmail.com"),
-                CellPhone.create("11983323932"), Password.create("iara123"));
+        return User.newUser("Iara", "Alves", Email.create("iara@gmail.com"), CellPhone.create("11983323932"),
+                Password.create("iara123"), Birth.create(Date.from(Instant.now())));
     }
 }
