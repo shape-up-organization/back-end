@@ -2,7 +2,6 @@ package br.com.shapeup.common.domain.valueobject;
 
 import br.com.shapeup.common.domain.ValueObject;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class Address extends ValueObject {

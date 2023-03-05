@@ -9,4 +9,5 @@ public class ShapeUpApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShapeUpApplication.class, args);
     }
+
 }
