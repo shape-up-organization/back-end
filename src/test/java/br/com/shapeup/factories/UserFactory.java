@@ -19,7 +19,7 @@ public class UserFactory {
     }
 
     public User create() {
-        return User.newUser("Iara", "Alves", Email.create("iara@gmail.com"), CellPhone.create("11983323932"),
+        return User.newUser("Iara", "Alves", "iarinha", Email.create("iara@gmail.com"), CellPhone.create("11983323932"),
                 Password.create("iara123"), Birth.create(Date.from(Instant.now())));
     }
 }

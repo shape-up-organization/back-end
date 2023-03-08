@@ -2,30 +2,33 @@ package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
+import java.util.Objects;
 
 public class User extends Entity<UserId> {
     private String name;
     private String lastName;
+    private String username;
     private Email email;
     private CellPhone cellPhone;
     private Password password;
     private Birth birth;
 
-    public User(String name, String lastName, Email email, CellPhone cellPhone, Password password,
+    public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
                 Birth birth) {
         super(UserId.unique());
         this.name = name;
         this.lastName = lastName;
+        this.username = username;
         this.email = email;
         this.cellPhone = cellPhone;
         this.password = password;
         this.birth = birth;
     }
 
-    public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password,
+    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
                                Birth birth) {
         var id = UserId.unique();
-        return new User(name, lastName, email, cellPhone, password, birth);
+        return new User(name, lastName, username, email, cellPhone, password, birth);
     }
 
     @Override
@@ -51,6 +54,14 @@ public class User extends Entity<UserId> {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Email getEmail() {
@@ -87,31 +98,15 @@ public class User extends Entity<UserId> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         User user = (User) o;
-
-        if (!name.equals(user.name))
-            return false;
-        if (!lastName.equals(user.lastName))
-            return false;
-        if (!email.equals(user.email))
-            return false;
-        if (!birth.equals(user.birth))
-            return false;
-        return password.equals(user.password);
+        return getName().equals(user.getName()) && getLastName().equals(user.getLastName()) && getUsername().equals(user.getUsername()) && getEmail().equals(user.getEmail()) && getCellPhone().equals(user.getCellPhone()) && getPassword().equals(user.getPassword()) && getBirth().equals(user.getBirth());
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + lastName.hashCode();
-        result = 31 * result + email.hashCode();
-        result = 31 * result + password.hashCode();
-        result = 31 * result + birth.hashCode();
-        return result;
+        return Objects.hash(super.hashCode(), getName(), getLastName(), getUsername(), getEmail(), getCellPhone(), getPassword(), getBirth());
     }
 }
