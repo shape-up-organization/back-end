@@ -4,6 +4,7 @@ import br.com.shapeup.adapters.output.repository.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+
 import java.util.UUID;
 
 @Repository
@@ -12,4 +13,7 @@ public interface UserRepositoryJpa extends JpaRepository<UserEntity, UUID> {
     Boolean existsByEmail(String email);
 
     UserEntity findByEmail(String email);
+
+    void deleteByEmail(String email);
 }
+

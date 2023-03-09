@@ -6,4 +6,6 @@ public interface UserPersistanceOutput {
     void save(User user);
 
     void updatePassword(User user);
+
+    void deleteByEmail(String email);
 }

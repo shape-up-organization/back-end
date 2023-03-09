@@ -20,4 +20,13 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     public void updatePassword(User user) {
         userPersistanceOutput.updatePassword(user);
     }
+
+    @Override
+    public void deleteByEmail(String email) {
+        userPersistanceOutput.deleteByEmail(email);
+    }
+
 }
+
+
+

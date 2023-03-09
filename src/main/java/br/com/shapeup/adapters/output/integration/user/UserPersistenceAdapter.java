@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -43,5 +45,11 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         userEntity.setPassword(user.getPassword().getValue());
 
         userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByEmail(String email) {
+     userRepositoryJpa.deleteByEmail(email);
     }
 }
