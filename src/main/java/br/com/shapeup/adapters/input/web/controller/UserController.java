@@ -1,6 +1,12 @@
 package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.mapper.UserHttpMapper;
+import br.com.shapeup.adapters.input.web.controller.request.UserBiographyRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserBirthRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserCellphoneRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserEmailRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserLastNameRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
@@ -33,7 +39,53 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED.value()).build();
     }
 
-    @PutMapping("/update-password")
+    @PutMapping("/name")
+    public ResponseEntity<Void> updateName(@RequestBody @Valid UserNameRequest userNameRequest) {
+        var user = userHttpMapper.toUser(userNameRequest);
+        userPersistanceInput.updateName(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PutMapping("/last-name")
+    public ResponseEntity<Void> updateLastName(@RequestBody @Valid UserLastNameRequest userLastNameRequest) {
+        var user = userHttpMapper.toUser(userLastNameRequest);
+        userPersistanceInput.updateLastName(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PutMapping("/email")
+    public ResponseEntity<Void> updateEmail(@RequestBody @Valid UserEmailRequest userEmailRequest) {
+        var user = userHttpMapper.toUser(userEmailRequest);
+        userPersistanceInput.updateEmail(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+    @PutMapping("/cell-phone")
+    public ResponseEntity<Void> updateCellPhone(@RequestBody @Valid UserCellphoneRequest userCellphoneRequest) {
+        var user = userHttpMapper.toUser(userCellphoneRequest);
+        userPersistanceInput.updateCellPhone(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+    @PutMapping("/biography")
+    public ResponseEntity<Void> updateBiography(@RequestBody @Valid UserBiographyRequest userBiographyRequest) {
+        var user = userHttpMapper.toUser(userBiographyRequest);
+        userPersistanceInput.updateBiography(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PutMapping("/birth")
+    public ResponseEntity<Void> updateBirth(@RequestBody @Valid UserBirthRequest userBirthRequest) {
+        var user = userHttpMapper.toUser(userBirthRequest);
+        userPersistanceInput.updateBirth(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@RequestBody @Valid UserPasswordRequest userPasswordRequest) {
         var user = userHttpMapper.toUser(userPasswordRequest);
         userPersistanceInput.updatePassword(user);
