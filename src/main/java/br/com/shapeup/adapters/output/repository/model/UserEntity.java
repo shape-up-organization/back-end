@@ -37,7 +37,11 @@ public class UserEntity {
 
     @Column
     private String password;
+
     @Column
     @Temporal(TemporalType.DATE)
     private Date birth;
+
+    @Column
+    private String description;
 }

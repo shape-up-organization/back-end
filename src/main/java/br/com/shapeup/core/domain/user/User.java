@@ -11,6 +11,8 @@ public class User extends Entity<UserId> {
     private Password password;
     private Birth birth;
 
+    private String description;
+
     public User(String name, String lastName, Email email, CellPhone cellPhone, Password password,
                 Birth birth) {
         super(UserId.unique());
@@ -20,6 +22,7 @@ public class User extends Entity<UserId> {
         this.cellPhone = cellPhone;
         this.password = password;
         this.birth = birth;
+        description = "";
     }
 
     public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password,
@@ -83,6 +86,14 @@ public class User extends Entity<UserId> {
 
     public void setBirth(Birth birth) {
         this.birth = birth;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

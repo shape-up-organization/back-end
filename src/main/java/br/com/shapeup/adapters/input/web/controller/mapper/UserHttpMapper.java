@@ -30,6 +30,7 @@ public interface UserHttpMapper {
     @Mapping(target = "cellPhone", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
+    @Mapping(target = "description", ignore = true)
     User toUser(UserPasswordRequest userPasswordRequest);
 
     @Named("stringToEmail")
