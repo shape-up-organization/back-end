@@ -43,5 +43,5 @@ public class UserEntity {
     private Date birth;
 
     @Column
-    private String description;
+    private String biography;
 }
