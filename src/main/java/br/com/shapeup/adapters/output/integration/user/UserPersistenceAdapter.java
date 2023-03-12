@@ -57,4 +57,5 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         }
             userRepositoryJpa.deleteByEmail(email);
     }
+
 }
