@@ -4,7 +4,6 @@ import br.com.shapeup.adapters.input.web.controller.mapper.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.UserBiographyRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserBirthRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserEmailRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
@@ -55,13 +54,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
-    @PutMapping("/email")
-    public ResponseEntity<Void> updateEmail(@RequestBody @Valid UserEmailRequest userEmailRequest) {
-        var user = userHttpMapper.toUser(userEmailRequest);
-        userPersistanceInput.updateEmail(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
     @PutMapping("/cell-phone")
     public ResponseEntity<Void> updateCellPhone(@RequestBody @Valid UserCellphoneRequest userCellphoneRequest) {
         var user = userHttpMapper.toUser(userCellphoneRequest);
@@ -69,6 +61,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
+
     @PutMapping("/biography")
     public ResponseEntity<Void> updateBiography(@RequestBody @Valid UserBiographyRequest userBiographyRequest) {
         var user = userHttpMapper.toUser(userBiographyRequest);

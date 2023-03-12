@@ -3,7 +3,6 @@ package br.com.shapeup.adapters.input.web.controller.mapper;
 import br.com.shapeup.adapters.input.web.controller.request.UserBiographyRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserBirthRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserEmailRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
@@ -66,15 +65,6 @@ public interface UserHttpMapper {
     @Mapping(target = "biography", ignore = true)
     @Mapping(source = "cellphone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
     User toUser(UserCellphoneRequest userCellphoneRequest);
-
-    @Mapping(target = "name", ignore = true)
-    @Mapping(target = "lastName", ignore = true)
-    @Mapping(target = "cellPhone", ignore = true)
-    @Mapping(target = "password", ignore = true)
-    @Mapping(target = "birth", ignore = true)
-    @Mapping(target = "biography", ignore = true)
-    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
-    User toUser(UserEmailRequest userEmailRequest);
 
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "lastName", ignore = true)

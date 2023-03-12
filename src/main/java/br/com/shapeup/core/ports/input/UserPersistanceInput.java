@@ -11,10 +11,7 @@ public interface UserPersistanceInput {
 
     void updateCellPhone(User user);
 
-    void updateEmail(User user);
-
     void updateBirth(User user);
-
 
     void updateBiography(User user);
 

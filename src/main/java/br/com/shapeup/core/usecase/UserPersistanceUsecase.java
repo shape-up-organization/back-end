@@ -37,11 +37,6 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public void updateEmail(User user) {
-        userPersistanceOutput.updateEmail(user);
-    }
-
-    @Override
     public void updateBirth(User user) {
         userPersistanceOutput.updateBirth(user);
     }
