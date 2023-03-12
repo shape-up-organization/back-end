@@ -22,7 +22,7 @@ public class User extends Entity<UserId> {
         this.cellPhone = cellPhone;
         this.password = password;
         this.birth = birth;
-        biography = "";
+        this.biography = "";
     }
 
     public static User newUser(String name, String lastName, Email email, CellPhone cellPhone, Password password,
