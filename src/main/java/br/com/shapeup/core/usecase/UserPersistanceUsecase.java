@@ -13,6 +13,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     @Override
     public void save(User user) {
+        user.getEmail().validateEmail();
         userPersistanceOutput.save(user);
     }
 
@@ -25,6 +26,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     @Override
     public void updateName(User user) {
+        user.getEmail().validateEmail();
         userPersistanceOutput.updateName(user);
     }
 
