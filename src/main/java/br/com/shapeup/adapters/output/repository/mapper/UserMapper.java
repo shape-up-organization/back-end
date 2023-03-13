@@ -7,6 +7,7 @@ import br.com.shapeup.core.domain.user.Email;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.domain.user.UserId;
+import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -75,12 +76,12 @@ public interface UserMapper {
     }
 
     @Named("birthToDate")
-    public static Date birthToDate(Birth birth){
+    public static LocalDate birthToDate(Birth birth) {
         return birth.getValue();
     }
 
     @Named("dateToBirth")
-    public static Birth dateToBirth(Date date){
+    public static Birth dateToBirth(LocalDate date) {
         return Birth.create(date);
     }
 }

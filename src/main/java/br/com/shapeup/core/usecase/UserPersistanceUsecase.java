@@ -18,6 +18,8 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     @Override
     public void updatePassword(User user) {
+        var password = user.getPassword();
+        password.validatePassword();
         userPersistanceOutput.updatePassword(user);
     }
 

@@ -23,16 +23,14 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
     private final String baseUrl;
 
-    public SwaggerUiWebMvcConfigurer(
-            @Value("${springfox.documentation.swagger-ui.base-url:}") String baseUrl) {
+    public SwaggerUiWebMvcConfigurer(@Value("${springfox.documentation.swagger-ui.base-url:}") String baseUrl) {
         this.baseUrl = baseUrl;
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/');
-        registry.
-                addResourceHandler(baseUrl + "/swagger-ui/**")
+        registry.addResourceHandler(baseUrl + "/swagger-ui/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
                 .resourceChain(false);
     }
@@ -45,31 +43,19 @@ public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry
-                .addMapping("/v2/api-docs.*")
-                .allowedOrigins("http://editor.swagger.io");
+        registry.addMapping("/v2/api-docs.*").allowedOrigins("http://editor.swagger.io");
     }
 
     @Bean
     public Docket categoryApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("category-api")
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .build()
-                .ignoredParameterTypes(ApiIgnore.class)
-                .enableUrlTemplating(true);
+        return new Docket(DocumentationType.SWAGGER_2).groupName("category-api").apiInfo(apiInfo()).select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class)).build()
+                .ignoredParameterTypes(ApiIgnore.class).enableUrlTemplating(true);
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("API ShapeUp")
-                .description("Retorno dos Endpoints da aplicacao ShapeUp")
-                .termsOfServiceUrl("http://springfox.io")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE")
-                .version("1.0")
-                .build();
+        return new ApiInfoBuilder().title("API ShapeUp").description("Retorno dos Endpoints da aplicacao ShapeUp")
+                .termsOfServiceUrl("http://springfox.io").license("Apache License Version 2.0")
+                .licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE").version("1.0").build();
     }
 }
