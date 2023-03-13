@@ -3,6 +3,7 @@ package br.com.shapeup.adapters.output.integration.user;
 import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
+import br.com.shapeup.common.config.security2.JWTUtil;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
@@ -24,6 +25,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final JWTUtil jwtUtil;
 
 
     @Override
@@ -40,6 +42,8 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         UserEntity userEntity = userMapper.userToUserEntity(user);
         log.info("Starting process to save user on database: {}", userEntity.getId());
         userRepositoryJpa.save(userEntity);
+
+        String token = jwtUtil.generateToken(user.getEmail().getValue());
     }
 
     @Override

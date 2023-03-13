@@ -34,7 +34,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserExistsByEmailException.class)
     public ResponseEntity<Object> handleUserExistsByEmailException(UserExistsByEmailException exception,
             WebRequest request) {
-        var apiErrorMessage = new ApiErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
     }
 }

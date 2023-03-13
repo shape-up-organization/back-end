@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,7 @@ public class UserEntity implements Serializable {
     private String password;
     @Column
     @Temporal(TemporalType.DATE)
-    private Date birth;
+    private LocalDate birth;
     @Column
     private String roles;
 
