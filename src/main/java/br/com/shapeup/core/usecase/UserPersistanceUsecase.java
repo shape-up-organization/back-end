@@ -22,11 +22,32 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
+    public void updateName(User user) {
+        userPersistanceOutput.updateName(user);
+    }
+
+    @Override
+    public void updateLastName(User user) {
+        userPersistanceOutput.updateLastName(user);
+    }
+
+    @Override
+    public void updateCellPhone(User user) {
+        userPersistanceOutput.updateCellPhone(user);
+    }
+
+    @Override
+    public void updateBirth(User user) {
+        userPersistanceOutput.updateBirth(user);
+    }
+
+    @Override
+    public void updateBiography(User user) {
+        userPersistanceOutput.updateBiography(user);
+    }
+
+    @Override
     public void deleteByEmail(String email) {
         userPersistanceOutput.deleteByEmail(email);
     }
-
 }
-
-
-

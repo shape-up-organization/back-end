@@ -49,6 +49,66 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     }
 
     @Override
+    public void updateName(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
+
+        if (userEntity == null) {
+            throw new UserExistsByEmailException(user.getEmail().getValue());
+        }
+        userEntity.setName(user.getName());
+
+        userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
+    public void updateLastName(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
+
+        if (userEntity == null) {
+            throw new UserExistsByEmailException(user.getEmail().getValue());
+        }
+        userEntity.setLastName(user.getLastName());
+
+        userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
+    public void updateCellPhone(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
+
+        if (userEntity == null) {
+            throw new UserExistsByEmailException(user.getEmail().getValue());
+        }
+        userEntity.setCellPhone(user.getCellPhone().getValue());
+
+        userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
+    public void updateBirth(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
+
+        if (userEntity == null) {
+            throw new UserExistsByEmailException(user.getEmail().getValue());
+        }
+        userEntity.setBirth(user.getBirth().getValue());
+
+        userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
+    public void updateBiography(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
+
+        if (userEntity == null) {
+            throw new UserExistsByEmailException(user.getEmail().getValue());
+        }
+        userEntity.setBiography(user.getBiography());
+
+        userRepositoryJpa.save(userEntity);
+    }
+
+    @Override
     @Transactional
     public void deleteByEmail(String email) {
 
@@ -57,5 +117,4 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         }
             userRepositoryJpa.deleteByEmail(email);
     }
-
 }

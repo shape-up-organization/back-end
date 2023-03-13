@@ -1,5 +1,10 @@
 package br.com.shapeup.adapters.input.web.controller.mapper;
 
+import br.com.shapeup.adapters.input.web.controller.request.UserBiographyRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserBirthRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserCellphoneRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserLastNameRequest;
+import br.com.shapeup.adapters.input.web.controller.request.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
 import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
 import br.com.shapeup.core.domain.user.Birth;
@@ -28,9 +33,56 @@ public interface UserHttpMapper {
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "lastName", ignore = true)
     @Mapping(target = "cellPhone", ignore = true)
-    @Mapping(target = "email", ignore = true)
+    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(target = "birth", ignore = true)
+    @Mapping(target = "biography", ignore = true)
     @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
     User toUser(UserPasswordRequest userPasswordRequest);
+
+    @Mapping(target = "lastName", ignore = true)
+    @Mapping(target = "cellPhone", ignore = true)
+    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "birth", ignore = true)
+    @Mapping(target = "biography", ignore = true)
+    @Mapping(source = "name", target = "name")
+    User toUser(UserNameRequest userNameRequest);
+
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "cellPhone", ignore = true)
+    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "birth", ignore = true)
+    @Mapping(target = "biography", ignore = true)
+    @Mapping(source = "lastName", target = "lastName")
+    User toUser(UserLastNameRequest userLastNameRequest);
+
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "lastName", ignore = true)
+    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "birth", ignore = true)
+    @Mapping(target = "biography", ignore = true)
+    @Mapping(source = "cellphone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
+    User toUser(UserCellphoneRequest userCellphoneRequest);
+
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "lastName", ignore = true)
+    @Mapping(target = "cellPhone", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(target = "biography", ignore = true)
+    @Mapping(source = "birth", target = "birth", qualifiedByName = "stringToBirth")
+    User toUser(UserBirthRequest userBirthRequest);
+
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "lastName", ignore = true)
+    @Mapping(target = "cellPhone", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "birth", ignore = true)
+    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(source = "biography", target = "biography")
+    User toUser(UserBiographyRequest userBiographyRequest);
 
     @Named("stringToEmail")
     public static Email stringToEmail(String email) {
