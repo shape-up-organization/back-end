@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config.security2;
+package br.com.shapeup.common.config.security;
 
 import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;

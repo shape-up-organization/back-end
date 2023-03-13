@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config.security2;
+package br.com.shapeup.common.config.security;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

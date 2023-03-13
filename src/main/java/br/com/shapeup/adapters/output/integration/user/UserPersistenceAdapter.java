@@ -3,7 +3,7 @@ package br.com.shapeup.adapters.output.integration.user;
 import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
-import br.com.shapeup.common.config.security2.JWTUtil;
+import br.com.shapeup.common.config.security.JWTUtil;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
@@ -61,11 +61,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateName(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
-
-        if (userEntity == null) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
+        });
+
         userEntity.setName(user.getName());
 
         userRepositoryJpa.save(userEntity);
@@ -73,11 +72,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateLastName(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
-
-        if (userEntity == null) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
+        });
+
         userEntity.setLastName(user.getLastName());
 
         userRepositoryJpa.save(userEntity);
@@ -85,11 +83,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateCellPhone(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
-
-        if (userEntity == null) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
+        });
+
         userEntity.setCellPhone(user.getCellPhone().getValue());
 
         userRepositoryJpa.save(userEntity);
@@ -97,11 +94,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateBirth(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
-
-        if (userEntity == null) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
+        });
+
         userEntity.setBirth(user.getBirth().getValue());
 
         userRepositoryJpa.save(userEntity);
@@ -109,11 +105,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateBiography(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
-
-        if (userEntity == null) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
+        });
+
         userEntity.setBiography(user.getBiography());
 
         userRepositoryJpa.save(userEntity);

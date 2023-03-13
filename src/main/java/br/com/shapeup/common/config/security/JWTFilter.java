@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config.security2;
+package br.com.shapeup.common.config.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;

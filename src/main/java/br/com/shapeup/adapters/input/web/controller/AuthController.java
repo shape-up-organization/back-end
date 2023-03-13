@@ -2,10 +2,8 @@ package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.mapper.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.UserAuthRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
 import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
-import br.com.shapeup.common.config.security2.JWTUtil;
-import br.com.shapeup.core.domain.user.Password;
+import br.com.shapeup.common.config.security.JWTUtil;
 import java.util.Collections;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
