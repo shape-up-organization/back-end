@@ -12,14 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class UserPersistenceAdapter implements UserPersistanceOutput {
-    @Autowired
     private UserRepositoryJpa userRepositoryJpa;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public UserPersistenceAdapter(UserRepositoryJpa userRepositoryJpa, UserMapper userMapper) {
+        this.userRepositoryJpa = userRepositoryJpa;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public void save(User user) {
@@ -35,11 +37,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updatePassword(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue());
-
-        if (userEntity == null) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
+        });
+
         userEntity.setPassword(user.getPassword().getValue());
 
         userRepositoryJpa.save(userEntity);

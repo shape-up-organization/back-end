@@ -20,4 +20,14 @@ public class Password extends ValueObject {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public void validatePassword() {
+        if (value.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
+
+        if (!value.matches(".*[A-Z].*")) {
+            throw new IllegalArgumentException("Password must contain at least one uppercase letter");
+        }
+    }
 }
