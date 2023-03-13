@@ -45,4 +45,9 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     public void updateBiography(User user) {
         userPersistanceOutput.updateBiography(user);
     }
+
+    @Override
+    public void deleteByEmail(String email) {
+        userPersistanceOutput.deleteByEmail(email);
+    }
 }

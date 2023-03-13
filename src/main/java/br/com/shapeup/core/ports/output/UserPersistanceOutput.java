@@ -7,6 +7,8 @@ public interface UserPersistanceOutput {
 
     void updatePassword(User user);
 
+    void deleteByEmail(String email);
+
     void updateName(User user);
 
     void updateLastName(User user);

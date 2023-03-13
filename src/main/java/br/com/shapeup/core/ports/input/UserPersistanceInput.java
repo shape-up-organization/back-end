@@ -17,4 +17,6 @@ public interface UserPersistanceInput {
 
     void updatePassword(User user);
 
+    void deleteByEmail(String email);
+
 }
