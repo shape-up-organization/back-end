@@ -43,4 +43,7 @@ public class UserEntity implements Serializable {
     @Column
     @Temporal(TemporalType.DATE)
     private Date birth;
+    @Column
+    private String roles;
+
 }

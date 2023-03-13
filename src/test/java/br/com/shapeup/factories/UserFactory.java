@@ -5,7 +5,10 @@ import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class UserFactory {
@@ -19,7 +22,10 @@ public class UserFactory {
     }
 
     public User create() {
-        return User.newUser("Iara", "Alves", "iarinha", Email.create("iara@gmail.com"), CellPhone.create("11983323932"),
-                Password.create("iara123"), Birth.create(Date.from(Instant.now())));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate localDate = LocalDate.parse("05/10/2000", formatter);
+        User user = User.newUser("Iara", "Alves", "iarinha", Email.create("iara@gmail.com"), CellPhone.create("11983323932"),
+                Password.create("iara123"), Birth.create(localDate));
+        return user;
     }
 }

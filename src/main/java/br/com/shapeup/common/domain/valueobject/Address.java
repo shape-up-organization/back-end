@@ -18,7 +18,7 @@ public class Address extends ValueObject {
     private Instant deletedAt;
 
     private Address(UUID id, String state, String city, String street, String uf, String neighborhood, String number,
-                    String complement) {
+            String complement) {
         this.id = id;
         this.state = state;
         this.city = city;
@@ -29,25 +29,9 @@ public class Address extends ValueObject {
         this.complement = complement;
     }
 
-    public static Address create(
-            String state,
-            String city,
-            String street,
-            String uf,
-            String number,
-            String neighborhood,
-            String complement
-    ) {
-        return new Address(
-                UUID.randomUUID(),
-                state,
-                city,
-                street,
-                uf,
-                neighborhood,
-                number,
-                complement
-        );
+    public static Address create(String state, String city, String street, String uf, String number,
+            String neighborhood, String complement) {
+        return new Address(UUID.randomUUID(), state, city, street, uf, neighborhood, number, complement);
     }
 
     public String getState() {

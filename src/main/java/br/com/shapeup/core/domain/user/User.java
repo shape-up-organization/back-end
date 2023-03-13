@@ -14,7 +14,7 @@ public class User extends Entity<UserId> {
     private Birth birth;
 
     public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-                Birth birth) {
+            Birth birth) {
         super(UserId.unique());
         this.name = name;
         this.lastName = lastName;
@@ -25,8 +25,8 @@ public class User extends Entity<UserId> {
         this.birth = birth;
     }
 
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-                               Birth birth) {
+    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
+            Password password, Birth birth) {
         var id = UserId.unique();
         return new User(name, lastName, username, email, cellPhone, password, birth);
     }
@@ -98,15 +98,22 @@ public class User extends Entity<UserId> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         User user = (User) o;
-        return getName().equals(user.getName()) && getLastName().equals(user.getLastName()) && getUsername().equals(user.getUsername()) && getEmail().equals(user.getEmail()) && getCellPhone().equals(user.getCellPhone()) && getPassword().equals(user.getPassword()) && getBirth().equals(user.getBirth());
+        return getName().equals(user.getName()) && getLastName().equals(user.getLastName())
+                && getUsername().equals(user.getUsername()) && getEmail().equals(user.getEmail())
+                && getCellPhone().equals(user.getCellPhone()) && getPassword().equals(user.getPassword())
+                && getBirth().equals(user.getBirth());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getName(), getLastName(), getUsername(), getEmail(), getCellPhone(), getPassword(), getBirth());
+        return Objects.hash(super.hashCode(), getName(), getLastName(), getUsername(), getEmail(), getCellPhone(),
+                getPassword(), getBirth());
     }
 }
