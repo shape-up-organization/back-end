@@ -27,12 +27,16 @@ public class UserEntity implements Serializable {
 
     @Id
     private UUID id = UUID.randomUUID();
+
     @Column
     private String name;
+
     @Column
     private String lastName;
+
     @Column
     private String username;
+
     @Column(unique = true)
     private String email;
 
@@ -41,10 +45,14 @@ public class UserEntity implements Serializable {
 
     @Column
     private String password;
+
     @Column
     @Temporal(TemporalType.DATE)
     private LocalDate birth;
+
+    @Column
+    private String biography;
+
     @Column
     private String roles;
-
 }

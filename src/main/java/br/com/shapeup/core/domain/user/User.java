@@ -12,6 +12,7 @@ public class User extends Entity<UserId> {
     private CellPhone cellPhone;
     private Password password;
     private Birth birth;
+    private String biography;
 
     public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
             Birth birth) {
@@ -23,6 +24,7 @@ public class User extends Entity<UserId> {
         this.cellPhone = cellPhone;
         this.password = password;
         this.birth = birth;
+        this.biography = "";
     }
 
     public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
@@ -94,6 +96,14 @@ public class User extends Entity<UserId> {
 
     public void setBirth(Birth birth) {
         this.birth = birth;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
 
     @Override
