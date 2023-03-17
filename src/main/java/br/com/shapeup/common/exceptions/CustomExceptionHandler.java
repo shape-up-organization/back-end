@@ -1,6 +1,10 @@
 package br.com.shapeup.common.exceptions;
 
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
+import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
+import br.com.shapeup.common.exceptions.user.UserInvalidCellPhoneException;
+import br.com.shapeup.common.exceptions.user.UserInvalidEmailException;
+import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import java.util.List;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -35,6 +39,34 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUserExistsByEmailException(UserExistsByEmailException exception,
             WebRequest request) {
         var apiErrorMessage = new ApiErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserInvalidCellPhoneException.class)
+    public ResponseEntity<Object> handleUserInvalidCellPhoneException(UserInvalidCellPhoneException exception,
+                                                                      WebRequest request){
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserInvalidBirthException.class)
+    public ResponseEntity<Object> handleUserInvalidBirthException(UserInvalidBirthException exception,
+                                                                  WebRequest request){
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserInvalidEmailException.class)
+    public ResponseEntity<Object> handleUserInvalidEmailException(UserInvalidEmailException exception,
+                                                                  WebRequest request){
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserInvalidPasswordException.class)
+    public ResponseEntity<Object> handleUserInvalidPasswordException(UserInvalidPasswordException exception,
+                                                                  WebRequest request){
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
     }
 }

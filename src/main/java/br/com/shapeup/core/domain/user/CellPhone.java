@@ -1,6 +1,7 @@
 package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.ValueObject;
+import br.com.shapeup.common.exceptions.user.UserInvalidCellPhoneException;
 
 public class CellPhone extends ValueObject {
     private String value;
@@ -19,5 +20,18 @@ public class CellPhone extends ValueObject {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void validateCellPhone(){
+        if(value.matches(".*[a-zA-Z].*")){
+            throw new UserInvalidCellPhoneException("cellphone should contain only numbers");
+        }
+
+        if(value.length() > 11){
+            throw new UserInvalidCellPhoneException("cellphone should contain less than 11 characters");
+        }
+        if(value.length() < 9){
+            throw new UserInvalidCellPhoneException("cellphone should contain more than 9 characters");
+        }
     }
 }

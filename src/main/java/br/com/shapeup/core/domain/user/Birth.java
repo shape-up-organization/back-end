@@ -1,13 +1,11 @@
 package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.ValueObject;
+import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class Birth extends ValueObject {
     private LocalDate value;
@@ -32,5 +30,19 @@ public class Birth extends ValueObject {
 
     public void setValue(LocalDate value) {
         this.value = value;
+    }
+
+    public void validateBirth() {
+        if (value.isAfter(LocalDate.now())) {
+            throw new UserInvalidBirthException();
+        }
+
+        if (value.isBefore(LocalDate.now().minusYears(120))) {
+            throw new UserInvalidBirthException();
+        }
+
+        if (value.isAfter(LocalDate.now().minusYears(18))) {
+            throw new UserInvalidBirthException("should be older than 18 years");
+        }
     }
 }

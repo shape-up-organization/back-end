@@ -117,10 +117,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     @Transactional
     public void deleteByEmail(String email) {
-
         if (!userRepositoryJpa.existsByEmail(email)) {
-        throw new UserNotFoundException(email);
+            throw new UserNotFoundException(email);
         }
-            userRepositoryJpa.deleteByEmail(email);
+
+        userRepositoryJpa.deleteByEmail(email);
     }
 }
