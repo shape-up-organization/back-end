@@ -13,6 +13,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     @Override
     public void save(User user) {
+        user.validateValueObjects();
         userPersistanceOutput.save(user);
     }
 
@@ -35,11 +36,14 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     @Override
     public void updateCellPhone(User user) {
+        var cellphone = user.getCellPhone();
+        cellphone.validateCellPhone();
         userPersistanceOutput.updateCellPhone(user);
     }
 
     @Override
     public void updateBirth(User user) {
+        user.getBirth().validateBirth();
         userPersistanceOutput.updateBirth(user);
     }
 

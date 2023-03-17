@@ -38,6 +38,13 @@ public class User extends Entity<UserId> {
         new UserValidator(handler, this).validate();
     }
 
+    public void validateValueObjects() {
+        email.validateEmail();
+        cellPhone.validateCellPhone();
+        password.validatePassword();
+        birth.validateBirth();
+    }
+
     public UserId getId() {
         return id;
     }
