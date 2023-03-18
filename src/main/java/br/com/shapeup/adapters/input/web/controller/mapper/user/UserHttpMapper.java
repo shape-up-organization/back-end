@@ -25,7 +25,7 @@ public interface UserHttpMapper {
     UserHttpMapper INSTANCE = Mappers.getMapper(UserHttpMapper.class);
 
     @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
-    @Mapping(source = "cellphone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
+    @Mapping(source = "cellPhone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
     @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
     @Mapping(source = "birth", target = "birth", qualifiedByName = "stringToBirth")
     User toUser(UserAuthRegisterRequest userAuthRegisterRequest);
