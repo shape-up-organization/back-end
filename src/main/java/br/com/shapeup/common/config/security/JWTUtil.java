@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class JWTUtil {
 
     @Value("${secret}")
-    private String secret = "";
+    private String secret;
 
     public String generateToken(String email) throws IllegalArgumentException, JWTCreationException {
         return JWT.create()

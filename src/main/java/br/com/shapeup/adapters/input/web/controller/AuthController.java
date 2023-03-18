@@ -27,9 +27,6 @@ public class AuthController {
     private JWTUtil jwtUtil;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -41,7 +38,7 @@ public class AuthController {
             UsernamePasswordAuthenticationToken authInputToken =
                     new UsernamePasswordAuthenticationToken(body.getEmail(), body.getPassword());
 
-            authenticationManager.authenticate(authInputToken);
+//            authenticationManager.authenticate(authInputToken);
 
             String token = jwtUtil.generateToken(body.getEmail());
 

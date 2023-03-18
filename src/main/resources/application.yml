@@ -1,8 +1,10 @@
 server:
   port: 7000
 
-secret: 36763979244226452948404D635166546A576D5A7134743777217A25432A462D
+secret: 8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb
 spring:
+  security:
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -17,5 +19,5 @@ spring:
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true

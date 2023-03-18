@@ -5,8 +5,8 @@ import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
 import br.com.shapeup.common.config.security.JWTUtil;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
-import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import jakarta.transaction.Transactional;
@@ -43,9 +43,8 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
         UserEntity userEntity = userMapper.userToUserEntity(user);
         log.info("Starting process to save user on database: {}", userEntity.getId());
-        userRepositoryJpa.save(userEntity);
-
         String token = jwtUtil.generateToken(user.getEmail().getValue());
+        userRepositoryJpa.save(userEntity);
     }
 
     @Override
@@ -123,4 +122,5 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
         userRepositoryJpa.deleteByEmail(email);
     }
+
 }
