@@ -1,8 +1,8 @@
 //package br.com.shapeup.adapters.output.integration.user;
 //
-//import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
-//import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
-//import br.com.shapeup.adapters.output.repository.model.UserEntity;
+//import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+//import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
+//import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 //import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 //import br.com.shapeup.core.domain.user.User;
 //import br.com.shapeup.factories.UserEntityFactory;

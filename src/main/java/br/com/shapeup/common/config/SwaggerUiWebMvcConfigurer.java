@@ -1,6 +1,5 @@
 package br.com.shapeup.common.config;
 
-import br.com.shapeup.adapters.input.web.controller.UserController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

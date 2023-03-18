@@ -1,6 +1,6 @@
 //package br.com.shapeup.factories;
 //
-//import br.com.shapeup.adapters.output.repository.model.UserEntity;
+//import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 //
 //import java.util.UUID;
 //

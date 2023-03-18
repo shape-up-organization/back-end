@@ -1,4 +1,4 @@
-package br.com.shapeup.adapters.input.web.controller.request;
+package br.com.shapeup.adapters.input.web.controller.request.user;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,12 +12,11 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-
-public class UserLastNameRequest {
+public class UserCellphoneRequest {
     @NotNull
     @NotBlank
     private String email;
     @NotNull
     @NotBlank
-    private String lastName;
+    private String cellphone;
 }

@@ -1,11 +1,10 @@
-package br.com.shapeup.adapters.input.web.controller.request;
+package br.com.shapeup.adapters.input.web.controller.request.user;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,25 +12,10 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserRequest {
-    @NotNull
-    @NotBlank
-    private String name;
-    @NotNull
-    @NotBlank
-    private String lastName;
-    @NotNull
-    @NotBlank
-    private String username;
+public class UserBirthRequest {
     @NotNull
     @NotBlank
     private String email;
-    @NotNull
-    @NotBlank
-    private String cellPhone;
-    @NotNull
-    @NotBlank
-    private String password;
     @NotNull
     @NotBlank
     private String birth;

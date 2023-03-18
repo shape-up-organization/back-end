@@ -1,6 +1,6 @@
-package br.com.shapeup.common.config.security;
+package br.com.shapeup.common.config.security.config;
 
-import br.com.shapeup.adapters.output.repository.model.UserEntity;
+import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,12 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class MyUserDetailsInfo implements UserDetails {
+public class UserInfoUserDetails implements UserDetails {
     private String email;
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public MyUserDetailsInfo(UserEntity userEntity) {
+    public UserInfoUserDetails(UserEntity userEntity) {
         this.email = userEntity.getEmail();
         this.password = userEntity.getPassword();
         this.authorities = userEntity.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());

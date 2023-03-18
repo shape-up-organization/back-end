@@ -1,6 +1,6 @@
-package br.com.shapeup.common.config.security;
+package br.com.shapeup.adapters.output.repository.model.user;
 
-import br.com.shapeup.adapters.output.repository.model.UserEntity;
+import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,10 +9,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Role {
+
+    public Role(String role) {
+        this.role = role;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
