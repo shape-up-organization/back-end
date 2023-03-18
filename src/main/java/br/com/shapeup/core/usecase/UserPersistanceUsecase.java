@@ -19,25 +19,25 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     @Override
     public void updatePassword(User user) {
-        var password = user.getPassword();
-        password.validatePassword();
+        user.getPassword().validatePassword();
         userPersistanceOutput.updatePassword(user);
     }
 
     @Override
     public void updateName(User user) {
+        user.validateName();
         userPersistanceOutput.updateName(user);
     }
 
     @Override
     public void updateLastName(User user) {
+        user.validateLastName();
         userPersistanceOutput.updateLastName(user);
     }
 
     @Override
     public void updateCellPhone(User user) {
-        var cellphone = user.getCellPhone();
-        cellphone.validateCellPhone();
+        user.getCellPhone().validateCellPhone();
         userPersistanceOutput.updateCellPhone(user);
     }
 

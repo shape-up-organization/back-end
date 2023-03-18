@@ -24,7 +24,7 @@ public class Email extends ValueObject {
 
     public void validateEmail(){
         if(!value.matches("^[A-Za-z0-9+_.-]+@(.+)$")){
-            throw new UserInvalidEmailException();
+            throw new UserInvalidEmailException("email should contain @ and .");
         }
 
         if(value.length() > 255){

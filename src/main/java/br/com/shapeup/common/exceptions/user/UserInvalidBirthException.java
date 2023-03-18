@@ -1,11 +1,11 @@
 package br.com.shapeup.common.exceptions.user;
 
 public class UserInvalidBirthException extends RuntimeException {
-    public UserInvalidBirthException() {
-        super("invalid birth!");
+    public UserInvalidBirthException(String birth) {
+        super(String.format("%s is an invalid birth", birth));
     }
 
-    public UserInvalidBirthException(String message) {
-        super(message);
+    public UserInvalidBirthException() {
+        super("user should be older than 18 years");
     }
 }
