@@ -1,9 +1,12 @@
 package br.com.shapeup.common.exceptions;
 
+import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
 import br.com.shapeup.common.exceptions.user.UserInvalidCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserInvalidEmailException;
+import br.com.shapeup.common.exceptions.user.UserInvalidLastName;
+import br.com.shapeup.common.exceptions.user.UserInvalidNameException;
 import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import java.util.List;
@@ -66,7 +69,28 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserInvalidPasswordException.class)
     public ResponseEntity<Object> handleUserInvalidPasswordException(UserInvalidPasswordException exception,
-                                                                  WebRequest request){
+                                                                     WebRequest request){
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserExistsByCellPhoneException.class)
+    public ResponseEntity<Object> handlerUserExistsByCellPhoneException(UserExistsByCellPhoneException exception,
+                                                                   WebRequest request){
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserInvalidNameException.class)
+    public ResponseEntity<Object> handlerUserInvalidNameException(UserInvalidNameException exception,
+                                                                  WebRequest request) {
+        var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+    }
+
+    @ExceptionHandler(UserInvalidLastName.class)
+    public ResponseEntity<Object> handlerUserInvalidLastName(UserInvalidLastName exception,
+                                                             WebRequest request) {
         var apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
     }
