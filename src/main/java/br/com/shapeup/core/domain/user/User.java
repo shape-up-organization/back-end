@@ -2,6 +2,8 @@ package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
+import br.com.shapeup.core.domain.validation.handler.ThrowsValidationHandler;
+
 import java.util.Objects;
 
 public class User extends Entity<UserId> {
@@ -39,10 +41,19 @@ public class User extends Entity<UserId> {
     }
 
     public void validateValueObjects() {
+        validate(new ThrowsValidationHandler());
         email.validateEmail();
         cellPhone.validateCellPhone();
         password.validatePassword();
         birth.validateBirth();
+    }
+
+    public void validateName() {
+        new UserValidator(new ThrowsValidationHandler(), this).validateName();
+    }
+
+    public void validateLastName() {
+        new UserValidator(new ThrowsValidationHandler(), this).validateLastName();
     }
 
     public UserId getId() {

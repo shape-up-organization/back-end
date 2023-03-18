@@ -4,6 +4,7 @@ import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.UserEntity;
 import br.com.shapeup.common.config.security.JWTUtil;
+import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
@@ -33,9 +34,13 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void save(User user) {
         Boolean userExists = userRepositoryJpa.existsByEmail(user.getEmail().getValue());
-
         if (userExists) {
             throw new UserExistsByEmailException(user.getEmail().getValue());
+        }
+
+        Boolean cellPhoneExists = userRepositoryJpa.existsByCellPhone(user.getCellPhone().getValue());
+        if (cellPhoneExists) {
+            throw new UserExistsByCellPhoneException(user.getCellPhone().getValue());
         }
 
         String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
@@ -54,7 +59,8 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
             throw new UserExistsByEmailException(user.getEmail().getValue());
         });
 
-        userEntity.setPassword(user.getPassword().getValue());
+        String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
+        userEntity.setPassword(encodedPassword);
 
         userRepositoryJpa.save(userEntity);
     }
@@ -86,6 +92,12 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException(user.getEmail().getValue());
         });
+
+        Boolean cellPhoneExists = userRepositoryJpa.existsByCellPhone(user.getCellPhone().getValue());
+
+        if (cellPhoneExists) {
+            throw new UserExistsByCellPhoneException(user.getCellPhone().getValue());
+        }
 
         userEntity.setCellPhone(user.getCellPhone().getValue());
 
