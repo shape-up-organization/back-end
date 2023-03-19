@@ -1,20 +1,20 @@
 package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.UserHttpMapper;
-import br.com.shapeup.adapters.input.web.controller.request.UserBiographyRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserBirthRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserLastNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
+import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
+import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,26 +23,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "users")
-@AllArgsConstructor
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
-    @Autowired
-    private UserPersistanceInput userPersistanceInput;
+    private final UserPersistanceInput userPersistanceInput;
 
-    @Autowired
-    private UserHttpMapper userHttpMapper;
-
-    @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid UserRequest userRequest) {
-        var user = userHttpMapper.toUser(userRequest);
-        userPersistanceInput.save(user);
-
-        return ResponseEntity.status(HttpStatus.CREATED.value()).build();
-    }
+    private final UserHttpMapper userHttpMapper;
 
     @PutMapping("/name")
     public ResponseEntity<Void> updateName(@RequestBody @Valid UserNameRequest userNameRequest) {

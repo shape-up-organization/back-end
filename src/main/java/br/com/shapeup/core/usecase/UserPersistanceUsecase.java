@@ -12,12 +12,6 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public void save(User user) {
-        user.validateValueObjects();
-        userPersistanceOutput.save(user);
-    }
-
-    @Override
     public void updatePassword(User user) {
         user.getPassword().validatePassword();
         userPersistanceOutput.updatePassword(user);

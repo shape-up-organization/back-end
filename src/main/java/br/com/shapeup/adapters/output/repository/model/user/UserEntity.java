@@ -1,14 +1,19 @@
-package br.com.shapeup.adapters.output.repository.model;
+package br.com.shapeup.adapters.output.repository.model.user;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -53,6 +58,11 @@ public class UserEntity implements Serializable {
     @Column
     private String biography;
 
-    @Column
-    private String roles;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles;
 }

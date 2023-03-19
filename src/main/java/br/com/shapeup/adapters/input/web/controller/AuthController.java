@@ -1,53 +1,43 @@
 package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.UserHttpMapper;
-import br.com.shapeup.adapters.input.web.controller.request.UserAuthRequest;
-import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
-import br.com.shapeup.common.config.security.JWTUtil;
-import java.util.Collections;
+import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
+import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthLoginRequest;
+import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
+import br.com.shapeup.adapters.output.integration.auth.AuthGateway;
+import br.com.shapeup.common.config.security.service.JwtService;
+import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private UserRepositoryJpa userRepository;
+    private final UserHttpMapper userHttpMapper;
 
-    @Autowired
-    private JWTUtil jwtUtil;
+    private final UserPersistanceInput userPersistanceInput;
+    private final AuthGateway authGateway;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@RequestBody UserAuthRegisterRequest userAuthRegisterRequest) {
+        authGateway.register(userAuthRegisterRequest);
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserHttpMapper userHttpMapper;
+        return ResponseEntity.status(HttpStatus.CREATED.value()).build();
+    }
 
     @PostMapping("/login")
-    public Map<String, Object> loginHandler(@RequestBody UserAuthRequest body) {
-        try {
-            UsernamePasswordAuthenticationToken authInputToken =
-                    new UsernamePasswordAuthenticationToken(body.getEmail(), body.getPassword());
+    public ResponseEntity<Map<String, Object>> authenticateAndGetToken(@RequestBody UserAuthLoginRequest userAuthRegisterRequest) {
 
-            authenticationManager.authenticate(authInputToken);
-
-            String token = jwtUtil.generateToken(body.getEmail());
-
-            return Collections.singletonMap("jwt-token", token);
-        } catch (AuthenticationException e) {
-            throw new RuntimeException("Invalid Login Credentials");
-        }
+        return ResponseEntity.status(HttpStatus.OK.value()).body(authGateway.login(userAuthRegisterRequest));
     }
 }

@@ -1,4 +1,4 @@
-package br.com.shapeup.adapters.input.web.controller.response;
+package br.com.shapeup.adapters.input.web.controller.response.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

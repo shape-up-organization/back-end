@@ -1,12 +1,10 @@
 package br.com.shapeup.adapters.output.integration.user;
 
-import br.com.shapeup.adapters.output.repository.jpa.UserRepositoryJpa;
-import br.com.shapeup.adapters.output.repository.mapper.UserMapper;
-import br.com.shapeup.adapters.output.repository.model.UserEntity;
-import br.com.shapeup.common.config.security.JWTUtil;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
+import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
-import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
@@ -28,35 +26,10 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final JWTUtil jwtUtil;
-
-
-    @Override
-    public void save(User user) {
-        Boolean userExists = userRepositoryJpa.existsByEmail(user.getEmail().getValue());
-        if (userExists) {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
-        }
-
-        Boolean cellPhoneExists = userRepositoryJpa.existsByCellPhone(user.getCellPhone().getValue());
-        if (cellPhoneExists) {
-            throw new UserExistsByCellPhoneException(user.getCellPhone().getValue());
-        }
-
-        String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
-        user.setPassword(Password.create(encodedPassword));
-
-        UserEntity userEntity = userMapper.userToUserEntity(user);
-        log.info("Starting process to save user on database: {}", userEntity.getId());
-        userRepositoryJpa.save(userEntity);
-
-        String token = jwtUtil.generateToken(user.getEmail().getValue());
-    }
-
     @Override
     public void updatePassword(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
+            throw new UserExistsByEmailException();
         });
 
         String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
@@ -68,7 +41,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateName(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
+            throw new UserExistsByEmailException();
         });
 
         userEntity.setName(user.getName());
@@ -79,7 +52,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateLastName(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
+            throw new UserExistsByEmailException();
         });
 
         userEntity.setLastName(user.getLastName());
@@ -90,7 +63,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateCellPhone(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
+            throw new UserExistsByEmailException();
         });
 
         Boolean cellPhoneExists = userRepositoryJpa.existsByCellPhone(user.getCellPhone().getValue());
@@ -107,7 +80,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateBirth(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
+            throw new UserExistsByEmailException();
         });
 
         userEntity.setBirth(user.getBirth().getValue());
@@ -118,7 +91,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateBiography(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException(user.getEmail().getValue());
+            throw new UserExistsByEmailException();
         });
 
         userEntity.setBiography(user.getBiography());

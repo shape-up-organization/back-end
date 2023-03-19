@@ -1,23 +1,23 @@
-package br.com.shapeup.adapters.input.web.controller.mapper;
+package br.com.shapeup.adapters.input.web.controller.mapper.user;
 
-import br.com.shapeup.adapters.input.web.controller.request.UserBiographyRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserBirthRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserLastNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserPasswordRequest;
-import br.com.shapeup.adapters.input.web.controller.request.UserRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
+import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.core.domain.user.Birth;
 import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
+import java.text.ParseException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
-import java.text.ParseException;
 
 @Mapper(componentModel = "spring", uses = { UserHttpMapper.class })
 @Component
@@ -28,7 +28,7 @@ public interface UserHttpMapper {
     @Mapping(source = "cellPhone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
     @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
     @Mapping(source = "birth", target = "birth", qualifiedByName = "stringToBirth")
-    User toUser(UserRequest userRequest);
+    User toUser(UserAuthRegisterRequest userAuthRegisterRequest);
 
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "lastName", ignore = true)
