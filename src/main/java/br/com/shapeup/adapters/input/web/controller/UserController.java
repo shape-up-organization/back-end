@@ -7,34 +7,33 @@ import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRe
 import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
-import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "users")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+//@Validated
+@RequestMapping(value = "users")
 public class UserController {
     private final UserPersistanceInput userPersistanceInput;
 
     private final UserHttpMapper userHttpMapper;
 
     @PutMapping("/name")
-    public ResponseEntity<Void> updateName(@RequestBody @Valid UserNameRequest userNameRequest) {
+    public ResponseEntity<Void> updateName(@Valid @RequestBody UserNameRequest userNameRequest) {
         var user = userHttpMapper.toUser(userNameRequest);
         userPersistanceInput.updateName(user);
 
@@ -42,7 +41,7 @@ public class UserController {
     }
 
     @PutMapping("/last-name")
-    public ResponseEntity<Void> updateLastName(@RequestBody @Valid UserLastNameRequest userLastNameRequest) {
+    public ResponseEntity<Void> updateLastName(@Valid @RequestBody UserLastNameRequest userLastNameRequest) {
         var user = userHttpMapper.toUser(userLastNameRequest);
         userPersistanceInput.updateLastName(user);
 
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("/cell-phone")
-    public ResponseEntity<Void> updateCellPhone(@RequestBody @Valid UserCellphoneRequest userCellphoneRequest) {
+    public ResponseEntity<Void> updateCellPhone(@Valid @RequestBody UserCellphoneRequest userCellphoneRequest) {
         var user = userHttpMapper.toUser(userCellphoneRequest);
         userPersistanceInput.updateCellPhone(user);
 
@@ -58,7 +57,7 @@ public class UserController {
     }
 
     @PutMapping("/biography")
-    public ResponseEntity<Void> updateBiography(@RequestBody @Valid UserBiographyRequest userBiographyRequest) {
+    public ResponseEntity<Void> updateBiography(@Valid @RequestBody UserBiographyRequest userBiographyRequest) {
         var user = userHttpMapper.toUser(userBiographyRequest);
         userPersistanceInput.updateBiography(user);
 
@@ -66,7 +65,7 @@ public class UserController {
     }
 
     @PutMapping("/birth")
-    public ResponseEntity<Void> updateBirth(@RequestBody @Valid UserBirthRequest userBirthRequest) {
+    public ResponseEntity<Void> updateBirth(@Valid @RequestBody UserBirthRequest userBirthRequest) {
         var user = userHttpMapper.toUser(userBirthRequest);
         userPersistanceInput.updateBirth(user);
 
@@ -74,7 +73,7 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UserPasswordRequest userPasswordRequest) {
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody UserPasswordRequest userPasswordRequest) {
         var user = userHttpMapper.toUser(userPasswordRequest);
         userPersistanceInput.updatePassword(user);
 

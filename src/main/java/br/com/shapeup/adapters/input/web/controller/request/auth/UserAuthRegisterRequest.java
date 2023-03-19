@@ -2,36 +2,35 @@ package br.com.shapeup.adapters.input.web.controller.request.auth;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 @Data
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserAuthRegisterRequest {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Name is required")
+    @NotBlank(message = "Name is required")
     String name;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Last name is required")
+    @NotBlank(message = "Last name is required")
     String lastName;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Username is required")
+    @NotBlank(message = "Username is required")
     String username;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Email is required")
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email is invalid")
     String email;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Password is required")
+    @NotBlank(message = "Password is required")
     String password;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Birth is required")
+    @NotBlank(message = "Birth is required")
     String birth;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Cellphone is required")
+    @NotBlank(message = "Cellphone is required")
     String cellPhone;
 }
