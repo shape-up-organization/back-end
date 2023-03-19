@@ -34,16 +34,57 @@ public class AuthAdapter implements AuthGateway {
 
     @Override
     public Map<String, Object> login(UserAuthLoginRequest userAuthLoginRequest) {
+        validateUserDoesNotExistByEmail(userAuthLoginRequest);
+
+        Authentication authentication = authenticateUser(userAuthLoginRequest);
+
+        return generateJwtToken(userAuthLoginRequest, authentication);
+    }
+
+    private Authentication authenticateUser(UserAuthLoginRequest userAuthLoginRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userAuthLoginRequest.getEmail(),
+                userAuthLoginRequest.getPassword())
+        );
+        return authentication;
+    }
+
+    @Override
+    public void register(UserAuthRegisterRequest userAuthRegisterRequest) {
+        validateUserExistByEmailInDatabase(userAuthRegisterRequest);
+
+        UserEntity userEntity = mapUserAuthRegisterToUsenrEntityWithEncodedPassword(userAuthRegisterRequest);
+
+        log.info("Starting process to save user on database: {}", userEntity.getId());
+        userRepositoryJpa.save(userEntity);
+    }
+
+    private UserEntity mapUserAuthRegisterToUsenrEntityWithEncodedPassword(UserAuthRegisterRequest userAuthRegisterRequest) {
+        UserEntity userEntity = userMapper.userRegisterRequestToUserEntity(userAuthRegisterRequest);
+        String encodedPassword = passwordEncoder.encode(userAuthRegisterRequest.getPassword());
+        userEntity.setPassword(encodedPassword);
+        userEntity.setRoles(Set.of(new Role("ROLE_USER")));
+        return userEntity;
+    }
+
+    private void validateUserExistByEmailInDatabase(UserAuthRegisterRequest userAuthRegisterRequest) {
+        Boolean userExists = userRepositoryJpa.existsByEmail(userAuthRegisterRequest.getEmail());
+
+        if (userExists) {
+            throw new UserExistsByEmailException();
+        }
+    }
+
+    private void validateUserDoesNotExistByEmail(UserAuthLoginRequest userAuthLoginRequest) {
         Boolean userExists = userRepositoryJpa.existsByEmail(userAuthLoginRequest.getEmail());
 
         if (!userExists) {
             throw new UserNotFoundException(userAuthLoginRequest.getEmail());
         }
+    }
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userAuthLoginRequest.getEmail(),
-                userAuthLoginRequest.getPassword())
-        );
+
+    private Map<String, Object> generateJwtToken(UserAuthLoginRequest userAuthLoginRequest, Authentication authentication) {
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(userAuthLoginRequest.getEmail());
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
@@ -51,22 +92,5 @@ public class AuthAdapter implements AuthGateway {
         } else {
             throw new UsernameNotFoundException("Invalid Login Credentials Request!");
         }
-    }
-
-    @Override
-    public void register(UserAuthRegisterRequest userAuthRegisterRequest) {
-        Boolean userExists = userRepositoryJpa.existsByEmail(userAuthRegisterRequest.getEmail());
-
-        if (userExists) {
-            throw new UserExistsByEmailException();
-        }
-
-        UserEntity userEntity = userMapper.userRegisterRequestToUserEntity(userAuthRegisterRequest);
-        String encodedPassword = passwordEncoder.encode(userAuthRegisterRequest.getPassword());
-        userEntity.setPassword(encodedPassword);
-        userEntity.setRoles(Set.of(new Role("ROLE_USER")));
-
-        log.info("Starting process to save user on database: {}", userEntity.getId());
-        userRepositoryJpa.save(userEntity);
     }
 }
