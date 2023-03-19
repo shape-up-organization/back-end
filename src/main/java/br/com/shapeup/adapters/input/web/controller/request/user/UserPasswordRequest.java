@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserPasswordRequest {
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Name is required")
+    @NotBlank(message = "Name is required")
     private String email;
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Password is required")
+    @NotBlank(message = "Password is required")
     private String password;
 }

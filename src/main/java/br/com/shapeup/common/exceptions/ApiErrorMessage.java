@@ -1,5 +1,7 @@
 package br.com.shapeup.common.exceptions;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
@@ -9,24 +11,32 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Setter
 public class ApiErrorMessage {
-    private int status;
-    private HttpStatus error;
+    private int statusCode;
+    private HttpStatus httpStatus;
     private String path;
-    private List<String> errors;
+    private List<String> messages;
+    private ZonedDateTime timestamp = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
-    public ApiErrorMessage(int status, HttpStatus error, String path, List<String> errors) {
+
+    public ApiErrorMessage(int status, HttpStatus httpStatus, String path, List<String> messages) {
         super();
-        this.status = status;
-        this.error = error;
+        this.statusCode = status;
+        this.httpStatus = httpStatus;
         this.path = path;
-        this.errors = errors;
+        this.messages = messages;
     }
 
     public ApiErrorMessage(int status, HttpStatus httpStatus, String path, String error) {
         super();
-        this.status = status;
-        this.error = httpStatus;
+        this.statusCode = status;
+        this.httpStatus = httpStatus;
         this.path = path;
-        this.errors = Arrays.asList(error);
+        this.messages = Arrays.asList(error);
+    }
+
+    public ApiErrorMessage(HttpStatus httpStatus, List<String> messages) {
+        super();
+        this.httpStatus = httpStatus;
+        this.messages = messages;
     }
 }
