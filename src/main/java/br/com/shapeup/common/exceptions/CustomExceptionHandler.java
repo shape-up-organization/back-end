@@ -12,7 +12,6 @@ import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import org.apache.coyote.Request;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -38,7 +36,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         var apiErrorMessage = new ApiErrorMessage(HttpServletResponse.SC_BAD_REQUEST, status, request.getRequestURI(), errors);
         request.getContextPath();
-        return new ResponseEntity<>(apiErrorMessage, apiErrorMessage.getHttpStatus());
+        return new ResponseEntity<>(apiErrorMessage, apiErrorMessage.getError());
     }
 
 
@@ -48,7 +46,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(HttpServletResponse.SC_NOT_FOUND, HttpStatus.NOT_FOUND, request.getRequestURI(), exception.getMessage());
-        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getError());
     }
 
     @ExceptionHandler(UserExistsByEmailException.class)
@@ -58,7 +56,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             HttpServletResponse response
     ) {
         var apiErrorMessage = new ApiErrorMessage(HttpServletResponse.SC_CONFLICT, HttpStatus.CONFLICT, request.getRequestURI(), exception.getMessage());
-        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getError());
     }
 
     @ExceptionHandler({
@@ -77,6 +75,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             HttpServletResponse response
     ) {
         var apiErrorMessage = new ApiErrorMessage(HttpServletResponse.SC_BAD_REQUEST, HttpStatus.BAD_REQUEST, request.getRequestURI(), exception.getMessage());
-        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getHttpStatus());
+        return new ResponseEntity<>(apiErrorMessage, new HttpHeaders(), apiErrorMessage.getError());
     }
 }
