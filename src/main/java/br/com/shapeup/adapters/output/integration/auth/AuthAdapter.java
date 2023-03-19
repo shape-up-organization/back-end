@@ -58,7 +58,7 @@ public class AuthAdapter implements AuthGateway {
         Boolean userExists = userRepositoryJpa.existsByEmail(userAuthRegisterRequest.getEmail());
 
         if (userExists) {
-            throw new UserExistsByEmailException(userAuthRegisterRequest.getEmail());
+            throw new UserExistsByEmailException();
         }
 
         UserEntity userEntity = userMapper.userRegisterRequestToUserEntity(userAuthRegisterRequest);
