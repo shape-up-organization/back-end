@@ -3,6 +3,7 @@ package br.com.shapeup.adapters.output.integration.user;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
@@ -11,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,13 +24,16 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private UserMapper userMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public void updatePassword(User user) {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException();
         });
 
-        userEntity.setPassword(user.getPassword().getValue());
+        String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
+        userEntity.setPassword(encodedPassword);
 
         userRepositoryJpa.save(userEntity);
     }
@@ -60,6 +65,12 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
             throw new UserExistsByEmailException();
         });
+
+        Boolean cellPhoneExists = userRepositoryJpa.existsByCellPhone(user.getCellPhone().getValue());
+
+        if (cellPhoneExists) {
+            throw new UserExistsByCellPhoneException(user.getCellPhone().getValue());
+        }
 
         userEntity.setCellPhone(user.getCellPhone().getValue());
 
@@ -97,5 +108,4 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
         userRepositoryJpa.deleteByEmail(email);
     }
-
 }

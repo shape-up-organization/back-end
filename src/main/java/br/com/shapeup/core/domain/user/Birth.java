@@ -34,15 +34,15 @@ public class Birth extends ValueObject {
 
     public void validateBirth() {
         if (value.isAfter(LocalDate.now())) {
-            throw new UserInvalidBirthException();
+            throw new UserInvalidBirthException(value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
 
         if (value.isBefore(LocalDate.now().minusYears(120))) {
-            throw new UserInvalidBirthException();
+            throw new UserInvalidBirthException(value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
 
         if (value.isAfter(LocalDate.now().minusYears(18))) {
-            throw new UserInvalidBirthException("should be older than 18 years");
+            throw new UserInvalidBirthException();
         }
     }
 }
