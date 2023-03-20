@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config.security.service;
+package br.com.shapeup.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -74,5 +74,14 @@ public class JwtService {
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
+    }
+
+    public static String extractEmailFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Decoders.BASE64.decode(SECRET))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email", String.class);
     }
 }

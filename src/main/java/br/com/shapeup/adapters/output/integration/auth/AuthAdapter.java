@@ -6,7 +6,7 @@ import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import br.com.shapeup.common.config.security.service.JwtService;
+import br.com.shapeup.security.service.JwtService;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import java.util.Map;
@@ -39,14 +39,6 @@ public class AuthAdapter implements AuthGateway {
         Authentication authentication = authenticateUser(userAuthLoginRequest);
 
         return generateJwtToken(userAuthLoginRequest, authentication);
-    }
-
-    private Authentication authenticateUser(UserAuthLoginRequest userAuthLoginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userAuthLoginRequest.getEmail(),
-                userAuthLoginRequest.getPassword())
-        );
-        return authentication;
     }
 
     @Override
@@ -92,5 +84,13 @@ public class AuthAdapter implements AuthGateway {
         } else {
             throw new UsernameNotFoundException("Invalid Login Credentials Request!");
         }
+    }
+
+    private Authentication authenticateUser(UserAuthLoginRequest userAuthLoginRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userAuthLoginRequest.getEmail(),
+                userAuthLoginRequest.getPassword())
+        );
+        return authentication;
     }
 }

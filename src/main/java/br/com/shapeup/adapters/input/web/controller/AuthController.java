@@ -1,16 +1,13 @@
 package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthLoginRequest;
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.adapters.output.integration.auth.AuthGateway;
-import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,13 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-//@Validated
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserHttpMapper userHttpMapper;
-
-    private final UserPersistanceInput userPersistanceInput;
     private final AuthGateway authGateway;
 
     @PostMapping("/register")
@@ -36,8 +29,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> authenticateAndGetToken(@Valid @RequestBody UserAuthLoginRequest userAuthRegisterRequest) {
-
-        return ResponseEntity.status(HttpStatus.OK.value()).body(authGateway.login(userAuthRegisterRequest));
+        Map<String, Object> jwtTokenResponse = authGateway.login(userAuthRegisterRequest);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(jwtTokenResponse);
     }
 }
 

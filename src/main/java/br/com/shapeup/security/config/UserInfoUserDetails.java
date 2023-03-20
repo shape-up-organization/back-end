@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config.security.config;
+package br.com.shapeup.security.config;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import java.util.Collection;

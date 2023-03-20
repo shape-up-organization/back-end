@@ -1,30 +1,34 @@
 package br.com.shapeup.adapters.output.integration.user;
 
+import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceAdapter;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
+import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
+import br.com.shapeup.security.service.JwtService;
 import jakarta.transaction.Transactional;
+import java.net.URL;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
-    private UserRepositoryJpa userRepositoryJpa;
-
-    private UserMapper userMapper;
-
+    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final S3ServiceAdapter s3Service;
 
     @Override
     public void updatePassword(User user) {
@@ -107,5 +111,22 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         }
 
         userRepositoryJpa.deleteByEmail(email);
+    }
+
+    @Override
+    public URL uploadPicture(Object file, String token) {
+
+        String userEmail = JwtService.extractEmailFromToken(token);
+        UserEntity user = userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> {
+            throw new UserNotFoundException(userEmail);
+        });
+
+        MultipartFile multipartFile = (MultipartFile) file;
+        PictureProfile pictureProfile = new PictureProfile(multipartFile, user.getId().toString());
+        s3Service.uploadFile(pictureProfile);
+
+        var pictureUrl = s3Service.getPictureUrl(pictureProfile);
+
+        return pictureUrl;
     }
 }

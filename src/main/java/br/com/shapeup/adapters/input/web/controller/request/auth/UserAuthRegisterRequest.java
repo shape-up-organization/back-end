@@ -34,3 +34,5 @@ public class UserAuthRegisterRequest {
     @NotBlank(message = "Cellphone is required")
     String cellPhone;
 }
+
+
