@@ -1,8 +1,7 @@
-package br.com.shapeup.common.config.security.config;
+package br.com.shapeup.security.config;
 
-import br.com.shapeup.common.config.security.filter.JwtAuthFilter;
+import br.com.shapeup.security.filter.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,22 +21,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthFilter authFilter;
+    private final JwtAuthFilter authFilter;
 
-    @Autowired
-    private UserInfoUserDetailsService uds;
+    private final UserInfoUserDetailsService uds;
+
+    public SecurityConfig(JwtAuthFilter authFilter, UserInfoUserDetailsService uds) {
+        this.authFilter = authFilter;
+        this.uds = uds;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .csrf().disable()
                 .httpBasic().disable()
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors()
                 .and()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/users/**").authenticated()
                         .anyRequest()
                         .permitAll()
                 ).userDetailsService(uds)
