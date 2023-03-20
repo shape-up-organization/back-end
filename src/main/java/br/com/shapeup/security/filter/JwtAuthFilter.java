@@ -1,7 +1,7 @@
-package br.com.shapeup.common.config.security.filter;
+package br.com.shapeup.security.filter;
 
-import br.com.shapeup.common.config.security.config.UserInfoUserDetailsService;
-import br.com.shapeup.common.config.security.service.JwtService;
+import br.com.shapeup.security.config.UserInfoUserDetailsService;
+import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +36,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (jwtService.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
