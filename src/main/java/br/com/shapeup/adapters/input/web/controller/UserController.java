@@ -1,15 +1,12 @@
 package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
-import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthLoginRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserEmailRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
-import br.com.shapeup.adapters.output.integration.auth.AuthGateway;
 import br.com.shapeup.common.config.security.service.JwtService;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import jakarta.validation.Valid;
