@@ -15,10 +15,22 @@ public class Birth extends ValueObject {
     }
 
     public static Birth create(String birth) throws ParseException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate localDate = LocalDate.parse(birth, formatter);
-        return Birth.create(localDate);
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate localDate = LocalDate.parse(birth, formatter);
+
+            return Birth.create(localDate);
+
+        } catch (Exception e) {
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.parse(birth, inputFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedDate = localDate.format(outputFormatter);
+
+            return Birth.create(formattedDate);
+        }
     }
+
 
     public static Birth create(LocalDate date) {
         return new Birth(date);
