@@ -9,6 +9,7 @@ import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest
 import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
 import br.com.shapeup.common.config.security.service.JwtService;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
+import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.net.URL;
