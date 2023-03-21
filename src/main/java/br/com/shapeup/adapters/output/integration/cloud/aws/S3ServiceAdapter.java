@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.UUID;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +27,8 @@ public class S3ServiceAdapter implements S3ServiceGateway {
 
     private final AmazonS3 s3Client;
     private final UserRepositoryJpa userRepositoryJpa;
-    @Value("${s3.bucket}")
-    private String bucketName;
+//    @Value("${s3.bucket}")
+    private String bucketName = Dotenv.load().get("AWS_S3_BUCKET");
 
     @Override
     public URI uploadFile(PictureProfile pictureProfile) {
