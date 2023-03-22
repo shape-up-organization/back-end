@@ -22,7 +22,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-s3:
-  bucket: ${AWS_S3_BUCKET}
-  region: ${AWS_REGION}
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
