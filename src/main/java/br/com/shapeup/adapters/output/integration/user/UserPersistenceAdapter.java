@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final UserRepositoryJpa userRepositoryJpa;
