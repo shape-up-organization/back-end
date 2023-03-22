@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class S3Config {
 
-        private String awsId = Dotenv.load().get("AWS_ACCESS_KEY_ID");
-        private String awsKey = Dotenv.load().get("AWS_SECRET_ACCESS_KEY");
-        private String region = Dotenv.load().get("AWS_REGION");
+    private String awsId = Dotenv.load().get("AWS_ACCESS_KEY_ID");
+    private String awsKey = Dotenv.load().get("AWS_SECRET_ACCESS_KEY");
+    private String region = Dotenv.load().get("AWS_REGION");
 
     public AWSCredentials credentials() {
         var credentials = new BasicAWSCredentials(awsId, awsKey);
