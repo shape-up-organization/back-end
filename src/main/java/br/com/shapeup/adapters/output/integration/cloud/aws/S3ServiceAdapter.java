@@ -7,6 +7,7 @@ import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -25,8 +26,7 @@ public class S3ServiceAdapter implements S3ServiceGateway {
 
     private final AmazonS3 s3Client;
     private final UserRepositoryJpa userRepositoryJpa;
-    @Value("${s3.bucket}")
-    private String bucketName;
+    private String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
     public URI uploadFile(PictureProfile pictureProfile) {
@@ -41,6 +41,7 @@ public class S3ServiceAdapter implements S3ServiceGateway {
         }
     }
 
+    @SneakyThrows
     @Override
     public URI uploadFile(InputStream inputStream, String fileName, String contentType, String uuid) {
         UserEntity user = getUserByUuid(uuid);
@@ -67,10 +68,13 @@ public class S3ServiceAdapter implements S3ServiceGateway {
         return user.getUsername() + "--" + fileName;
     }
 
+    @SneakyThrows
     private void uploadToS3(InputStream inputStream, String fileName, String contentType, String uuid) {
         var metadata = new ObjectMetadata();
         metadata.setContentType(contentType);
         metadata.addUserMetadata("USER_UUID", uuid);
+        validateFileSizeLimit(inputStream);
+        metadata.setContentLength(inputStream.available());
         log.info("Uploading file to S3...");
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
         log.info("File uploaded successfully.");
@@ -79,5 +83,13 @@ public class S3ServiceAdapter implements S3ServiceGateway {
     @SneakyThrows
     private URI generateS3Url(String fileName) {
         return s3Client.getUrl(bucketName, fileName).toURI();
+    }
+
+    private static void validateFileSizeLimit(InputStream inputStream) throws IOException {
+        Integer contentLength = inputStream.available();
+
+        if (contentLength > 5 * 1024 * 1024) {
+            throw new RuntimeException("File size is too big");
+        }
     }
 }
