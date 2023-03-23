@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,13 +44,13 @@ public class AuthAdapter implements AuthGateway {
     public void register(UserAuthRegisterRequest userAuthRegisterRequest) {
         validateUserExistByEmailInDatabase(userAuthRegisterRequest);
 
-        UserEntity userEntity = mapUserAuthRegisterToUsenrEntityWithEncodedPassword(userAuthRegisterRequest);
+        UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
 
         log.info("Starting process to save user on database: {}", userEntity.getId());
         userRepositoryJpa.save(userEntity);
     }
 
-    private UserEntity mapUserAuthRegisterToUsenrEntityWithEncodedPassword(UserAuthRegisterRequest userAuthRegisterRequest) {
+    private UserEntity mapUserAuthRegisterToUserEntityWithEncodedPassword(UserAuthRegisterRequest userAuthRegisterRequest) {
         UserEntity userEntity = userMapper.userRegisterRequestToUserEntity(userAuthRegisterRequest);
         String encodedPassword = passwordEncoder.encode(userAuthRegisterRequest.getPassword());
         userEntity.setPassword(encodedPassword);
