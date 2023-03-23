@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final UserRepositoryJpa userRepositoryJpa;
@@ -114,9 +114,9 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     }
 
     @Override
-    public URL uploadPicture(Object file, String token) {
+    public URL uploadPicture(Object file, String tokenJwt) {
 
-        String userEmail = JwtService.extractEmailFromToken(token);
+        String userEmail = JwtService.extractEmailFromToken(tokenJwt);
         UserEntity user = userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> {
             throw new UserNotFoundException(userEmail);
         });
