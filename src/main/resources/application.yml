@@ -4,7 +4,7 @@ server:
 spring:
   mvc:
     pathmatch:
-      matching-strategy: ANT_PATH_MATCHER
+      matching-strategy: ant_path_matcher
   config:
     import:
       - optional:file:./variables-local.properties
@@ -19,3 +19,12 @@ spring:
       ddl-auto: create-drop
     show-sql: true
 
+aws:
+  region:
+    static: us-east-1
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+
+s3:
+  bucket: ${AWS_S3_BUCKET}
+  region: ${AWS_REGION}
