@@ -11,20 +11,19 @@ spring:
   datasource:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
-    url: ${POSGRES_URL}
+    url: ${POSTGRES_URL}
     driver-class-name: org.postgresql.Driver
   jpa:
     database: POSTGRESQL
     hibernate:
       ddl-auto: create-drop
     show-sql: true
-
-aws:
-  region:
-    static: us-east-1
-  access-key-id: ${AWS_ACCESS_KEY_ID}
-  secret-access-key: ${AWS_SECRET_ACCESS_KEY}
-
-s3:
-  bucket: ${AWS_S3_BUCKET}
-  region: ${AWS_REGION}
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
