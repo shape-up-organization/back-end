@@ -6,19 +6,16 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
 
-    @Value("${aws.access-key-id}")
-    private String awsId;
-    @Value("${aws.secret-access-key}")
-    private String awsKey;
-    @Value("${s3.region}")
-    private String region;
+    private String awsId = Dotenv.load().get("AWS_ACCESS_KEY_ID");
+    private String awsKey = Dotenv.load().get("AWS_SECRET_ACCESS_KEY");
+    private String region = Dotenv.load().get("AWS_REGION");
 
     public AWSCredentials credentials() {
         var credentials = new BasicAWSCredentials(awsId, awsKey);
