@@ -7,7 +7,6 @@ import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRe
 import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
-import br.com.shapeup.common.config.security.service.JwtService;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 import java.net.URL;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,7 +40,7 @@ public class UserController {
     public ResponseEntity<Void> updateName(@RequestHeader(value = "Authorization") String token,
                                            @Valid @RequestBody UserNameRequest userNameRequest) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userNameRequest.setEmail(email);
 
         var user = userHttpMapper.toUser(userNameRequest);
@@ -55,7 +53,7 @@ public class UserController {
     public ResponseEntity<Void> updateLastName(@RequestHeader(value = "Authorization") String token,
                                                @Valid @RequestBody UserLastNameRequest userLastNameRequest) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userLastNameRequest.setEmail(email);
 
         var user = userHttpMapper.toUser(userLastNameRequest);
@@ -68,7 +66,7 @@ public class UserController {
     public ResponseEntity<Void> updateCellPhone(@RequestHeader(value = "Authorization") String token,
                                                 @Valid @RequestBody UserCellphoneRequest userCellphoneRequest) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userCellphoneRequest.setEmail(email);
 
         var user = userHttpMapper.toUser(userCellphoneRequest);
@@ -81,7 +79,7 @@ public class UserController {
     public ResponseEntity<Void> updateBiography(@RequestHeader(value = "Authorization") String token,
                                                 @Valid @RequestBody UserBiographyRequest userBiographyRequest) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userBiographyRequest.setEmail(email);
 
         var user = userHttpMapper.toUser(userBiographyRequest);
@@ -94,7 +92,7 @@ public class UserController {
     public ResponseEntity<Void> updateBirth(@RequestHeader(value = "Authorization") String token,
                                             @Valid @RequestBody UserBirthRequest userBirthRequest) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userBirthRequest.setEmail(email);
 
         var user = userHttpMapper.toUser(userBirthRequest);
@@ -107,7 +105,7 @@ public class UserController {
     public ResponseEntity<Void> updatePassword(@RequestHeader(value = "Authorization") String token,
                                                @Valid @RequestBody UserPasswordRequest userPasswordRequest) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userPasswordRequest.setEmail(email);
 
         var user = userHttpMapper.toUser(userPasswordRequest);
@@ -120,7 +118,7 @@ public class UserController {
     public ResponseEntity<Void> deleteByEmail(@RequestHeader(value = "Authorization")
                                               String token) {
         String jwtToken = token.replace("Bearer ", "");
-        var email = new JwtService().extractEmail(jwtToken);
+        var email = JwtService.extractEmailFromToken(jwtToken);
         userPersistanceInput.deleteByEmail(email);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
