@@ -15,10 +15,8 @@ import lombok.NoArgsConstructor;
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 
 public class UserLastNameRequest {
-    @NotNull(message = "Name is required")
-    @NotBlank(message = "Name is required")
-    @Email(message = "Email is invalid")
     private String email;
+
     @NotNull(message = "Last name is required")
     @NotBlank(message = "Last name is required")
     private String lastName;

@@ -14,10 +14,8 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserBirthRequest {
-    @NotNull(message = "Name is required")
-    @NotBlank(message = "Name is required")
-    @Email(message = "Email is invalid")
     private String email;
+
     @NotNull(message = "Birth is required")
     @NotBlank(message = "Birth is required")
     private String birth;
