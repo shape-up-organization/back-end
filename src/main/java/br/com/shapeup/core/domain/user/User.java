@@ -56,6 +56,7 @@ public class User extends Entity<UserId> {
         new UserValidator(new ThrowsValidationHandler(), this).validateLastName();
     }
 
+
     public UserId getId() {
         return id;
     }

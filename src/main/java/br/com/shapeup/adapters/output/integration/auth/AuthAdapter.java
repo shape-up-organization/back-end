@@ -9,8 +9,12 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.security.service.JwtService;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+
 import java.util.Map;
 import java.util.Set;
+
+import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
+import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,6 +54,23 @@ public class AuthAdapter implements AuthGateway {
         userRepositoryJpa.save(userEntity);
     }
 
+
+    @Override
+    public Boolean validateUserName(String username) {
+
+        Boolean userExists = userRepositoryJpa.existsByUsername(username);
+
+        if (userExists) {
+
+            throw new UserAlreadyExistsException("User already exists");
+
+        }
+        return true;
+
+
+    }
+
+
     private UserEntity mapUserAuthRegisterToUserEntityWithEncodedPassword(UserAuthRegisterRequest userAuthRegisterRequest) {
         UserEntity userEntity = userMapper.userRegisterRequestToUserEntity(userAuthRegisterRequest);
         String encodedPassword = passwordEncoder.encode(userAuthRegisterRequest.getPassword());
@@ -57,6 +78,7 @@ public class AuthAdapter implements AuthGateway {
         userEntity.setRoles(Set.of(new Role("ROLE_USER")));
         return userEntity;
     }
+
 
     private void validateUserExistByEmailInDatabase(UserAuthRegisterRequest userAuthRegisterRequest) {
         Boolean userExists = userRepositoryJpa.existsByEmail(userAuthRegisterRequest.getEmail());
@@ -92,4 +114,16 @@ public class AuthAdapter implements AuthGateway {
         );
         return authentication;
     }
+
+    private void validateUserExistsByUserNameInDatabase(String username) {
+        Boolean userNameIsAlreadyInUse   = userRepositoryJpa.existsByUsername(username);
+        if (userNameIsAlreadyInUse) {
+
+            throw new UserAlreadyExistsException("User already exists");
+
+        }
+
+
+    }
+
 }

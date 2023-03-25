@@ -1,13 +1,9 @@
-package br.com.shapeup.core.ports.output;
+package br.com.shapeup.core.ports.input.user;
 
 import br.com.shapeup.core.domain.user.User;
 import java.net.URL;
 
-public interface UserPersistanceOutput {
-
-    void updatePassword(User user);
-
-    void deleteByEmail(String email);
+public interface UserPersistanceInput {
 
     void updateName(User user);
 
@@ -18,6 +14,10 @@ public interface UserPersistanceOutput {
     void updateBirth(User user);
 
     void updateBiography(User user);
+
+    void updatePassword(User user);
+
+    void deleteByEmail(String email);
 
     URL uploadPicture(Object file, String token);
 }

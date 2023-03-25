@@ -7,13 +7,12 @@ import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRe
 import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
-import br.com.shapeup.core.ports.input.UserPersistanceInput;
+import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.net.URL;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
