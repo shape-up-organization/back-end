@@ -9,8 +9,11 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.security.service.JwtService;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+
 import java.util.Map;
 import java.util.Set;
+
+import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -91,5 +94,25 @@ public class AuthAdapter implements AuthGateway {
                 userAuthLoginRequest.getPassword())
         );
         return authentication;
+    }
+
+    @Override
+    public Boolean validateUserName(String username) {
+
+        Boolean userExists = userRepositoryJpa.existsByUserName(username);
+
+        if (userExists) {
+
+            throw new UserAlreadyExistsException("User already exists");
+
+        }
+        return true;
+    }
+
+    private void validateUserExistsByUserNameInDatabase(String username) {
+        Boolean userNameIsAlreadyInUse = userRepositoryJpa.existsByUserName(username);
+        if (userNameIsAlreadyInUse) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
     }
 }
