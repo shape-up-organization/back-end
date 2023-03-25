@@ -9,5 +9,6 @@ public interface AuthGateway {
     Map<String, Object> login(UserAuthLoginRequest userAuthLoginRequest);
 
     void register(UserAuthRegisterRequest userAuthRegisterRequest);
+
     Boolean validateUserName(String username);
 }

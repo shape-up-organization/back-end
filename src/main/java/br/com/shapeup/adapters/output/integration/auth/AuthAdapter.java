@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
+import com.amazonaws.services.simpleworkflow.model.RespondActivityTaskCanceledRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,6 +47,7 @@ public class AuthAdapter implements AuthGateway {
     @Override
     public void register(UserAuthRegisterRequest userAuthRegisterRequest) {
         validateUserExistByEmailInDatabase(userAuthRegisterRequest);
+        validateUserExistsByUserNameInDatabase(userAuthRegisterRequest.getUsername());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
 
@@ -99,18 +101,13 @@ public class AuthAdapter implements AuthGateway {
     @Override
     public Boolean validateUserName(String username) {
 
-        Boolean userExists = userRepositoryJpa.existsByUserName(username);
+        Boolean userExists = userRepositoryJpa.existsByUsername(username);
+        return userExists;
 
-        if (userExists) {
-
-            throw new UserAlreadyExistsException("User already exists");
-
-        }
-        return true;
     }
 
     private void validateUserExistsByUserNameInDatabase(String username) {
-        Boolean userNameIsAlreadyInUse = userRepositoryJpa.existsByUserName(username);
+        Boolean userNameIsAlreadyInUse = userRepositoryJpa.existsByUsername(username);
         if (userNameIsAlreadyInUse) {
             throw new UserAlreadyExistsException("User already exists");
         }
