@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.output.repository.model.user;
 
+import br.com.shapeup.adapters.output.repository.model.level.LevelEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -57,6 +59,19 @@ public class UserEntity implements Serializable {
 
     @Column
     private String biography;
+
+    @Column
+    private String profilePhotoUrl;
+
+    @Column(columnDefinition = "BIT", nullable = false)
+    private boolean isActive;
+
+    @Column
+    private String fkLevelId;
+
+    @OneToOne
+    @JoinColumn(name = "fk_level_id", referencedColumnName = "id")
+    private LevelEntity levelEntity;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
