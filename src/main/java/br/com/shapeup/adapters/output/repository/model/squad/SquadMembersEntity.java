@@ -24,20 +24,20 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SquadMembersEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
     @Column
     private String position;
 
-    @Column
-    private String fkSquadId;
+    @Column(name = "fk_squad_id", insertable = false, updatable = false)
+    private UUID fkSquadId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_squad_id", referencedColumnName = "id")
     private SquadEntity squadEntity;
 
-    @Column
-    private String fkUserId;
+    @Column(name = "fk_user_id", insertable = false, updatable = false)
+    private UUID fkUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")

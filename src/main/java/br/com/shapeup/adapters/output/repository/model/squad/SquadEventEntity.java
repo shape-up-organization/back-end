@@ -36,15 +36,15 @@ public class SquadEventEntity {
     @Column
     private String description;
 
-    @Column
-    private String fkSquadId;
+    @Column(name = "fk_squad_id", insertable = false, updatable = false)
+    private UUID fkSquadId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_squad_id", referencedColumnName = "id")
     private SquadEntity squadEntity;
 
-    @Column
-    private String fkAddressId;
+    @Column(name = "fk_address_id", insertable = false, updatable = false)
+    private UUID fkAddressId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_address_id", referencedColumnName = "id")

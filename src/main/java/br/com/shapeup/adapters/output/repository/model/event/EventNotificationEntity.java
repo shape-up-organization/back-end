@@ -23,7 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class EventNotificationEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
     @Column
     private String title;
@@ -31,8 +31,8 @@ public class EventNotificationEntity {
     @Column
     private String message;
 
-    @Column
-    private String fkPublicEventId;
+    @Column(name = "fk_public_event_id", insertable = false, updatable = false)
+    private UUID fkPublicEventId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_public_event_id", referencedColumnName = "id")

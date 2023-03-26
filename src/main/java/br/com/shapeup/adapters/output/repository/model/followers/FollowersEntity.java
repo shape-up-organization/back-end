@@ -24,17 +24,17 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FollowersEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
-    @Column
-    private String fkUserId;
+    @Column(name = "fk_user_id", insertable = false, updatable = false)
+    private UUID fkUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @Column
-    private String fkFollowerId;
+    @Column(name = "fk_follower_id", insertable = false, updatable = false)
+    private UUID fkFollowerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_follower_id", referencedColumnName = "id")

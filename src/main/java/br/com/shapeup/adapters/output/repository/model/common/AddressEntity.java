@@ -20,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class AddressEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
     @Column
     private String street;

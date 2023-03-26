@@ -24,7 +24,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PersonalChallengesEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
     @Column
     private String title;
@@ -38,8 +38,8 @@ public class PersonalChallengesEntity {
     @Column(columnDefinition = "BIT", nullable = false)
     private boolean isDone;
 
-    @Column
-    private String fkUserId;
+    @Column(name = "fk_user_id", insertable = false, updatable = false)
+    private UUID fkUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")

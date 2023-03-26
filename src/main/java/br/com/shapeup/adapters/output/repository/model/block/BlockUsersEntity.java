@@ -23,19 +23,19 @@ import java.util.UUID;
 @NoArgsConstructor
 public class BlockUsersEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
-    @Column
-    private String fkUserId;
+    @Column(name = "fk_user_id", insertable = false, updatable = false)
+    private UUID fkUserId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @Column
-    private String fkBlockUserId;
+    @Column(name = "fk_block_user_id", insertable = false, updatable = false)
+    private UUID fkBlockUserId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_block_user_id", referencedColumnName = "id")
-    private UserEntity userFollowerEntity;
+    private UserEntity userBlock;
 }

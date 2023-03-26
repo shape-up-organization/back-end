@@ -23,7 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserNotificationEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
     @Column
     private String title;
@@ -34,8 +34,8 @@ public class UserNotificationEntity {
     @Column
     private String senderUserPhotoUrl;
 
-    @Column
-    private String fkUserId;
+    @Column(name = "fk_user_id", insertable = false, updatable = false)
+    private UUID fkUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")

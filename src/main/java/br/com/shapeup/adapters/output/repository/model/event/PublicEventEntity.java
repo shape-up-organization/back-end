@@ -26,7 +26,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PublicEventEntity {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
 
     @Column
     private String name;
@@ -43,15 +43,15 @@ public class PublicEventEntity {
     @Column
     private String tag;
 
-    @Column
-    private String fkUserId;
+    @Column(name = "fk_user_id", insertable = false, updatable = false)
+    private UUID fkUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @Column
-    private String fkAddressId;
+    @Column(name = "fk_address_id", insertable = false, updatable = false)
+    private UUID fkAddressId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_address_id", referencedColumnName = "id")
