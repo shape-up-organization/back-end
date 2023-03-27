@@ -1,7 +1,7 @@
 package br.com.shapeup.common.config;
 
 import br.com.shapeup.adapters.output.integration.user.UserPersistenceAdapter;
-import br.com.shapeup.core.usecase.UserPersistanceUsecase;
+import br.com.shapeup.core.usecase.user.UserPersistanceUsecase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

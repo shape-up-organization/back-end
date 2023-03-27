@@ -1,4 +1,4 @@
-package br.com.shapeup.core.ports.output;
+package br.com.shapeup.core.ports.output.user;
 
 import br.com.shapeup.core.domain.user.User;
 import java.net.URL;
@@ -19,5 +19,5 @@ public interface UserPersistanceOutput {
 
     void updateBiography(User user);
 
-    URL uploadPicture(Object file, String token);
+    User findUserByUsername(String username);
 }

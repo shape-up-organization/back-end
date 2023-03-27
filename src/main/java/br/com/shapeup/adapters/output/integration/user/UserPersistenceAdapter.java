@@ -9,13 +9,12 @@ import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
-import br.com.shapeup.core.ports.output.UserPersistanceOutput;
+import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.transaction.Transactional;
 import java.net.URL;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -104,6 +103,14 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     }
 
     @Override
+    public User findUserByUsername(String username) {
+        UserEntity userEntity = userRepositoryJpa.getByUsername(username).orElseThrow(() -> {
+            throw new UserNotFoundException(username);
+        });
+        return userMapper.userEntitytoUser(userEntity);
+    }
+
+    @Override
     @Transactional
     public void deleteByEmail(String email) {
         if (!userRepositoryJpa.existsByEmail(email)) {
@@ -113,20 +120,5 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         userRepositoryJpa.deleteByEmail(email);
     }
 
-    @Override
-    public URL uploadPicture(Object file, String tokenJwt) {
 
-        String userEmail = JwtService.extractEmailFromToken(tokenJwt);
-        UserEntity user = userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> {
-            throw new UserNotFoundException(userEmail);
-        });
-
-        MultipartFile multipartFile = (MultipartFile) file;
-        PictureProfile pictureProfile = new PictureProfile(multipartFile, user.getId().toString());
-        s3Service.uploadFile(pictureProfile);
-
-        var pictureUrl = s3Service.getPictureUrl(pictureProfile);
-
-        return pictureUrl;
-    }
 }
