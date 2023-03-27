@@ -101,7 +101,6 @@ public class AuthAdapter implements AuthGateway {
     public Boolean validateUserName(String username) {
         validateUserExistsByUserNameInDatabase(username);
         return true;
-
     }
 
     private void validateUserExistsByUserNameInDatabase(String username) {
