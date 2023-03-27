@@ -5,6 +5,7 @@ import br.com.shapeup.core.domain.validation.ValidationHandler;
 import br.com.shapeup.core.domain.validation.handler.ThrowsValidationHandler;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class User extends Entity<UserId> {
     private String name;
@@ -15,6 +16,8 @@ public class User extends Entity<UserId> {
     private Password password;
     private Birth birth;
     private String biography;
+
+    private Set<User> friends;
 
     public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
             Birth birth) {
@@ -122,6 +125,14 @@ public class User extends Entity<UserId> {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public Set<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Set<User> friends) {
+        this.friends = friends;
     }
 
     @Override
