@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
@@ -15,9 +16,9 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 @Entity
+@Table(name = "tb_role")
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 public class Role {
 
@@ -33,7 +34,6 @@ public class Role {
     private String role;
 
     @ManyToMany(mappedBy = "roles")
-    @ToString.Exclude
     private List<UserEntity> users;
 
     @Override
