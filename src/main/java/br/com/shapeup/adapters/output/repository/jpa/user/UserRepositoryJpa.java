@@ -1,9 +1,12 @@
 package br.com.shapeup.adapters.output.repository.jpa.user;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.UUID;
 
 @Repository

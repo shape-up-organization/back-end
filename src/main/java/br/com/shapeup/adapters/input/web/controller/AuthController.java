@@ -37,7 +37,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(jwtTokenResponse);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/validate-username/{username}")
     public ResponseEntity<Boolean> validateUserName(@Valid @PathVariable String username) {
         Boolean userNameValidationResponse = authGateway.validateUserName(username);
 

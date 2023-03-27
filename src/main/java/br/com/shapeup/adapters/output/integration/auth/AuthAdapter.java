@@ -47,7 +47,6 @@ public class AuthAdapter implements AuthGateway {
     @Override
     public void register(UserAuthRegisterRequest userAuthRegisterRequest) {
         validateUserExistByEmailInDatabase(userAuthRegisterRequest);
-        validateUserExistsByUserNameInDatabase(userAuthRegisterRequest.getUsername());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
 
@@ -100,9 +99,8 @@ public class AuthAdapter implements AuthGateway {
 
     @Override
     public Boolean validateUserName(String username) {
-
-        Boolean userExists = userRepositoryJpa.existsByUsername(username);
-        return userExists;
+        validateUserExistsByUserNameInDatabase(username);
+        return true;
 
     }
 
