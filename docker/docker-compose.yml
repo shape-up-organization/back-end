@@ -32,5 +32,18 @@ services:
       - pg-db-network
     restart: always
 
+  rebbitmq:
+    image: rabbitmq:3-management
+    container_name: rebbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./dados:/var/lib/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=dev
+      - RABBITMQ_DEFAULT_PASS=123
+
 networks:
   pg-db-network: {}

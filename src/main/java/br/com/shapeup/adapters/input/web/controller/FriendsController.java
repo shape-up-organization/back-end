@@ -21,16 +21,13 @@ public class FriendsController {
 
     private final FriendsInput friendsInput;
 
-    @PostMapping("/new")
+    @PostMapping("/add-friend/{newFriendUsername}")
     public ResponseEntity<Void> addNewFriend(
             @RequestHeader(value = "Authorization") String token,
-            @Valid @PathVariable String currentUsername,
             @Valid @PathVariable String newFriendUsername
     ) {
-        String jwtToken = token.replace("Bearer ", "");
-        String email = JwtService.extractEmailFromToken(token);
 
-        friendsInput.addNewFriend(currentUsername, newFriendUsername);
+        friendsInput.addNewFriend(newFriendUsername);
 
         return ResponseEntity.status(HttpStatus.OK.value()).build();
     }

@@ -1,9 +1,7 @@
 package br.com.shapeup.adapters.output.integration.user;
 
-import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceAdapter;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
-import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
@@ -12,12 +10,10 @@ import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.transaction.Transactional;
-import java.net.URL;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -27,7 +23,6 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     private final UserRepositoryJpa userRepositoryJpa;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final S3ServiceAdapter s3Service;
 
     @Override
     public void updatePassword(User user) {
@@ -103,14 +98,6 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     }
 
     @Override
-    public User findUserByUsername(String username) {
-        UserEntity userEntity = userRepositoryJpa.getByUsername(username).orElseThrow(() -> {
-            throw new UserNotFoundException(username);
-        });
-        return userMapper.userEntitytoUser(userEntity);
-    }
-
-    @Override
     @Transactional
     public void deleteByEmail(String email) {
         if (!userRepositoryJpa.existsByEmail(email)) {
@@ -119,6 +106,4 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
         userRepositoryJpa.deleteByEmail(email);
     }
-
-
 }

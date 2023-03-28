@@ -1,6 +1,5 @@
 package br.com.shapeup.adapters.output.integration.user.profile;
 
-import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceAdapter;
 import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceGateway;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
