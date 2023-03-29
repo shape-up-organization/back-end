@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.input.web.controller;
 
+import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.ports.input.user.FriendsInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.validation.Valid;
@@ -26,9 +27,9 @@ public class FriendsController {
             @RequestHeader(value = "Authorization") String token,
             @Valid @PathVariable String newFriendUsername
     ) {
+        String email = JwtService.extractEmailFromToken(token);
 
-        friendsInput.addNewFriend(newFriendUsername);
-
+        friendsInput.addNewFriend(newFriendUsername, email);
         return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 }

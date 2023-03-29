@@ -17,4 +17,5 @@ public interface UserPersistanceOutput {
     void updateBirth(User user);
 
     void updateBiography(User user);
+
 }

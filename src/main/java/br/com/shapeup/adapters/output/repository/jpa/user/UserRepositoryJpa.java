@@ -1,7 +1,6 @@
 package br.com.shapeup.adapters.output.repository.jpa.user;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import br.com.shapeup.core.domain.user.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -19,5 +18,6 @@ public interface UserRepositoryJpa extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findById(UUID uuid);
 
-    Optional<UserEntity> getByUsername(String username);
+    Optional<UserEntity> findByUsername(String username);
+
 }

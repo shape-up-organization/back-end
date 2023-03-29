@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config;
+package br.com.shapeup.common.config.bean;
 
 import br.com.shapeup.adapters.output.integration.user.profile.ProfilePictureAdapter;
 import br.com.shapeup.core.usecase.user.profile.ProfilePictureUsecase;

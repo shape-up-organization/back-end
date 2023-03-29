@@ -1,4 +1,4 @@
-package br.com.shapeup.common.config;
+package br.com.shapeup.common.config.bean;
 
 import br.com.shapeup.adapters.output.integration.user.UserPersistenceAdapter;
 import br.com.shapeup.core.usecase.user.UserPersistanceUsecase;
