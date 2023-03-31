@@ -26,18 +26,12 @@ public class SquadMembersEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @Column
+    @Column(length = 100)
     private String position;
-
-    @Column(name = "fk_squad_id", insertable = false, updatable = false)
-    private UUID fkSquadId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_squad_id", referencedColumnName = "id")
     private SquadEntity squadEntity;
-
-    @Column(name = "fk_user_id", insertable = false, updatable = false)
-    private UUID fkUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
@@ -48,11 +42,11 @@ public class SquadMembersEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SquadMembersEntity that = (SquadMembersEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(position, that.position) && Objects.equals(fkSquadId, that.fkSquadId) && Objects.equals(squadEntity, that.squadEntity) && Objects.equals(fkUserId, that.fkUserId) && Objects.equals(userEntity, that.userEntity);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, position, fkSquadId, squadEntity, fkUserId, userEntity);
+        return getClass().hashCode();
     }
 }

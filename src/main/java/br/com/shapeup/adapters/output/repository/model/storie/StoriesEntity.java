@@ -1,4 +1,4 @@
-package br.com.shapeup.adapters.output.repository.model.challenges;
+package br.com.shapeup.adapters.output.repository.model.storie;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import jakarta.persistence.Column;
@@ -17,29 +17,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_personal_challenges")
+@Table(name = "tb_stories")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonalChallengesEntity {
+public class StoriesEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
     @Column
-    private String title;
-
-    @Column
-    private String description;
-
-    @Column
-    private String tag;
-
-    @Column(columnDefinition = "BIT", nullable = false)
-    private boolean isDone;
-
-    @Column(name = "fk_user_id", insertable = false, updatable = false)
-    private UUID fkUserId;
+    private String pictureStorieUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
@@ -49,12 +37,12 @@ public class PersonalChallengesEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PersonalChallengesEntity that = (PersonalChallengesEntity) o;
-        return isDone == that.isDone && Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(tag, that.tag) && Objects.equals(fkUserId, that.fkUserId) && Objects.equals(userEntity, that.userEntity);
+        StoriesEntity that = (StoriesEntity) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, tag, isDone, fkUserId, userEntity);
+        return getClass().hashCode();
     }
 }

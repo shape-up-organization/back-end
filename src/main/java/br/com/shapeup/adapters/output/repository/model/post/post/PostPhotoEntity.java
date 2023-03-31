@@ -1,7 +1,5 @@
-package br.com.shapeup.adapters.output.repository.model.event;
+package br.com.shapeup.adapters.output.repository.model.post.post;
 
-import br.com.shapeup.adapters.output.repository.model.common.AddressEntity;
-import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,48 +12,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_public_event")
+@Table(name = "tb_photo_post")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PublicEventEntity {
+public class PostPhotoEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
     @Column
-    private String name;
-
-    @Column
-    private LocalDateTime date;
-
-    @Column(length = 1000)
-    private String description;
-
-    @Column
-    private int xp;
-
-    @Column
-    private String tag;
+    private String photoUrlPhoto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
-    private UserEntity userEntity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_address_id", referencedColumnName = "id")
-    private AddressEntity addressEntity;
+    @JoinColumn(name = "fk_post_id", referencedColumnName = "id")
+    private PostEntity postEntity;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PublicEventEntity that = (PublicEventEntity) o;
+        PostPhotoEntity that = (PostPhotoEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

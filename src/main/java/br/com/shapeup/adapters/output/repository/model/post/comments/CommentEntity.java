@@ -1,6 +1,6 @@
-package br.com.shapeup.adapters.output.repository.model.event;
+package br.com.shapeup.adapters.output.repository.model.post.comments;
 
-import br.com.shapeup.adapters.output.repository.model.common.AddressEntity;
+import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,48 +14,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_public_event")
+@Table(name = "tb_comment")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PublicEventEntity {
+public class CommentEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @Column
-    private String name;
-
-    @Column
-    private LocalDateTime date;
-
     @Column(length = 1000)
-    private String description;
+    private String commentMessage;
 
-    @Column
-    private int xp;
-
-    @Column
-    private String tag;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_post_id", referencedColumnName = "id")
+    private PostEntity postEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_address_id", referencedColumnName = "id")
-    private AddressEntity addressEntity;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PublicEventEntity that = (PublicEventEntity) o;
+        CommentEntity that = (CommentEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

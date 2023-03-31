@@ -32,25 +32,29 @@ public class UserNotificationEntity {
     private String message;
 
     @Column
-    private String senderUserPhotoUrl;
+    private String type;
 
-    @Column(name = "fk_user_id", insertable = false, updatable = false)
-    private UUID fkUserId;
+    @Column
+    private UUID idType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
     private UserEntity userEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_user_sender_id", referencedColumnName = "id")
+    private UserEntity userSenderEntity;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserNotificationEntity that = (UserNotificationEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(message, that.message) && Objects.equals(senderUserPhotoUrl, that.senderUserPhotoUrl) && Objects.equals(fkUserId, that.fkUserId) && Objects.equals(userEntity, that.userEntity);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, message, senderUserPhotoUrl, fkUserId, userEntity);
+        return getClass().hashCode();
     }
 }

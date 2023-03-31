@@ -25,22 +25,22 @@ public class AddressEntity {
     @Column
     private String street;
 
-    @Column
+    @Column(length = 100)
     private String number;
 
-    @Column
+    @Column(length = 100)
     private String neighborhood;
 
-    @Column
+    @Column(length = 100)
     private String city;
 
-    @Column
+    @Column(length = 100)
     private String state;
 
     @Column
     private String complement;
 
-    @Column
+    @Column(length = 100)
     private String county;
 
     @Override
@@ -48,11 +48,11 @@ public class AddressEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AddressEntity that = (AddressEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(street, that.street) && Objects.equals(number, that.number) && Objects.equals(neighborhood, that.neighborhood) && Objects.equals(city, that.city) && Objects.equals(state, that.state) && Objects.equals(complement, that.complement) && Objects.equals(county, that.county);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, street, number, neighborhood, city, state, complement, county);
+        return getClass().hashCode();
     }
 }

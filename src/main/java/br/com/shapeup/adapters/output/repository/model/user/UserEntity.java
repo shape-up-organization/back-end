@@ -61,13 +61,13 @@ public class UserEntity implements Serializable {
     private String biography;
 
     @Column
-    private String profilePhotoUrl;
+    private String pictureProfileUrl;
+
+    @Column
+    private int xp;
 
     @Column(columnDefinition = "BIT", nullable = false)
     private boolean isActive;
-
-    @Column(name = "fk_level_id", insertable = false, updatable = false)
-    private UUID fkLevelId;
 
     @OneToOne
     @JoinColumn(name = "fk_level_id", referencedColumnName = "id")

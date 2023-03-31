@@ -2,6 +2,8 @@ package br.com.shapeup.adapters.output.repository.model.level;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "tb_level")
@@ -20,7 +21,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class LevelEntity {
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private double min;
@@ -33,11 +35,11 @@ public class LevelEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LevelEntity that = (LevelEntity) o;
-        return Double.compare(that.min, min) == 0 && Double.compare(that.max, max) == 0 && Objects.equals(id, that.id);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, min, max);
+        return getClass().hashCode();
     }
 }

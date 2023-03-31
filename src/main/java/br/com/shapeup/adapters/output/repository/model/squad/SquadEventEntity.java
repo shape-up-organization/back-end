@@ -33,18 +33,15 @@ public class SquadEventEntity {
     @Column
     private LocalDateTime date;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 
-    @Column(name = "fk_squad_id", insertable = false, updatable = false)
-    private UUID fkSquadId;
+    @Column
+    private String tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_squad_id", referencedColumnName = "id")
     private SquadEntity squadEntity;
-
-    @Column(name = "fk_address_id", insertable = false, updatable = false)
-    private UUID fkAddressId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_address_id", referencedColumnName = "id")
@@ -55,11 +52,11 @@ public class SquadEventEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SquadEventEntity that = (SquadEventEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(date, that.date) && Objects.equals(description, that.description) && Objects.equals(fkSquadId, that.fkSquadId) && Objects.equals(squadEntity, that.squadEntity) && Objects.equals(fkAddressId, that.fkAddressId) && Objects.equals(addressEntity, that.addressEntity);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, description, fkSquadId, squadEntity, fkAddressId, addressEntity);
+        return getClass().hashCode();
     }
 }

@@ -28,11 +28,8 @@ public class EventNotificationEntity {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 1000)
     private String message;
-
-    @Column(name = "fk_public_event_id", insertable = false, updatable = false)
-    private UUID fkPublicEventId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_public_event_id", referencedColumnName = "id")
@@ -43,11 +40,11 @@ public class EventNotificationEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventNotificationEntity that = (EventNotificationEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(message, that.message) && Objects.equals(fkPublicEventId, that.fkPublicEventId) && Objects.equals(publicEventEntity, that.publicEventEntity);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, message, fkPublicEventId, publicEventEntity);
+        return getClass().hashCode();
     }
 }
