@@ -1,7 +1,6 @@
 server:
   port: 7000
 
-secret: 36763979244226452948404D635166546A576D5A7134743777217A25432A462D
 spring:
   mvc:
     pathmatch:
@@ -12,10 +11,19 @@ spring:
   datasource:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
-    url: ${POSGRES_URL}
+    url: ${POSTGRES_URL}
     driver-class-name: org.postgresql.Driver
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui

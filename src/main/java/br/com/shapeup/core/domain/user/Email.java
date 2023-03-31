@@ -1,7 +1,7 @@
 package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.ValueObject;
-import br.com.shapeup.core.domain.exceptions.user.valueobject.UserInvalidEmailException;
+import br.com.shapeup.common.exceptions.user.UserInvalidEmailException;
 
 public class Email extends ValueObject {
     private String value;
@@ -22,17 +22,16 @@ public class Email extends ValueObject {
         this.value = value;
     }
 
-    public void validateEmail() {
-        if(!value.contains("@")) {
-            throw new UserInvalidEmailException("Email precisa conter @");
+    public void validateEmail(){
+        if(!value.matches("^[A-Za-z0-9+_.-]+@(.+)$")){
+            throw new UserInvalidEmailException("email should contain @ and .");
         }
 
-        if(!value.contains(".")) {
-            throw new UserInvalidEmailException("Email precisa conter .");
+        if(value.length() > 255){
+            throw new UserInvalidEmailException("email should contain less than 255 characters");
         }
-
-        if(value.length() < 5) {
-            throw new UserInvalidEmailException("Email precisa conter mais de 5 caracteres");
+        if(value.length() < 5){
+            throw new UserInvalidEmailException("email should contain more than 5 characters");
         }
     }
 }
