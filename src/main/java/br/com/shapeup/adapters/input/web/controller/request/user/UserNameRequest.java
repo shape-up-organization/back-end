@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class UserNameRequest {
     private String email;
 
-    @NotNull(message = "Name is required")
-    @NotBlank(message = "Name is required")
+    @NotNull
+    @NotBlank
     private String name;
 }

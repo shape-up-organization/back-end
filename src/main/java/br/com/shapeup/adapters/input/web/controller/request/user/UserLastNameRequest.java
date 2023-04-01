@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class UserLastNameRequest {
     private String email;
 
-    @NotNull(message = "Last name is required")
-    @NotBlank(message = "Last name is required")
+    @NotNull
+    @NotBlank
     private String lastName;
 }
