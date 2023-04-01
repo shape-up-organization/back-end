@@ -81,7 +81,8 @@ public class AuthAdapter implements AuthGateway {
 
     private Map<String, Object> generateJwtToken(UserAuthLoginRequest userAuthLoginRequest, Authentication authentication) {
         if (authentication.isAuthenticated()) {
-            String tokenGenerated = jwtService.generateToken(userAuthLoginRequest.getEmail());
+            String tokenGenerated = jwtService.generateToken(userAuthLoginRequest.getEmail(),
+                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId());
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
         } else {

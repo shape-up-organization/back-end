@@ -56,4 +56,9 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     public URL uploadPicture(Object file, String token) {
         return userPersistanceOutput.uploadPicture(file, token);
     }
+
+    @Override
+    public User findUser(String email) {
+        return userPersistanceOutput.findUser(email);
+    }
 }

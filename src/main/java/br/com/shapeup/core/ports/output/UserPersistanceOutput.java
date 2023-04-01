@@ -20,4 +20,6 @@ public interface UserPersistanceOutput {
     void updateBiography(User user);
 
     URL uploadPicture(Object file, String token);
+
+    User findUser(String email);
 }
