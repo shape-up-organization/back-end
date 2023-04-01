@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public class UserBiographyRequest {
     private String email;
 
-    @NotNull(message = "Biography is required")
-    @NotBlank(message = "Biography is required")
+    @NotNull
+    @NotBlank
     private String biography;
 }

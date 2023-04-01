@@ -20,4 +20,6 @@ public interface UserPersistanceInput {
     void deleteByEmail(String email);
 
     URL uploadPicture(Object file, String token);
+
+    User findUser(String email);
 }

@@ -129,4 +129,15 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
         return pictureUrl;
     }
+
+    @Override
+    public User findUser(String email) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
+            throw new UserNotFoundException(email);
+        });
+
+        User user = userMapper.userEntitytoUser(userEntity);
+
+        return user;
+    }
 }

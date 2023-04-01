@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public class UserCellphoneRequest {
     private String email;
 
-    @NotNull(message = "Cellphone is required")
-    @NotBlank(message = "Cellphone is required")
+    @NotNull
+    @NotBlank
     private String cellphone;
 }
