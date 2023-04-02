@@ -4,7 +4,7 @@ import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthLoginRe
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.adapters.output.integration.auth.AuthGateway;
 import br.com.shapeup.core.domain.user.User;
-import br.com.shapeup.core.ports.input.UserPersistanceInput;
+import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class AuthController {
 
     private final AuthGateway authGateway;
 
-    private final UserPersistanceInput userPersistanceInput;
+    private final UserPersistanceOutput userPersistanceOutput;
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody UserAuthRegisterRequest userAuthRegisterRequest) {
@@ -36,12 +36,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> authenticateAndGetToken(@Valid @RequestBody UserAuthLoginRequest userAuthRegisterRequest) {
-        User user = userPersistanceInput.findUser(userAuthRegisterRequest.getEmail());
-        userAuthRegisterRequest.setId(user.getId().getValue());
-        userAuthRegisterRequest.setName(user.getName());
+    public ResponseEntity<Map<String, Object>> authenticateAndGetToken(@Valid @RequestBody UserAuthLoginRequest userAuthLoginRequest) {
+        User user = userPersistanceOutput.findUser(userAuthLoginRequest.getEmail());
+        userAuthLoginRequest.setId(user.getId().getValue());
+        userAuthLoginRequest.setName(user.getName());
 
-        Map<String, Object> jwtTokenResponse = authGateway.login(userAuthRegisterRequest);
+        Map<String, Object> jwtTokenResponse = authGateway.login(userAuthLoginRequest);
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(jwtTokenResponse);
     }

@@ -5,7 +5,6 @@ import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
@@ -15,7 +14,6 @@ import jakarta.transaction.Transactional;
 import java.net.URL;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,79 +27,6 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final S3ServiceAdapter s3Service;
-
-    @Override
-    public void updatePassword(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
-        });
-
-        String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
-        userEntity.setPassword(encodedPassword);
-
-        userRepositoryJpa.save(userEntity);
-    }
-
-    @Override
-    public void updateName(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
-        });
-
-        userEntity.setName(user.getName());
-
-        userRepositoryJpa.save(userEntity);
-    }
-
-    @Override
-    public void updateLastName(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
-        });
-
-        userEntity.setLastName(user.getLastName());
-
-        userRepositoryJpa.save(userEntity);
-    }
-
-    @Override
-    public void updateCellPhone(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
-        });
-
-        Boolean cellPhoneExists = userRepositoryJpa.existsByCellPhone(user.getCellPhone().getValue());
-
-        if (cellPhoneExists) {
-            throw new UserExistsByCellPhoneException(user.getCellPhone().getValue());
-        }
-
-        userEntity.setCellPhone(user.getCellPhone().getValue());
-
-        userRepositoryJpa.save(userEntity);
-    }
-
-    @Override
-    public void updateBirth(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
-        });
-
-        userEntity.setBirth(user.getBirth().getValue());
-
-        userRepositoryJpa.save(userEntity);
-    }
-
-    @Override
-    public void updateBiography(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
-        });
-
-        userEntity.setBiography(user.getBiography());
-
-        userRepositoryJpa.save(userEntity);
-    }
 
     @Override
     @Transactional
@@ -139,5 +64,37 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         User user = userMapper.userEntitytoUser(userEntity);
 
         return user;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
+            throw new UserExistsByEmailException();
+        });
+
+        if(user.getCellPhone() != null)
+            userEntity.setCellPhone(user.getCellPhone().getValue());
+
+        if(user.getBirth() != null)
+            userEntity.setBirth(user.getBirth().getValue());
+
+        if(user.getBiography() != null)
+            userEntity.setBiography(user.getBiography());
+
+        if (user.getName() != null)
+            userEntity.setName(user.getName());
+
+        if (user.getLastName() != null)
+            userEntity.setLastName(user.getLastName());
+
+        if(user.getUsername() != null)
+            userEntity.setUsername(user.getUsername());
+
+        if (user.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
+            userEntity.setPassword(encodedPassword);
+        }
+
+        userRepositoryJpa.save(userEntity);
     }
 }
