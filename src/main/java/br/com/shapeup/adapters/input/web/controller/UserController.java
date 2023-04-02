@@ -1,6 +1,5 @@
 package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.domain.user.Birth;
 import br.com.shapeup.core.domain.user.CellPhone;
