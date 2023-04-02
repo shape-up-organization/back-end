@@ -45,5 +45,5 @@ public class StoriesId extends Identifier {
     public int hashCode() {
         return Objects.hash(getValue());
     }
-}{
 }
+
