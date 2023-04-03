@@ -1,11 +1,11 @@
-package br.com.shapeup.adapters.output.integration.user.profile;
+package br.com.shapeup.adapters.output.integration.profile;
 
 import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceGateway;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
-import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
+import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
-import br.com.shapeup.core.ports.output.user.profile.ProfilePictureOutput;
+import br.com.shapeup.core.ports.output.profile.ProfilePictureOutput;
 import br.com.shapeup.security.service.JwtService;
 import java.net.URISyntaxException;
 import java.net.URL;

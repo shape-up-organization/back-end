@@ -1,4 +1,4 @@
-package br.com.shapeup.core.ports.input.user.profile;
+package br.com.shapeup.core.ports.input.profile;
 
 import java.net.URL;
 

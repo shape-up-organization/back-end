@@ -1,7 +1,6 @@
-package br.com.shapeup.adapters.input.web.controller.profile;
+package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
-import br.com.shapeup.core.ports.input.user.profile.ProfilePictureInput;
+import br.com.shapeup.core.ports.input.profile.ProfilePictureInput;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URL;
 import java.util.Map;

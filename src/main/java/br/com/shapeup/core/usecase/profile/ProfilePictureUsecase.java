@@ -1,7 +1,7 @@
-package br.com.shapeup.core.usecase.user.profile;
+package br.com.shapeup.core.usecase.profile;
 
-import br.com.shapeup.core.ports.input.user.profile.ProfilePictureInput;
-import br.com.shapeup.core.ports.output.user.profile.ProfilePictureOutput;
+import br.com.shapeup.core.ports.input.profile.ProfilePictureInput;
+import br.com.shapeup.core.ports.output.profile.ProfilePictureOutput;
 import java.net.URL;
 
 public class ProfilePictureUsecase implements ProfilePictureInput {
