@@ -3,6 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.env
+docker/.env
+docker/volumes/database/mongo-dev
 
 ### STS ###
 .apt_generated
