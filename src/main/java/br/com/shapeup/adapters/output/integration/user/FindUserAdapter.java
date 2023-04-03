@@ -19,18 +19,14 @@ public class FindUserAdapter implements FindUserOutput {
 
     @Override
     public User findByEmail(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
-            throw new UserNotFoundException(email);
-        });
+        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
 
         return userMapper.userEntitytoUser(userEntity);
     }
 
     @Override
     public User findByUsername(String username) {
-        UserEntity userEntity = userRepositoryJpa.findByUsername(username).orElseThrow(() -> {
-            throw new UserNotFoundException(username);
-        });
+        UserEntity userEntity = userRepositoryJpa.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
 
         return userMapper.userEntitytoUser(userEntity);
     }
