@@ -1,6 +1,6 @@
 package br.com.shapeup.adapters.output.integration.cloud.aws;
 
-import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
+import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -1,7 +1,7 @@
 package br.com.shapeup.adapters.output.integration.cloud.aws;
 
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
-import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
+import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -16,7 +16,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -73,8 +72,10 @@ public class S3ServiceAdapter implements S3ServiceGateway {
         var metadata = new ObjectMetadata();
         metadata.setContentType(contentType);
         metadata.addUserMetadata("USER_UUID", uuid);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, inputStream, metadata);
         validateFileSizeLimit(inputStream);
         metadata.setContentLength(inputStream.available());
+
         log.info("Uploading file to S3...");
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
         log.info("File uploaded successfully.");
