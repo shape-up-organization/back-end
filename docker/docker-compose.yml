@@ -43,6 +43,5 @@ services:
     networks:
       - pg-db-network
 
-
 networks:
   pg-db-network: {}

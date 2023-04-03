@@ -1,21 +1,15 @@
 package br.com.shapeup.core.ports.output.user;
 
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.domain.user.User;
 
 public interface UserPersistanceOutput {
 
-    void updatePassword(User user);
-
     void deleteByEmail(String email);
 
-    void updateName(User user);
+    URL uploadPicture(Object file, String token);
 
-    void updateLastName(User user);
+    User findUser(String email);
 
-    void updateCellPhone(User user);
-
-    void updateBirth(User user);
-
-    void updateBiography(User user);
-
+    void updateUser(String email, UserRequest userRequest);
 }

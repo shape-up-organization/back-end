@@ -33,23 +33,51 @@ public class User extends Entity<UserId> {
         this.biography = "";
     }
 
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-            Password password, Birth birth, UUID anId) {
+    public static User newUser(
+            String name,
+            String lastName,
+            String username,
+            Email email,
+            CellPhone cellPhone,
+            Password password,
+            Birth birth,
+            UUID anId
+    ) {
         var id = UserId.from(anId);
-        return new User(name, lastName, username, email, cellPhone, password, birth, anId);
+        return new User(name,
+                lastName,
+                username,
+                email,
+                cellPhone,
+                password,
+                birth,
+                anId
+        );
+    }
+
+    public static User newUser(
+            String name,
+            String lastName,
+            String username,
+            Email email,
+            CellPhone cellPhone,
+            Password password,
+            Birth birth,
+            String biography
+    ) {
+        return new User(name,
+                lastName,
+                username,
+                email, cellPhone,
+                password,
+                birth,
+                biography
+        );
     }
 
     @Override
     public void validate(final ValidationHandler handler) {
         new UserValidator(handler, this).validate();
-    }
-
-    public void validateValueObjects() {
-        validate(new ThrowsValidationHandler());
-        email.validateEmail();
-        cellPhone.validateCellPhone();
-        password.validatePassword();
-        birth.validateBirth();
     }
 
     public void validateName() {
