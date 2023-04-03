@@ -6,9 +6,10 @@ import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import br.com.shapeup.security.service.JwtService;
+import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.security.service.JwtService;
 import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -43,10 +44,11 @@ public class AuthAdapter implements AuthGateway {
     @Override
     public void register(UserAuthRegisterRequest userAuthRegisterRequest) {
         validateUserExistByEmailInDatabase(userAuthRegisterRequest);
+        validateCellPhoneAlreadyExistsInDatabase(userAuthRegisterRequest.getCellPhone());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
 
-        log.info("Starting process to save user on database: {}", userEntity.getId());
+        log.info("Starting process to save user on database: {}", userEntity.getUsername());
         userRepositoryJpa.save(userEntity);
     }
 
@@ -63,6 +65,14 @@ public class AuthAdapter implements AuthGateway {
 
         if (userExists) {
             throw new UserExistsByEmailException();
+        }
+    }
+
+    private void validateCellPhoneAlreadyExistsInDatabase(String cellphone) {
+        Boolean cellphoneAlreadyExistsInDatabase = userRepositoryJpa.countAllByCellPhone(cellphone);
+
+        if (cellphoneAlreadyExistsInDatabase) {
+            throw new CellPhoneAlreadyExistsException();
         }
     }
 

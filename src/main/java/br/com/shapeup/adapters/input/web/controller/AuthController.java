@@ -32,6 +32,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> authenticateAndGetToken(@Valid @RequestBody UserAuthLoginRequest userAuthRegisterRequest) {
         Map<String, Object> jwtTokenResponse = authGateway.login(userAuthRegisterRequest);
+
         return ResponseEntity.status(HttpStatus.OK.value()).body(jwtTokenResponse);
     }
 }
