@@ -5,33 +5,41 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserAuthRegisterRequest {
 
-    @NotNull(message = "Name is required")
-    @NotBlank(message = "Name is required")
+    @NotNull
+    @NotBlank
     String name;
-    @NotNull(message = "Last name is required")
-    @NotBlank(message = "Last name is required")
+    @NotNull
+    @NotBlank
     String lastName;
-    @NotNull(message = "Username is required")
-    @NotBlank(message = "Username is required")
+    @NotNull
+    @NotBlank
     String username;
-    @NotNull(message = "Email is required")
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+    @NotNull
+    @NotBlank
+    @Email
     String email;
-    @NotNull(message = "Password is required")
-    @NotBlank(message = "Password is required")
+    @NotNull
+    @NotBlank
     String password;
-    @NotNull(message = "Birth is required")
-    @NotBlank(message = "Birth is required")
+    @NotNull
+    @NotBlank
+//    @Past
     String birth;
-    @NotNull(message = "Cellphone is required")
-    @NotBlank(message = "Cellphone is required")
+    @NotNull
+    @NotBlank
+    @Size(min = 10, max = 11)
+    @Pattern(
+            regexp = "^[1-9]{2}9?[6-9][0-9]{3}[0-9]{4}$",
+            message = "Invalid cell phone number"
+    )
     String cellPhone;
 }
 

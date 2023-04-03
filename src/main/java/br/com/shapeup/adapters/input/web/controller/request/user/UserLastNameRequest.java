@@ -2,9 +2,7 @@ package br.com.shapeup.adapters.input.web.controller.request.user;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +13,8 @@ import lombok.NoArgsConstructor;
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 
 public class UserLastNameRequest {
+    @NotBlank
     private String email;
-
-    @NotNull(message = "Last name is required")
-    @NotBlank(message = "Last name is required")
+    @NotBlank
     private String lastName;
 }
