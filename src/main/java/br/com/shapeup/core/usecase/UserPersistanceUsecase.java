@@ -13,41 +13,6 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public void updatePassword(User user) {
-        user.getPassword().validatePassword();
-        userPersistanceOutput.updatePassword(user);
-    }
-
-    @Override
-    public void updateName(User user) {
-        user.validateName();
-        userPersistanceOutput.updateName(user);
-    }
-
-    @Override
-    public void updateLastName(User user) {
-        user.validateLastName();
-        userPersistanceOutput.updateLastName(user);
-    }
-
-    @Override
-    public void updateCellPhone(User user) {
-        user.getCellPhone().validateCellPhone();
-        userPersistanceOutput.updateCellPhone(user);
-    }
-
-    @Override
-    public void updateBirth(User user) {
-        user.getBirth().validateBirth();
-        userPersistanceOutput.updateBirth(user);
-    }
-
-    @Override
-    public void updateBiography(User user) {
-        userPersistanceOutput.updateBiography(user);
-    }
-
-    @Override
     public void deleteByEmail(String email) {
         userPersistanceOutput.deleteByEmail(email);
     }
@@ -58,7 +23,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public User findUser(String email) {
-        return userPersistanceOutput.findUser(email);
+    public void updateUser(User user) {
+        userPersistanceOutput.updateUser(user);
     }
 }

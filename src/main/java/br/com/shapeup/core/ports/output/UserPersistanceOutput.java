@@ -5,21 +5,11 @@ import java.net.URL;
 
 public interface UserPersistanceOutput {
 
-    void updatePassword(User user);
-
     void deleteByEmail(String email);
-
-    void updateName(User user);
-
-    void updateLastName(User user);
-
-    void updateCellPhone(User user);
-
-    void updateBirth(User user);
-
-    void updateBiography(User user);
 
     URL uploadPicture(Object file, String token);
 
     User findUser(String email);
+
+    void updateUser(User user);
 }

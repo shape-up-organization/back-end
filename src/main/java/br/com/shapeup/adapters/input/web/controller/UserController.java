@@ -1,17 +1,16 @@
 package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
+import br.com.shapeup.core.domain.user.Birth;
+import br.com.shapeup.core.domain.user.CellPhone;
+import br.com.shapeup.core.domain.user.Password;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
+import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,85 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserPersistanceInput userPersistanceInput;
 
-    private final UserHttpMapper userHttpMapper;
-
-    @PutMapping("/name")
-    public ResponseEntity<Void> updateName(@RequestHeader(value = "Authorization") String token,
-                                           @Valid @RequestBody UserNameRequest userNameRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userNameRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userNameRequest);
-        userPersistanceInput.updateName(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/last-name")
-    public ResponseEntity<Void> updateLastName(@RequestHeader(value = "Authorization") String token,
-                                               @Valid @RequestBody UserLastNameRequest userLastNameRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userLastNameRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userLastNameRequest);
-        userPersistanceInput.updateLastName(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/cell-phone")
-    public ResponseEntity<Void> updateCellPhone(@RequestHeader(value = "Authorization") String token,
-                                                @Valid @RequestBody UserCellphoneRequest userCellphoneRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userCellphoneRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userCellphoneRequest);
-        userPersistanceInput.updateCellPhone(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/biography")
-    public ResponseEntity<Void> updateBiography(@RequestHeader(value = "Authorization") String token,
-                                                @Valid @RequestBody UserBiographyRequest userBiographyRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userBiographyRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userBiographyRequest);
-        userPersistanceInput.updateBiography(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/birth")
-    public ResponseEntity<Void> updateBirth(@RequestHeader(value = "Authorization") String token,
-                                            @Valid @RequestBody UserBirthRequest userBirthRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userBirthRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userBirthRequest);
-        userPersistanceInput.updateBirth(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(@RequestHeader(value = "Authorization") String token,
-                                               @Valid @RequestBody UserPasswordRequest userPasswordRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userPasswordRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userPasswordRequest);
-        userPersistanceInput.updatePassword(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
+    private final UserPersistanceOutput userPersistanceOutput;
 
     @DeleteMapping()
     public ResponseEntity<Void> deleteByEmail(@RequestHeader(value = "Authorization")
@@ -132,5 +53,53 @@ public class UserController {
         var urlUserPictureProfileResponse = Map.of("uploadPictureProfile-picture-profile", uploadPictureProfile);
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(urlUserPictureProfileResponse);
+    }
+
+    @PutMapping()
+    public ResponseEntity<Void> updateUserField(@RequestHeader(value = "Authorization") String token,
+                                                @RequestBody UserRequest userRequest) {
+        String jwtToken = token.replace("Bearer ", "");
+        var email = JwtService.extractEmailFromToken(jwtToken);
+
+        User user = userPersistanceOutput.findUser(email);
+
+        updateField(user, userRequest);
+        userPersistanceInput.updateUser(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    private void updateField(User user, UserRequest userRequest) {
+
+        if (userRequest.getCellPhone() != null) {
+            CellPhone cellPhone = CellPhone.create(userRequest.getCellPhone());
+            user.setCellPhone(cellPhone);
+        }
+
+        if (userRequest.getBirth() != null){
+            try {
+                Birth birth = Birth.create(userRequest.getBirth());
+                user.setBirth(birth);
+            } catch (ParseException e) {
+                //faço dps
+            }
+        }
+
+        if(userRequest.getBiography() != null)
+            user.setBiography(userRequest.getBiography());
+
+        if (userRequest.getName() != null)
+            user.setName(userRequest.getName());
+
+        if (userRequest.getLastName() != null)
+            user.setLastName(userRequest.getLastName());
+
+        if(userRequest.getUsername() != null)
+            user.setUsername(userRequest.getUsername());
+
+        if (userRequest.getPassword() != null) {
+            Password password = Password.create(userRequest.getPassword());
+            user.setPassword(password);
+        }
     }
 }
