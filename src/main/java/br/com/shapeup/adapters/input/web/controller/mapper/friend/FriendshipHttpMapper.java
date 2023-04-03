@@ -16,14 +16,8 @@ import org.springframework.stereotype.Component;
 public interface FriendshipHttpMapper {
     FriendshipHttpMapper INSTANCE = Mappers.getMapper(FriendshipHttpMapper.class);
 
-    @Mapping(source = "id", target = "id", qualifiedByName = "friendshipRequestIdToStringId")
     RequestFriendshipResponse friendRequestToRequestFriendshipResponse(FriendshipRequest friendshipRequest);
 
-    @Mapping(source = "id", target = "id", qualifiedByName = "friendshipRequestIdToStringId")
     AcceptedFriendshipResponse friendRequestToAcceptedFriendshipResponse(FriendshipRequest friendshipRequest);
 
-    @Named("friendshipRequestIdToStringId")
-    static String friendshipRequestIdToStringId(FriendshipRequestId id) {
-        return id.getValue();
-    }
 }

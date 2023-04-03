@@ -92,10 +92,6 @@ public class User extends Entity<UserId> {
         return email;
     }
 
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
     public CellPhone getCellPhone() {
         return cellPhone;
     }

@@ -19,7 +19,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {UserHttpMapper.class})
+@Mapper(componentModel = "cdi")
 @Component
 public interface UserHttpMapper {
     UserHttpMapper INSTANCE = Mappers.getMapper(UserHttpMapper.class);
@@ -50,11 +50,11 @@ public interface UserHttpMapper {
 
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "cellPhone", ignore = true)
-    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
+    @Mapping(target = "email", source = "email", qualifiedByName = "stringToEmail")
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "birth", ignore = true)
     @Mapping(target = "biography", ignore = true)
-    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(target = "lastName", source = "lastName")
     User toUser(UserLastNameRequest userLastNameRequest);
 
     @Mapping(target = "name", ignore = true)
