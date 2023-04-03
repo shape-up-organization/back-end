@@ -140,23 +140,23 @@ public class CustomExceptionHandler {
         );
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<Object> handleInternalServerError(
-//            Exception exception,
-//            HttpServletRequest request,
-//            HttpServletResponse response
-//    ) {
-//        var apiErrorMessage = new ApiErrorMessage(
-//                HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-//                HttpStatus.INTERNAL_SERVER_ERROR,
-//                request.getRequestURI(),
-//                exception.getMessage()
-//        );
-//
-//        return new ResponseEntity<>(
-//                apiErrorMessage,
-//                new HttpHeaders(),
-//                apiErrorMessage.getHttpStatus()
-//        );
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleInternalServerError(
+            Exception exception,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        var apiErrorMessage = new ApiErrorMessage(
+                HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                request.getRequestURI(),
+                exception.getMessage()
+        );
+
+        return new ResponseEntity<>(
+                apiErrorMessage,
+                new HttpHeaders(),
+                apiErrorMessage.getHttpStatus()
+        );
+    }
 }
