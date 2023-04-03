@@ -1,6 +1,6 @@
 package br.com.shapeup.core.usecase;
 
-import br.com.shapeup.core.domain.user.User;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import java.net.URL;
@@ -23,7 +23,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public void updateUser(User user) {
-        userPersistanceOutput.updateUser(user);
+    public void updateUser(String email, UserRequest userRequest) {
+        userPersistanceOutput.updateUser(email, userRequest);
     }
 }
