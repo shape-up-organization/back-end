@@ -1,14 +1,12 @@
 package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
-import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
-import br.com.shapeup.security.service.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final UserRepositoryJpa userRepositoryJpa;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override

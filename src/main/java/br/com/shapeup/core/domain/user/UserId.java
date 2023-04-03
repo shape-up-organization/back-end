@@ -4,7 +4,7 @@ import br.com.shapeup.common.domain.Identifier;
 import java.util.Objects;
 import java.util.UUID;
 
-public class UserId extends Identifier {
+public class UserId extends Identifier<String> {
     private final String value;
 
     private UserId(String value) {

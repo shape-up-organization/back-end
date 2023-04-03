@@ -2,7 +2,6 @@ package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.ValueObject;
 import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
-
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

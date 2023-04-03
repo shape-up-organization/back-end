@@ -3,9 +3,10 @@ package br.com.shapeup.core.domain.user;
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
 import br.com.shapeup.core.domain.validation.handler.ThrowsValidationHandler;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.UUID;
 
 public class User extends Entity<UserId> {
     private String name;
@@ -17,11 +18,11 @@ public class User extends Entity<UserId> {
     private Birth birth;
     private String biography;
 
-    private Set<User> friends;
+    private List<User> friends = new ArrayList<>();
 
     public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-            Birth birth) {
-        super(UserId.unique());
+            Birth birth, UUID id) {
+        super(UserId.from(id));
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -33,9 +34,9 @@ public class User extends Entity<UserId> {
     }
 
     public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-            Password password, Birth birth) {
-        var id = UserId.unique();
-        return new User(name, lastName, username, email, cellPhone, password, birth);
+            Password password, Birth birth, UUID anId) {
+        var id = UserId.from(anId);
+        return new User(name, lastName, username, email, cellPhone, password, birth, anId);
     }
 
     @Override
@@ -127,11 +128,11 @@ public class User extends Entity<UserId> {
         this.biography = biography;
     }
 
-    public Set<User> getFriends() {
+    public List<User> getFriends() {
         return friends;
     }
 
-    public void setFriends(Set<User> friends) {
+    public void setFriends(List<User> friends) {
         this.friends = friends;
     }
 

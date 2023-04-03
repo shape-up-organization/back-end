@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.Qualifier;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", source = "id")
     @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
     @Mapping(source = "cellPhone", target = "cellPhone", qualifiedByName = "stringToCellphone")
     @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
@@ -42,7 +43,7 @@ public interface UserMapper {
     UserEntity userRegisterRequestToUserEntity(UserAuthRegisterRequest userAuthRegisterRequest);
 
     @Named("uuidToUserId")
-    public static UserId uuidToUserId(UUID uuid) {
+    default UserId uuidToUserId(UUID uuid) {
         return UserId.from(uuid);
     }
 

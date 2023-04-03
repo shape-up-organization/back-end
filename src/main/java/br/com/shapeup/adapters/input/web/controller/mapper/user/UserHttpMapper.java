@@ -1,12 +1,12 @@
 package br.com.shapeup.adapters.input.web.controller.mapper.user;
 
+import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
-import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.core.domain.user.Birth;
 import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
@@ -19,7 +19,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = { UserHttpMapper.class })
+@Mapper(componentModel = "spring", uses = {UserHttpMapper.class})
 @Component
 public interface UserHttpMapper {
     UserHttpMapper INSTANCE = Mappers.getMapper(UserHttpMapper.class);
@@ -85,32 +85,32 @@ public interface UserHttpMapper {
     User toUser(UserBiographyRequest userBiographyRequest);
 
     @Named("stringToEmail")
-    public static Email stringToEmail(String email) {
+    static Email stringToEmail(String email) {
         return Email.create(email);
     }
 
     @Named("emailToString")
-    public static String emailToString(Email email) {
+    static String emailToString(Email email) {
         return email.getValue();
     }
 
     @Named("stringToCellPhone")
-    public static CellPhone stringToCellPhone(String cellPhone) {
+    static CellPhone stringToCellPhone(String cellPhone) {
         return CellPhone.create(cellPhone);
     }
 
     @Named("stringToPassword")
-    public static Password stringToPassword(String password) {
+    static Password stringToPassword(String password) {
         return Password.create(password);
     }
 
     @Named("passwordToString")
-    public static String stringToPassword(Password password) {
+    static String stringToPassword(Password password) {
         return password.getValue();
     }
 
     @Named("stringToBirth")
-    public static Birth stringToBirth(String birth) throws ParseException {
+    static Birth stringToBirth(String birth) throws ParseException {
         return Birth.create(birth);
     }
 }
