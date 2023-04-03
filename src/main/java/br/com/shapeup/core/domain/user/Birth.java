@@ -6,6 +6,7 @@ import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Birth extends ValueObject {
     private LocalDate value;
@@ -31,7 +32,6 @@ public class Birth extends ValueObject {
         }
     }
 
-
     public static Birth create(LocalDate date) {
         return new Birth(date);
     }
@@ -44,17 +44,22 @@ public class Birth extends ValueObject {
         this.value = value;
     }
 
-    public void validateBirth() {
-        if (value.isAfter(LocalDate.now())) {
-            throw new UserInvalidBirthException(value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    public static void validateBirth(LocalDate birth) {
+        if (birth.isAfter(LocalDate.now())) {
+            throw new UserInvalidBirthException(birth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
 
-        if (value.isBefore(LocalDate.now().minusYears(120))) {
-            throw new UserInvalidBirthException(value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        if (birth.isBefore(LocalDate.now().minusYears(120))) {
+            throw new UserInvalidBirthException(birth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
 
-        if (value.isAfter(LocalDate.now().minusYears(18))) {
+        if (birth.isAfter(LocalDate.now().minusYears(18))) {
             throw new UserInvalidBirthException();
         }
+    }
+
+    public static LocalDate convertBirth(String birth) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("pt", "BR"));
+        return LocalDate.parse(birth, formatter);
     }
 }

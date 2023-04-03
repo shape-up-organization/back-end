@@ -1,16 +1,11 @@
 package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
-import br.com.shapeup.core.domain.user.Birth;
-import br.com.shapeup.core.domain.user.CellPhone;
-import br.com.shapeup.core.domain.user.Password;
-import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.UserPersistanceInput;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -61,45 +56,8 @@ public class UserController {
         String jwtToken = token.replace("Bearer ", "");
         var email = JwtService.extractEmailFromToken(jwtToken);
 
-        User user = userPersistanceOutput.findUser(email);
-
-        updateField(user, userRequest);
-        userPersistanceInput.updateUser(user);
+        userPersistanceInput.updateUser(email, userRequest);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    private void updateField(User user, UserRequest userRequest) {
-
-        if (userRequest.getCellPhone() != null) {
-            CellPhone cellPhone = CellPhone.create(userRequest.getCellPhone());
-            user.setCellPhone(cellPhone);
-        }
-
-        if (userRequest.getBirth() != null){
-            try {
-                Birth birth = Birth.create(userRequest.getBirth());
-                user.setBirth(birth);
-            } catch (ParseException e) {
-                //faço dps
-            }
-        }
-
-        if(userRequest.getBiography() != null)
-            user.setBiography(userRequest.getBiography());
-
-        if (userRequest.getName() != null)
-            user.setName(userRequest.getName());
-
-        if (userRequest.getLastName() != null)
-            user.setLastName(userRequest.getLastName());
-
-        if(userRequest.getUsername() != null)
-            user.setUsername(userRequest.getUsername());
-
-        if (userRequest.getPassword() != null) {
-            Password password = Password.create(userRequest.getPassword());
-            user.setPassword(password);
-        }
     }
 }

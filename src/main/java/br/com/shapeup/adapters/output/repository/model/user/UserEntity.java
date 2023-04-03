@@ -58,6 +58,9 @@ public class UserEntity implements Serializable {
     @Column
     private String biography;
 
+    @Column
+    private boolean isActive;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "tb_user_role",

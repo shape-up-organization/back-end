@@ -1,6 +1,6 @@
 package br.com.shapeup.core.ports.input;
 
-import br.com.shapeup.core.domain.user.User;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import java.net.URL;
 
 public interface UserPersistanceInput {
@@ -9,5 +9,5 @@ public interface UserPersistanceInput {
 
     URL uploadPicture(Object file, String token);
 
-    void updateUser(User user);
+    void updateUser(String email, UserRequest userRequest);
 }

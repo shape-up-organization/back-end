@@ -22,15 +22,15 @@ public class CellPhone extends ValueObject {
         this.value = value;
     }
 
-    public void validateCellPhone(){
-        if(value.matches(".*[a-zA-Z].*")){
+    public static void validateCellPhone(String cellPhone){
+        if(cellPhone.matches(".*[a-zA-Z].*")){
             throw new UserInvalidCellPhoneException("cellphone should contain only numbers");
         }
 
-        if(value.length() > 11){
+        if(cellPhone.length() > 11){
             throw new UserInvalidCellPhoneException("cellphone should contain less than 11 characters");
         }
-        if(value.length() < 9){
+        if(cellPhone.length() < 9){
             throw new UserInvalidCellPhoneException("cellphone should contain more than 9 characters");
         }
     }

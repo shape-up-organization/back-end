@@ -1,5 +1,6 @@
 package br.com.shapeup.core.ports.output;
 
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.domain.user.User;
 import java.net.URL;
 
@@ -11,5 +12,5 @@ public interface UserPersistanceOutput {
 
     User findUser(String email);
 
-    void updateUser(User user);
+    void updateUser(String email, UserRequest userRequest);
 }

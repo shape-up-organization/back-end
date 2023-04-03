@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.output.integration.user;
 
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceAdapter;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
@@ -7,6 +8,9 @@ import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.core.domain.user.Birth;
+import br.com.shapeup.core.domain.user.CellPhone;
+import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.UserPersistanceOutput;
 import br.com.shapeup.security.service.JwtService;
@@ -31,11 +35,13 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     @Transactional
     public void deleteByEmail(String email) {
-        if (!userRepositoryJpa.existsByEmail(email)) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
             throw new UserNotFoundException(email);
-        }
+        });
 
-        userRepositoryJpa.deleteByEmail(email);
+        userEntity.setActive(false);
+
+        userRepositoryJpa.save(userEntity);
     }
 
     @Override
@@ -67,31 +73,43 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     }
 
     @Override
-    public void updateUser(User user) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(user.getEmail().getValue()).orElseThrow(() -> {
+    public void updateUser(String email, UserRequest userRequest) {
+        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
             throw new UserExistsByEmailException();
         });
 
-        if(user.getCellPhone() != null)
-            userEntity.setCellPhone(user.getCellPhone().getValue());
+        if(userRequest.getCellPhone() != null) {
+            CellPhone.validateCellPhone(userRequest.getCellPhone());
+            userEntity.setCellPhone(userRequest.getCellPhone());
+        }
 
-        if(user.getBirth() != null)
-            userEntity.setBirth(user.getBirth().getValue());
+        if(userRequest.getBirth() != null) {
+            var birth = Birth.convertBirth(userRequest.getBirth());
 
-        if(user.getBiography() != null)
-            userEntity.setBiography(user.getBiography());
+            Birth.validateBirth(birth);
+            userEntity.setBirth(birth);
+        }
 
-        if (user.getName() != null)
-            userEntity.setName(user.getName());
+        if(userRequest.getBiography() != null) {
+            userEntity.setBiography(userRequest.getBiography());
+        }
 
-        if (user.getLastName() != null)
-            userEntity.setLastName(user.getLastName());
+        if(userRequest.getName() != null) {
+            userEntity.setName(userRequest.getName());
+        }
 
-        if(user.getUsername() != null)
-            userEntity.setUsername(user.getUsername());
+        if(userRequest.getLastName() != null) {
+            userEntity.setLastName(userRequest.getLastName());
+        }
 
-        if (user.getPassword() != null) {
-            String encodedPassword = passwordEncoder.encode(user.getPassword().getValue());
+        if(userRequest.getUsername() != null) {
+            userEntity.setUsername(userRequest.getUsername());
+        }
+
+        if(userRequest.getPassword() != null) {
+            Password.validatePassword(userRequest.getPassword());
+
+            String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
             userEntity.setPassword(encodedPassword);
         }
 
