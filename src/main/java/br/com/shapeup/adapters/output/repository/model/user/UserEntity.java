@@ -58,8 +58,8 @@ public class UserEntity implements Serializable {
     @Column
     private String biography;
 
-    @Column
-    private boolean isActive;
+    @Column(columnDefinition = "boolean default true")
+    private boolean isActive = true;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
