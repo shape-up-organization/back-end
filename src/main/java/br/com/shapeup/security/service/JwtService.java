@@ -28,9 +28,13 @@ public class JwtService {
                 .getBody();
     }
 
-    private String createToken(Map<String, Object> claims, String userName) {
+    private String createToken(Map<String, Object> claims, String userName, String name, String id) {
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(id)
+                .claim("id", id)
+                .setSubject(name)
+                .claim("name", name)
                 .setSubject(userName)
                 .claim("email", userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -40,9 +44,9 @@ public class JwtService {
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(String userName, String name, String id) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName);
+        return createToken(claims, userName, name, id);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

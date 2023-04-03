@@ -66,12 +66,12 @@ public class UserEntity implements Serializable {
     @Column
     private int xp;
 
-    @Column(columnDefinition = "BIT", nullable = false)
-    private boolean isActive;
-
     @OneToOne
     @JoinColumn(name = "fk_level_id", referencedColumnName = "id")
     private LevelEntity levelEntity;
+
+    @Column(columnDefinition = "boolean default true")
+    private boolean isActive = true;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(

@@ -5,33 +5,41 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserAuthRegisterRequest {
 
-    @NotNull(message = "Name is required")
-    @NotBlank(message = "Name is required")
+    @NotNull
+    @NotBlank
+    @Size(min = 2, max = 45)
     String name;
-    @NotNull(message = "Last name is required")
-    @NotBlank(message = "Last name is required")
+    @NotNull
+    @NotBlank
+    @Size(min = 2, max = 45)
     String lastName;
-    @NotNull(message = "Username is required")
-    @NotBlank(message = "Username is required")
+    @NotNull
+    @NotBlank
+    @Size(min = 2, max = 45)
+    @Pattern( regexp = "^[^\\s@]+$", message = "Username cannot contain spaces or @" )
     String username;
-    @NotNull(message = "Email is required")
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+    @NotNull
+    @NotBlank
+    @Email
+    @Size(min = 2, max = 45)
     String email;
-    @NotNull(message = "Password is required")
-    @NotBlank(message = "Password is required")
+    @NotNull
+    @NotBlank
+    @Size(min = 2, max = 45)
     String password;
-    @NotNull(message = "Birth is required")
-    @NotBlank(message = "Birth is required")
+    @NotNull
+    @NotBlank
     String birth;
-    @NotNull(message = "Cellphone is required")
-    @NotBlank(message = "Cellphone is required")
+    @NotNull
+    @NotBlank
     String cellPhone;
 }
 

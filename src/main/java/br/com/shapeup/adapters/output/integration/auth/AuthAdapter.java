@@ -9,8 +9,12 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.security.service.JwtService;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+
 import java.util.Map;
 import java.util.Set;
+
+import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
+import com.amazonaws.services.simpleworkflow.model.RespondActivityTaskCanceledRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,7 +81,8 @@ public class AuthAdapter implements AuthGateway {
 
     private Map<String, Object> generateJwtToken(UserAuthLoginRequest userAuthLoginRequest, Authentication authentication) {
         if (authentication.isAuthenticated()) {
-            String tokenGenerated = jwtService.generateToken(userAuthLoginRequest.getEmail());
+            String tokenGenerated = jwtService.generateToken(userAuthLoginRequest.getEmail(),
+                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId());
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
         } else {
@@ -91,5 +96,18 @@ public class AuthAdapter implements AuthGateway {
                 userAuthLoginRequest.getPassword())
         );
         return authentication;
+    }
+
+    @Override
+    public Boolean validateUserName(String username) {
+        validateUserExistsByUserNameInDatabase(username);
+        return true;
+    }
+
+    private void validateUserExistsByUserNameInDatabase(String username) {
+        Boolean userNameIsAlreadyInUse = userRepositoryJpa.existsByUsername(username);
+        if (userNameIsAlreadyInUse) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
     }
 }
