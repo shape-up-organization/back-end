@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class UserCellphoneRequest {
     private String email;
 
-    @NotNull(message = "Cellphone is required")
-    @NotBlank(message = "Cellphone is required")
+    @NotBlank
     private String cellphone;
 }

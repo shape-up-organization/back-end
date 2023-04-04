@@ -22,24 +22,24 @@ public class Password extends ValueObject {
         this.value = value;
     }
 
-    public void validatePassword() {
-        if (value.length() < 8) {
+    public static void validatePassword(String password) {
+        if (password.length() < 8) {
             throw new UserInvalidPasswordException("password should contain more than 8 characters");
         }
 
-        if (!value.matches(".*[A-Z].*")) {
+        if (!password.matches(".*[A-Z].*")) {
             throw new UserInvalidPasswordException("password should contain at least one uppercase letter");
         }
 
-        if(!value.matches(".*[a-z].*")) {
+        if(!password.matches(".*[a-z].*")) {
             throw new UserInvalidPasswordException("password should contain at least one lowercase letter");
         }
 
-        if (!value.matches(".*[0-9].*")) {
+        if (!password.matches(".*[0-9].*")) {
             throw new UserInvalidPasswordException("password should contain at least one number");
         }
 
-        if(!value.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+        if(!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
             throw new UserInvalidPasswordException("password should contain at least one special character");
         }
     }

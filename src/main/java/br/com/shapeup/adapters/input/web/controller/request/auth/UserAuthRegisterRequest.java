@@ -15,30 +15,31 @@ public class UserAuthRegisterRequest {
 
     @NotNull
     @NotBlank
+    @Size(min = 2, max = 45)
     String name;
     @NotNull
     @NotBlank
+    @Size(min = 2, max = 45)
     String lastName;
     @NotNull
     @NotBlank
+    @Size(min = 2, max = 45)
+    @Pattern( regexp = "^[^\\s@]+$", message = "Username cannot contain spaces or @" )
     String username;
     @NotNull
     @NotBlank
     @Email
+    @Size(min = 2, max = 45)
     String email;
     @NotNull
     @NotBlank
+    @Size(min = 2, max = 45)
     String password;
     @NotNull
     @NotBlank
     String birth;
     @NotNull
     @NotBlank
-    @Size(min = 10, max = 11)
-    @Pattern(
-            regexp = "^[1-9]{2}9?[6-9][0-9]{3}[0-9]{4}$",
-            message = "Invalid cell phone number"
-    )
     String cellPhone;
 }
 

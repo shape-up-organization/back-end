@@ -30,90 +30,23 @@ public class UserController {
 
     private final UserHttpMapper userHttpMapper;
 
-    @PutMapping("/name")
-    public ResponseEntity<Void> updateName(@RequestHeader(value = "Authorization") String token,
-                                           @Valid @RequestBody UserNameRequest userNameRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userNameRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userNameRequest);
-        userPersistanceInput.updateName(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/last-name")
-    public ResponseEntity<Void> updateLastName(@RequestHeader(value = "Authorization") String token,
-                                               @Valid @RequestBody UserLastNameRequest userLastNameRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userLastNameRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userLastNameRequest);
-        userPersistanceInput.updateLastName(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/cell-phone")
-    public ResponseEntity<Void> updateCellPhone(@RequestHeader(value = "Authorization") String token,
-                                                @Valid @RequestBody UserCellphoneRequest userCellphoneRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userCellphoneRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userCellphoneRequest);
-        userPersistanceInput.updateCellPhone(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/biography")
-    public ResponseEntity<Void> updateBiography(@RequestHeader(value = "Authorization") String token,
-                                                @Valid @RequestBody UserBiographyRequest userBiographyRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userBiographyRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userBiographyRequest);
-        userPersistanceInput.updateBiography(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/birth")
-    public ResponseEntity<Void> updateBirth(@RequestHeader(value = "Authorization") String token,
-                                            @Valid @RequestBody UserBirthRequest userBirthRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userBirthRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userBirthRequest);
-        userPersistanceInput.updateBirth(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
-    @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(@RequestHeader(value = "Authorization") String token,
-                                               @Valid @RequestBody UserPasswordRequest userPasswordRequest) {
-        String jwtToken = token.replace("Bearer ", "");
-        var email = JwtService.extractEmailFromToken(jwtToken);
-        userPasswordRequest.setEmail(email);
-
-        var user = userHttpMapper.toUser(userPasswordRequest);
-        userPersistanceInput.updatePassword(user);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
-    }
-
     @DeleteMapping()
     public ResponseEntity<Void> deleteByEmail(@RequestHeader(value = "Authorization")
                                               String token) {
         String jwtToken = token.replace("Bearer ", "");
         var email = JwtService.extractEmailFromToken(jwtToken);
         userPersistanceInput.deleteByEmail(email);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PutMapping()
+    public ResponseEntity<Void> updateUserField(@RequestHeader(value = "Authorization") String token,
+                                                @RequestBody UserRequest userRequest) {
+        String jwtToken = token.replace("Bearer ", "");
+        var email = JwtService.extractEmailFromToken(jwtToken);
+
+        userPersistanceInput.updateUser(email, userRequest);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }

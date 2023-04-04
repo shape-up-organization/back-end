@@ -39,17 +39,19 @@ public class User extends Entity<UserId> {
         return new User(name, lastName, username, email, cellPhone, password, birth, anId);
     }
 
+    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
+                               Password password, Birth birth, String biography) {
+        return new User(name, lastName, username, email, cellPhone, password, birth, biography);
+    }
+
+    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
+                               Password password, Birth birth) {
+        return new User(name, lastName, username, email, cellPhone, password, birth);
+    }
+
     @Override
     public void validate(final ValidationHandler handler) {
         new UserValidator(handler, this).validate();
-    }
-
-    public void validateValueObjects() {
-        validate(new ThrowsValidationHandler());
-        email.validateEmail();
-        cellPhone.validateCellPhone();
-        password.validatePassword();
-        birth.validateBirth();
     }
 
     public void validateName() {
