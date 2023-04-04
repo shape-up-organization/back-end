@@ -34,10 +34,6 @@ public class SquadEntity {
     @Column
     private int xp;
 
-    @OneToOne
-    @JoinColumn(name = "fk_level_id", referencedColumnName = "id")
-    private LevelEntity levelEntity;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

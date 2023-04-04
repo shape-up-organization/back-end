@@ -1,20 +1,17 @@
 package br.com.shapeup.adapters.output.repository.model.level;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
-@Entity
-@Table(name = "tb_level")
+@Document("tb_level")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,10 +21,8 @@ public class LevelEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     private double min;
 
-    @Column
     private double max;
 
     @Override

@@ -1,6 +1,6 @@
 package br.com.shapeup.adapters.output.repository.model.user;
 
-import br.com.shapeup.adapters.output.repository.model.level.LevelEntity;
+import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,12 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -66,10 +67,6 @@ public class UserEntity implements Serializable {
     @Column
     private int xp;
 
-    @OneToOne
-    @JoinColumn(name = "fk_level_id", referencedColumnName = "id")
-    private LevelEntity levelEntity;
-
     @Column(columnDefinition = "boolean default true")
     private boolean isActive = true;
 
@@ -80,6 +77,9 @@ public class UserEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "id")
+    private List<PostEntity> posts;
 
     @Override
     public boolean equals(Object o) {

@@ -1,24 +1,15 @@
 package br.com.shapeup.adapters.output.repository.model.post.comments;
 
-import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
-import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tb_comment")
+@Document("tb_comment")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,16 +18,11 @@ public class CommentEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @Column(length = 1000)
     private String commentMessage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_post_id", referencedColumnName = "id")
-    private PostEntity postEntity;
+    private String userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
-    private UserEntity userEntity;
+    private String idPost;
 
     @Override
     public boolean equals(Object o) {
