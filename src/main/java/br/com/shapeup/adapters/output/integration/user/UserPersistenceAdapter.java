@@ -1,8 +1,8 @@
 package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
-import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceAdapter;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
@@ -24,6 +24,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final UserRepositoryJpa userRepositoryJpa;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional

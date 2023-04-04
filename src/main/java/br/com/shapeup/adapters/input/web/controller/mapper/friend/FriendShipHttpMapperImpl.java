@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Primary
-public class FriendshipHttpMapperImpl implements FriendshipHttpMapper {
+public class FriendShipHttpMapperImpl implements FriendshipHttpMapper {
     @Override
     public RequestFriendshipResponse friendRequestToRequestFriendshipResponse(FriendshipRequest friendshipRequest) {
         return RequestFriendshipResponse.builder()

@@ -10,10 +10,9 @@ import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsExce
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.security.service.JwtService;
+import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import java.util.Map;
 import java.util.Set;
-import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
-import com.amazonaws.services.simpleworkflow.model.RespondActivityTaskCanceledRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +29,7 @@ public class AuthAdapter implements AuthGateway {
 
     private final JwtService jwtService;
     private final UserRepositoryJpa userRepositoryJpa;
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
@@ -71,7 +70,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private void validateCellPhoneAlreadyExistsInDatabase(String cellphone) {
-        Boolean cellphoneAlreadyExistsInDatabase = userRepositoryJpa.countAllByCellPhone(cellphone);
+        Boolean cellphoneAlreadyExistsInDatabase = userRepositoryJpa.existsByCellPhoneContains(cellphone);
 
         if (cellphoneAlreadyExistsInDatabase) {
             throw new CellPhoneAlreadyExistsException();
@@ -87,10 +86,15 @@ public class AuthAdapter implements AuthGateway {
     }
 
 
-    private Map<String, Object> generateJwtToken(UserAuthLoginRequest userAuthLoginRequest, Authentication authentication) {
+    private Map<String, Object> generateJwtToken(
+            UserAuthLoginRequest userAuthLoginRequest,
+            Authentication authentication
+    ) {
         if (authentication.isAuthenticated()) {
-            String tokenGenerated = jwtService.generateToken(userAuthLoginRequest.getEmail(),
-                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId());
+            String tokenGenerated = jwtService.generateToken(
+                    userAuthLoginRequest.getEmail(),
+                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId()
+            );
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
         } else {
@@ -99,10 +103,12 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private Authentication authenticateUser(UserAuthLoginRequest userAuthLoginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
                 userAuthLoginRequest.getEmail(),
                 userAuthLoginRequest.getPassword())
         );
+
         return authentication;
     }
 

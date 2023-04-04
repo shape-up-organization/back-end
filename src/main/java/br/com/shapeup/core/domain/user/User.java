@@ -20,9 +20,9 @@ public class User extends Entity<UserId> {
 
     private List<User> friends = new ArrayList<>();
 
-    public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-            Birth birth, UUID id) {
-        super(UserId.from(id));
+    public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
+            Birth birth, String biography) {
+        super(id);
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -30,23 +30,13 @@ public class User extends Entity<UserId> {
         this.cellPhone = cellPhone;
         this.password = password;
         this.birth = birth;
-        this.biography = "";
+        this.biography = biography;
     }
 
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-            Password password, Birth birth, UUID anId) {
+    public static User newUser(UUID anId, String name, String lastName, String username, Email email, CellPhone cellPhone,
+            Password password, Birth birth, String biography) {
         var id = UserId.from(anId);
-        return new User(name, lastName, username, email, cellPhone, password, birth, anId);
-    }
-
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-                               Password password, Birth birth, String biography) {
-        return new User(name, lastName, username, email, cellPhone, password, birth, biography);
-    }
-
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-                               Password password, Birth birth) {
-        return new User(name, lastName, username, email, cellPhone, password, birth);
+        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography);
     }
 
     @Override

@@ -1,11 +1,5 @@
 package br.com.shapeup.adapters.input.web.controller.mapper.user;
 
-import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.domain.user.Birth;
@@ -24,12 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserHttpMapper {
     UserHttpMapper INSTANCE = Mappers.getMapper(UserHttpMapper.class);
-
-    @Mapping(source = "email", target = "email", qualifiedByName = "stringToEmail")
-    @Mapping(source = "cellPhone", target = "cellPhone", qualifiedByName = "stringToCellPhone")
-    @Mapping(source = "password", target = "password", qualifiedByName = "stringToPassword")
-    @Mapping(source = "birth", target = "birth", qualifiedByName = "stringToBirth")
-    User toUser(UserAuthRegisterRequest userAuthRegisterRequest);
 
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "lastName", ignore = true)

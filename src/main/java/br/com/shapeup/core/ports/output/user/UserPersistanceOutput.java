@@ -1,4 +1,4 @@
-package br.com.shapeup.core.ports.output;
+package br.com.shapeup.core.ports.output.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.domain.user.User;

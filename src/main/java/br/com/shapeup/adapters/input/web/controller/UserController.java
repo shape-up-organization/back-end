@@ -1,15 +1,9 @@
 package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserBiographyRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserBirthRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserCellphoneRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserLastNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserNameRequest;
-import br.com.shapeup.adapters.input.web.controller.request.user.UserPasswordRequest;
+import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

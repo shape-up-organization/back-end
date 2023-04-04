@@ -9,16 +9,15 @@ import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
 import java.time.LocalDate;
 import java.util.UUID;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-@Primary
 public class UserMapperImpl implements UserMapper {
 
     @Override
     public User userEntitytoUser(UserEntity userEntity) {
         return User.newUser(
+                userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getLastName(),
                 userEntity.getUsername(),
@@ -26,7 +25,7 @@ public class UserMapperImpl implements UserMapper {
                 CellPhone.create(userEntity.getCellPhone()),
                 Password.create(userEntity.getPassword()),
                 Birth.create(userEntity.getBirth()),
-                userEntity.getId()
+                userEntity.getBiography()
         );
     }
 
@@ -53,7 +52,7 @@ public class UserMapperImpl implements UserMapper {
                 .email(userAuthRegisterRequest.getEmail())
                 .cellPhone(userAuthRegisterRequest.getCellPhone())
                 .password(userAuthRegisterRequest.getPassword())
-                .birth(LocalDate.parse(userAuthRegisterRequest.getBirth()))
+                .birth(LocalDate.parse(userAuthRegisterRequest.getBirth(), Birth.DATE_FORMATTER))
                 .build();
     }
 }

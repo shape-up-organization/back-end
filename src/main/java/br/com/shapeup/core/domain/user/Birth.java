@@ -5,9 +5,16 @@ import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
 
 public class Birth extends ValueObject {
+    public static final DateTimeFormatter DATE_FORMATTER = new DateTimeFormatterBuilder()
+            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+            .appendOptional(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            .toFormatter();
     private LocalDate value;
 
     private Birth(LocalDate value) {
@@ -15,20 +22,9 @@ public class Birth extends ValueObject {
     }
 
     public static Birth create(String birth) throws ParseException {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate localDate = LocalDate.parse(birth, formatter);
+        LocalDate localDate = LocalDate.parse(birth, DATE_FORMATTER);
 
-            return Birth.create(localDate);
-
-        } catch (Exception e) {
-            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.parse(birth, inputFormatter);
-            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String formattedDate = localDate.format(outputFormatter);
-
-            return Birth.create(formattedDate);
-        }
+        return Birth.create(localDate);
     }
 
     public static Birth create(LocalDate date) {
