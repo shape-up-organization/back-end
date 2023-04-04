@@ -31,7 +31,6 @@ public class UserAuthRegisterRequest {
     String password;
     @NotNull
     @NotBlank
-//    @Past
     String birth;
     @NotNull
     @NotBlank

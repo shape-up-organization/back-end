@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +35,7 @@ import org.hibernate.Hibernate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserEntity implements Serializable {
 
     @Id
