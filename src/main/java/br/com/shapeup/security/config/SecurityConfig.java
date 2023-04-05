@@ -30,6 +30,12 @@ public class SecurityConfig {
         this.uds = uds;
     }
 
+    private static final String[] REQUIRED_AUTHENTICATION = {
+            "/users/**",
+            "/friends/**",
+            "/profiles/**",
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -39,8 +45,10 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers(REQUIRED_AUTHENTICATION).authenticated()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/**").authenticated()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/").permitAll()
                         .anyRequest()
                         .permitAll()
                 ).userDetailsService(uds)

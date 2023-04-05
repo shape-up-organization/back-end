@@ -1,4 +1,4 @@
-package br.com.shapeup.adapters.output.repository.model.user;
+package br.com.shapeup.adapters.output.repository.model.profile;
 
 import java.io.File;
 import java.io.IOException;

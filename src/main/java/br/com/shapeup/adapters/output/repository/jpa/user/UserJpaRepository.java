@@ -1,13 +1,11 @@
 package br.com.shapeup.adapters.output.repository.jpa.user;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-
 import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
@@ -22,4 +20,9 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
     void deleteByEmail(String email);
 
     Optional<UserEntity> findById(UUID uuid);
+
+    Boolean existsByCellPhoneContains(@NonNull String cellPhone);
+
+    Optional<UserEntity> findByUsername(String username);
+
 }

@@ -2,7 +2,7 @@ package br.com.shapeup.common.domain;
 
 import java.util.Objects;
 
-public abstract class Identifier<T> {
+public abstract class Identifier<T> extends ValueObject{
     private final T value;
 
     protected Identifier(T value) {
