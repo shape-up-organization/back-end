@@ -28,7 +28,7 @@ public class FriendshipUsecase implements FriendshipInput {
         validateUserAlreadyFriend(newFriendUsername, user);
         validateIsSameUser(newFriendUsername, user);
 
-        findFriendshipOutput.existsByUsernameSenderAndUsernameReceiver(user.getUsername(), newFriend.getUsername());
+        findFriendshipOutput.hasNotSentFriendRequestYet(user.getUsername(), newFriend.getUsername());
 
         return friendsOutput.sendFriendRequest(user, newFriend);
     }
