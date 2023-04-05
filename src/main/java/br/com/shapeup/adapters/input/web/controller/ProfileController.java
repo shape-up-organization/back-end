@@ -20,7 +20,6 @@ public class ProfileController {
 
     private final ProfilePictureInput profilePictureInput;
 
-
     @PostMapping("/picture")
     public ResponseEntity<Map<String, URL>> uploadPicture(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
