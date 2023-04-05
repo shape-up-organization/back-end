@@ -42,9 +42,6 @@ public class ProfilePictureAdapter implements ProfilePictureOutput {
 
     private UserEntity validateUserExistsInDatabaseByEmailAndReturnSame(String tokenJwt) {
         String userEmail = JwtService.extractEmailFromToken(tokenJwt);
-        UserEntity user = userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> {
-            throw new UserNotFoundException(userEmail);
-        });
-        return user;
+        return userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException(userEmail));
     }
 }
