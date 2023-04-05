@@ -21,7 +21,7 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     private final FriendshipMapper friendshipMapper;
 
     @Override
-    public Boolean existsByUsernameSenderAndUsernameReceiver(String usernameSender, String usernameReceiver) {
+    public Boolean hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver) {
         Boolean alreadySentFriendRequest = friendshipMongoRepository
                 .existsByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver);
 
@@ -38,7 +38,6 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
 
         FriendshipRequestEntity friendshipRequestEntity = friendshipMongoRepository.
                 findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver);
-
 
         return friendshipMapper.friendshipRequestEntityToFriendshipRequest(friendshipRequestEntity);
     }
