@@ -21,7 +21,7 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     private final FriendshipMapper friendshipMapper;
 
     @Override
-    public Boolean hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver) {
+    public void hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver) {
         Boolean alreadySentFriendRequest = friendshipMongoRepository
                 .existsByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver);
 
@@ -30,7 +30,6 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
             throw new AlreadySentFriendRequestException(usernameSender, usernameReceiver);
         }
 
-        return false;
     }
 
     @Override
