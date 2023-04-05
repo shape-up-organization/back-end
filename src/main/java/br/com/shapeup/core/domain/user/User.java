@@ -3,8 +3,10 @@ package br.com.shapeup.core.domain.user;
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
 import br.com.shapeup.core.domain.validation.handler.ThrowsValidationHandler;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class User extends Entity<UserId> {
     private String name;
@@ -16,22 +18,11 @@ public class User extends Entity<UserId> {
     private Birth birth;
     private String biography;
 
-    public User(String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-            Birth birth) {
-        super(UserId.unique());
-        this.name = name;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.cellPhone = cellPhone;
-        this.password = password;
-        this.birth = birth;
-        this.biography = "";
-    }
+    private List<User> friends = new ArrayList<>();
 
-    private User(String name, String lastName, String username, Email email, CellPhone cellPhone,
-                 Password password, Birth birth, String biography) {
-        super(UserId.unique());
+    public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
+            Birth birth, String biography) {
+        super(id);
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -42,18 +33,10 @@ public class User extends Entity<UserId> {
         this.biography = biography;
     }
 
-    public User() {
-        super(UserId.unique());
-    }
-
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-                               Password password, Birth birth) {
-        return new User(name, lastName, username, email, cellPhone, password, birth);
-    }
-
-    public static User newUser(String name, String lastName, String username, Email email, CellPhone cellPhone,
-                               Password password, Birth birth, String biography) {
-        return new User(name, lastName, username, email, cellPhone, password, birth, biography);
+    public static User newUser(UUID anId, String name, String lastName, String username, Email email, CellPhone cellPhone,
+            Password password, Birth birth, String biography) {
+        var id = UserId.from(anId);
+        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography);
     }
 
     @Override
@@ -135,6 +118,14 @@ public class User extends Entity<UserId> {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
     }
 
     @Override
