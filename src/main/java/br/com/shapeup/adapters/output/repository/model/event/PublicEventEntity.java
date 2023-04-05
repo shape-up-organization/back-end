@@ -44,7 +44,7 @@ public class PublicEventEntity {
     private String tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)

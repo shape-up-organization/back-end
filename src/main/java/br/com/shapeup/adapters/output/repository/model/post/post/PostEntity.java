@@ -30,7 +30,7 @@ public class PostEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     private UserEntity userEntity;
 
     @Override

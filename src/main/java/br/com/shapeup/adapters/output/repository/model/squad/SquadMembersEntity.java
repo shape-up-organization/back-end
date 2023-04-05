@@ -34,7 +34,7 @@ public class SquadMembersEntity {
     private SquadEntity squadEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     private UserEntity userEntity;
 
     @Override
