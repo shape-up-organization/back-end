@@ -1,7 +1,7 @@
 package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
-import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
@@ -22,25 +22,25 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
-    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserJpaRepository UserJpaRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Override
     @Transactional
     public void deleteByEmail(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
+        UserEntity userEntity = UserJpaRepository.findByEmail(email).orElseThrow(() -> {
             throw new UserNotFoundException(email);
         });
 
         userEntity.setActive(false);
 
-        userRepositoryJpa.save(userEntity);
+        UserJpaRepository.save(userEntity);
     }
 
     @Override
     public User findUser(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
+        UserEntity userEntity = UserJpaRepository.findByEmail(email).orElseThrow(() -> {
             throw new UserNotFoundException(email);
         });
 
@@ -51,7 +51,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateUser(String email, UserRequest userRequest) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
+        UserEntity userEntity = UserJpaRepository.findByEmail(email).orElseThrow(() -> {
             throw new UserExistsByEmailException();
         });
 
@@ -90,6 +90,6 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
             userEntity.setPassword(encodedPassword);
         }
 
-        userRepositoryJpa.save(userEntity);
+        UserJpaRepository.save(userEntity);
     }
 }

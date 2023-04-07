@@ -1,7 +1,7 @@
 package br.com.shapeup.adapters.output.integration.profile;
 
 import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceGateway;
-import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class ProfilePictureAdapter implements ProfilePictureOutput {
-    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserJpaRepository UserJpaRepository;
     private final S3ServiceGateway s3Service;
 
     @Override
@@ -42,6 +42,6 @@ public class ProfilePictureAdapter implements ProfilePictureOutput {
 
     private UserEntity validateUserExistsInDatabaseByEmailAndReturnSame(String tokenJwt) {
         String userEmail = JwtService.extractEmailFromToken(tokenJwt);
-        return userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException(userEmail));
+        return UserJpaRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException(userEmail));
     }
 }

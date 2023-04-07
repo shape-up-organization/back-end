@@ -1,6 +1,6 @@
 package br.com.shapeup.adapters.output.integration.cloud.aws;
 
-import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class S3ServiceAdapter implements S3ServiceGateway {
 
     private final AmazonS3 s3Client;
-    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserJpaRepository UserJpaRepository;
     private String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
@@ -53,13 +53,13 @@ public class S3ServiceAdapter implements S3ServiceGateway {
     public URL getPictureUrl(PictureProfile pictureProfile) {
         String fileName = pictureProfile.getOriginalFilename();
         String uuid = pictureProfile.getUuid();
-        String username = userRepositoryJpa.findById(UUID.fromString(uuid)).get().getUsername();
+        String username = UserJpaRepository.findById(UUID.fromString(uuid)).get().getUsername();
         String newFileName = username + "--" + fileName;
         return s3Client.getUrl(bucketName, newFileName);
     }
 
     private UserEntity getUserByUuid(String uuid) {
-        return userRepositoryJpa.findById(UUID.fromString(uuid))
+        return UserJpaRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UserNotFoundException(uuid));
     }
 

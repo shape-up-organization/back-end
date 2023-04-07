@@ -2,7 +2,7 @@ package br.com.shapeup.adapters.output.integration.auth;
 
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthLoginRequest;
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
-import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 public class AuthAdapter implements AuthGateway {
 
     private final JwtService jwtService;
-    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserJpaRepository UserJpaRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -50,7 +50,7 @@ public class AuthAdapter implements AuthGateway {
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
 
         log.info("Starting process to save user on database: {}", userEntity.getUsername());
-        userRepositoryJpa.save(userEntity);
+        UserJpaRepository.save(userEntity);
     }
 
     private UserEntity mapUserAuthRegisterToUserEntityWithEncodedPassword(UserAuthRegisterRequest userAuthRegisterRequest) {
@@ -62,7 +62,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private void validateUserExistByEmailInDatabase(UserAuthRegisterRequest userAuthRegisterRequest) {
-        Boolean userExists = userRepositoryJpa.existsByEmail(userAuthRegisterRequest.getEmail());
+        Boolean userExists = UserJpaRepository.existsByEmail(userAuthRegisterRequest.getEmail());
 
         if (userExists) {
             throw new UserExistsByEmailException();
@@ -70,7 +70,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private void validateCellPhoneAlreadyExistsInDatabase(String cellphone) {
-        Boolean cellphoneAlreadyExistsInDatabase = userRepositoryJpa.existsByCellPhoneContains(cellphone);
+        Boolean cellphoneAlreadyExistsInDatabase = UserJpaRepository.existsByCellPhoneContains(cellphone);
 
         if (cellphoneAlreadyExistsInDatabase) {
             throw new CellPhoneAlreadyExistsException();
@@ -78,7 +78,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private void validateUserDoesNotExistByEmail(UserAuthLoginRequest userAuthLoginRequest) {
-        Boolean userExists = userRepositoryJpa.existsByEmail(userAuthLoginRequest.getEmail());
+        Boolean userExists = UserJpaRepository.existsByEmail(userAuthLoginRequest.getEmail());
 
         if (!userExists) {
             throw new UserNotFoundException(userAuthLoginRequest.getEmail());
@@ -119,7 +119,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private void validateUserExistsByUserNameInDatabase(String username) {
-        Boolean userNameIsAlreadyInUse = userRepositoryJpa.existsByUsername(username);
+        Boolean userNameIsAlreadyInUse = UserJpaRepository.existsByUsername(username);
         if (userNameIsAlreadyInUse) {
             throw new UserAlreadyExistsException("User already exists");
         }
