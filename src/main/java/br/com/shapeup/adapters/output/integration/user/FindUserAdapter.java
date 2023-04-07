@@ -1,6 +1,6 @@
 package br.com.shapeup.adapters.output.integration.user;
 
-import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
@@ -14,19 +14,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class FindUserAdapter implements FindUserOutput {
-    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserJpaRepository UserJpaRepository;
     private final UserMapper userMapper;
 
     @Override
     public User findByEmail(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        UserEntity userEntity = UserJpaRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
 
         return userMapper.userEntitytoUser(userEntity);
     }
 
     @Override
     public User findByUsername(String username) {
-        UserEntity userEntity = userRepositoryJpa.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        UserEntity userEntity = UserJpaRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
 
         return userMapper.userEntitytoUser(userEntity);
     }

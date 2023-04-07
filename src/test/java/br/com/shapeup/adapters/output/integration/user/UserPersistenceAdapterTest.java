@@ -1,6 +1,6 @@
 //package br.com.shapeup.adapters.output.integration.user;
 //
-//import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+//import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 //import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 //import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 //import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
@@ -25,7 +25,7 @@
 //@ExtendWith(MockitoExtension.class)
 //class UserPersistenceAdapterTest {
 //    @Mock
-//    private UserRepositoryJpa userRepositoryJpa;
+//    private UserJpaRepository UserJpaRepository;
 //    private UserMapper userMapper;
 //    @InjectMocks
 //    private UserPersistenceAdapter userPersistenceAdapter;
@@ -33,7 +33,7 @@
 //    @BeforeEach
 //    void setUp() {
 //        userMapper = UserMapper.INSTANCE;
-//        userPersistenceAdapter = new UserPersistenceAdapter(userRepositoryJpa, userMapper);
+//        userPersistenceAdapter = new UserPersistenceAdapter(UserJpaRepository, userMapper);
 //        MockitoAnnotations.openMocks(this);
 //    }
 //
@@ -42,10 +42,10 @@
 //    void saveWithSuccess() {
 //        User userMock = UserFactory.getInstance().create();
 //
-//        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(false);
+//        Mockito.when(UserJpaRepository.existsByEmail(userMock.getEmail().getValue())).thenReturn(false);
 //        userPersistenceAdapter.save(userMock);
 //
-//        Mockito.verify(userRepositoryJpa, Mockito.times(1)).save(Mockito.any(UserEntity.class));
+//        Mockito.verify(UserJpaRepository, Mockito.times(1)).save(Mockito.any(UserEntity.class));
 //    }
 //
 //    @Test
@@ -54,12 +54,12 @@
 //        User userMock = UserFactory.getInstance().create();
 //        UserEntity userEntityMock = UserEntityFactory.getInstance().create();
 //
-//        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(true);
+//        Mockito.when(UserJpaRepository.existsByEmail(userMock.getEmail().getValue())).thenReturn(true);
 //
 //        UserExistsByEmailException exception = Assertions.assertThrows(UserExistsByEmailException.class,
 //                () -> userPersistenceAdapter.save(userMock));
 //        Assertions.assertTrue(exception.getMessage().contains(userMock.getEmail().getValue()));
 //
-//        Mockito.verify(userRepositoryJpa, Mockito.never()).save(userEntityMock);
+//        Mockito.verify(UserJpaRepository, Mockito.never()).save(userEntityMock);
 //    }
 //}
