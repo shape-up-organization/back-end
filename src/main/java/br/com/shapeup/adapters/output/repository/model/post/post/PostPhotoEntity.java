@@ -19,9 +19,14 @@ public class PostPhotoEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
-    private String photoUrlPhoto;
+    private String photoUrl;
 
     private String idPost;
+
+    public PostPhotoEntity(String photoUrl, String idPost) {
+        this.photoUrl = photoUrl;
+        this.idPost = idPost;
+    }
 
     @Override
     public boolean equals(Object o) {

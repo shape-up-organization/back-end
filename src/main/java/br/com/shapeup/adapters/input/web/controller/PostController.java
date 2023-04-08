@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/posts")
@@ -19,13 +24,19 @@ public class PostController {
     private final PostInput postPersistenceInput;
 
     @PostMapping
-    public ResponseEntity<Void> createPost(PostRequest request,
+    public ResponseEntity<List<Map<String, URL>>> createPost(PostRequest request,
                                            @RequestParam("file") MultipartFile[] files,
                                            HttpServletRequest jwtToken) {
-        String token = jwtToken.getHeader("Authorization").substring(7);
+        String token =
+                jwtToken.getHeader("Authorization").substring(7);
 
-        postPersistenceInput.createPost(files, token, request);
+        List<URL> postUrls =
+                postPersistenceInput.createPost(files, token, request);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        List<Map<String, URL>> postUrlResponse = postUrls.stream()
+                .map(postUrl -> Collections.singletonMap("urlPost", postUrl))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(postUrlResponse);
     }
 }

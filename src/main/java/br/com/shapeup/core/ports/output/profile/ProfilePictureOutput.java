@@ -4,5 +4,4 @@ import java.net.URL;
 
 public interface ProfilePictureOutput {
     URL uploadPicture(Object file, String token);
-
 }

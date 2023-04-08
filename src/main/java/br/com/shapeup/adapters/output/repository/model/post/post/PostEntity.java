@@ -33,6 +33,12 @@ public class PostEntity {
     @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     private UserEntity userEntity;
 
+    public PostEntity(UUID userId, String description) {
+        this.userEntity = new UserEntity();
+        userEntity.setId(userId);
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

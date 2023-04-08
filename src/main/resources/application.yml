@@ -7,10 +7,7 @@ spring:
       database: ${MONGO_DATABASE}
       host: ${MONGO_HOST}
       port: ${MONGO_PORT}
-      username: ${MONGO_USER}
-      password: ${MONGO_PASSWORD}
       auto-index-creation: true
-      authentication-database: admin
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -25,7 +22,7 @@ spring:
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: false
     open-in-view: false
     properties:
