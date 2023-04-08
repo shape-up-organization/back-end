@@ -34,6 +34,7 @@ public class SecurityConfig {
             "/users/**",
             "/friends/**",
             "/profiles/**",
+            "/posts/**",
     };
 
     @Bean
