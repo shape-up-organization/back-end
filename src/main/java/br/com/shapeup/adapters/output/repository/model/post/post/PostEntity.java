@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -33,10 +33,14 @@ public class PostEntity {
     @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     private UserEntity userEntity;
 
+    @Column
+    private LocalDateTime created_at;
+
     public PostEntity(UUID userId, String description) {
         this.userEntity = new UserEntity();
         userEntity.setId(userId);
         this.description = description;
+        created_at = LocalDateTime.now();
     }
 
     @Override

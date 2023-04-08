@@ -10,11 +10,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 @Service
@@ -26,7 +24,7 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
     private String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
-    public URI uploadPostPictureFile(MultipartFile file, UserEntity user) throws URISyntaxException {
+    public URI uploadPostPictureFile(MultipartFile file, UserEntity user) {
         try {
             String fileName = file.getOriginalFilename();
             String contentType = file.getContentType();
@@ -57,7 +55,6 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
         metadata.setContentType(contentType);
         metadata.addUserMetadata("USER_USERNAME", username);
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, inputStream, metadata);
         validateFileSizeLimit(inputStream);
 
         metadata.setContentLength(inputStream.available());
@@ -68,7 +65,7 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
     }
 
     private static void validateFileSizeLimit(InputStream inputStream) throws IOException {
-        Integer contentLength = inputStream.available();
+        int contentLength = inputStream.available();
 
         if (contentLength > 5 * 1024 * 1024) {
             throw new RuntimeException("File size is too big");

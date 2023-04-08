@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,9 +23,12 @@ public class PostPhotoEntity {
 
     private String idPost;
 
+    private LocalDateTime created_at;
+
     public PostPhotoEntity(String photoUrl, String idPost) {
         this.photoUrl = photoUrl;
         this.idPost = idPost;
+        created_at = LocalDateTime.now();
     }
 
     @Override

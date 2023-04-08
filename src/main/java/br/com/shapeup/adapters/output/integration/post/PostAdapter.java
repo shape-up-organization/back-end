@@ -14,7 +14,6 @@ import br.com.shapeup.security.service.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -30,15 +29,15 @@ public class PostAdapter implements PostOutput {
     private final PostPhotoMongoRepository postPhotoMongoRepository;
 
     @Override
-    public List<URL> createPost(MultipartFile[] files, String token, PostRequest request) {
+    public List<URL> createPost(Object[] files, String token, PostRequest request) {
         UserEntity user = validateUserExistsInDatabaseByEmailAndReturnSame(token);
 
         List<URI> savingImages = Arrays.stream(files)
-                .map(file -> sendPostPhotosToS3AndReturnSame(file, user))
+                .map(file -> sendPostPhotosToS3AndReturnSame((MultipartFile) file, user))
                 .toList();
 
         List<URL> postUrls = Arrays.stream(files)
-                .map(file -> s3Service.getPostPictureUrl(file, user.getUsername()))
+                .map(file -> s3Service.getPostPictureUrl((MultipartFile) file, user.getUsername()))
                 .toList();
 
         PostEntity postEntity = new PostEntity(user.getId(), request.getDescription());
