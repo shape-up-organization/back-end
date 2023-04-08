@@ -53,4 +53,6 @@ public class FriendshipController {
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(acceptedFriendshipRequest);
     }
+
+
 }

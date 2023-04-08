@@ -98,18 +98,17 @@ public class AuthAdapter implements AuthGateway {
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
         } else {
-            throw new UsernameNotFoundException("Invalid Login Credentials Request!");
+            throw new UserNotFoundException(userAuthLoginRequest.getEmail());
         }
     }
 
     private Authentication authenticateUser(UserAuthLoginRequest userAuthLoginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
+
+        return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 userAuthLoginRequest.getEmail(),
                 userAuthLoginRequest.getPassword())
         );
-
-        return authentication;
     }
 
     @Override

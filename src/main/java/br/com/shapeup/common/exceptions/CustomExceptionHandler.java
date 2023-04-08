@@ -1,6 +1,7 @@
 package br.com.shapeup.common.exceptions;
 
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
+import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
@@ -10,6 +11,7 @@ import br.com.shapeup.common.exceptions.user.UserInvalidLastName;
 import br.com.shapeup.common.exceptions.user.UserInvalidNameException;
 import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -89,15 +91,16 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler({
-            UsernameNotFoundException.class,
             UserInvalidPasswordException.class,
             UserInvalidEmailException.class,
             UserInvalidBirthException.class,
             UserInvalidCellPhoneException.class,
             UserInvalidLastName.class,
             UserInvalidNameException.class,
-            UserExistsByCellPhoneException.class
+            UserExistsByCellPhoneException.class,
+            ExpiredJwtException.class
     })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
             Exception exception,
             HttpServletRequest request,
@@ -140,7 +143,10 @@ public class CustomExceptionHandler {
         );
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({
+            Exception.class,
+            InternalServerErrorException.class
+    })
     public ResponseEntity<Object> handleInternalServerError(
             Exception exception,
             HttpServletRequest request,
