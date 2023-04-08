@@ -1,13 +1,17 @@
 package br.com.shapeup.core.usecase.friend;
+
 import br.com.shapeup.common.exceptions.friend.AddYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
+import br.com.shapeup.common.exceptions.friend.NotFriendException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.friend.FriendshipInput;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
+
+import java.io.NotActiveException;
 
 public class FriendshipUsecase implements FriendshipInput {
     private final FriendshipOutput friendsOutput;
@@ -70,5 +74,39 @@ public class FriendshipUsecase implements FriendshipInput {
         if (isSentByCurrentUser || isReceivedByFriend) {
             throw new FriendshipRequestNotFoundException();
         }
+    }
+
+    private static void validateExistsFrienship(String friendUsername, User user) {
+        boolean isAlreadyFriend = user.getFriends().stream()
+                .anyMatch(friend -> friend.getUsername().equals(friendUsername));
+
+        if (!isAlreadyFriend) {
+            throw new NotFriendException(user.getUsername()); // depois tera uma exception dizendo que nao é amigo
+        }
+    }
+
+
+    @Override
+    public void deleteFriendshipRequest(String friendUsername, String email) {
+        User user = findUserOutput.findByEmail(email);
+        User newFriend = findUserOutput.findByUsername(friendUsername);
+
+        validateIsSameUser(friendUsername, user);
+
+        validateUserAlreadyFriend(friendUsername, user);
+
+        friendsOutput.deleteFriendshipRequest(user, newFriend);
+    }
+
+    @Override
+    public void deleteFriend(String friendUsername, String email) {
+        User user = findUserOutput.findByEmail(email);
+        User newFriend = findUserOutput.findByUsername(friendUsername);
+
+        validateIsSameUser(friendUsername, user);
+
+        validateExistsFrienship(friendUsername, user);
+
+        friendsOutput.deleteFriend(user, newFriend);
     }
 }

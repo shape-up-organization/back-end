@@ -7,4 +7,8 @@ public interface FriendshipOutput {
     FriendshipRequest sendFriendRequest(User currentUser, User newFriend);
 
     FriendshipRequest acceptFriendRequest(User currentUser, User newFriend);
+
+    void deleteFriendshipRequest(User user, User newFriend);
+
+    void deleteFriend(User user, User newFriend);
 }

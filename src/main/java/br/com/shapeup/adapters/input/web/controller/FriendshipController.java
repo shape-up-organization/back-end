@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,10 +28,7 @@ public class FriendshipController {
     private final FriendshipHttpMapper friendshipHttpMapper;
 
     @PostMapping("/sent-friendship-request/{newFriendUsername}")
-    public ResponseEntity<RequestFriendshipResponse> sentFriendshipRequest(
-            HttpServletRequest request,
-            @Valid @PathVariable String newFriendUsername
-    ) {
+    public ResponseEntity<RequestFriendshipResponse> sentFriendshipRequest(HttpServletRequest request, @Valid @PathVariable String newFriendUsername) {
         String token = request.getHeader("Authorization").substring(7);
         String email = JwtService.extractEmailFromToken(token);
 
@@ -41,10 +39,7 @@ public class FriendshipController {
     }
 
     @PostMapping("/accept-friendship-request/{friendUsername}")
-    public ResponseEntity<AcceptedFriendshipResponse> acceptFriendshipRequest(
-            HttpServletRequest request,
-            @Valid @PathVariable String friendUsername
-    ) {
+    public ResponseEntity<AcceptedFriendshipResponse> acceptFriendshipRequest(HttpServletRequest request, @Valid @PathVariable String friendUsername) {
         String token = request.getHeader("Authorization").substring(7);
         String email = JwtService.extractEmailFromToken(token);
 
@@ -52,5 +47,26 @@ public class FriendshipController {
         AcceptedFriendshipResponse acceptedFriendshipRequest = friendshipHttpMapper.friendRequestToAcceptedFriendshipResponse(friendRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(acceptedFriendshipRequest);
+    }
+
+    @DeleteMapping("/delete-friendship-request/{friendUsername}")
+    public ResponseEntity<Void> deleteFriendshipRequest(HttpServletRequest request, @Valid @PathVariable String friendUsername) {
+        String token = request.getHeader("Authorization").substring(7);
+        String email = JwtService.extractEmailFromToken(token);
+
+        friendshipInput.deleteFriendshipRequest(friendUsername, email);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @DeleteMapping("/delete-friend/{friendUsername}")
+    public ResponseEntity<Void> deleteFriendshipByUsername(HttpServletRequest request, @Valid @PathVariable String friendUsername) {
+        String token = request.getHeader("Authorization").substring(7);
+        String email = JwtService.extractEmailFromToken(token);
+
+        friendshipInput.deleteFriend(friendUsername, email);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
