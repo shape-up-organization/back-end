@@ -2,7 +2,7 @@ package br.com.shapeup.adapters.output.integration.friend;
 
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
 import br.com.shapeup.adapters.output.repository.mapper.friend.FriendshipMapper;
-import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestEntity;
+import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestDocument;
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
@@ -35,9 +35,9 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     @Override
     public FriendshipRequest findFriendshipRequest(String usernameSender, String usernameReceiver) {
 
-        FriendshipRequestEntity friendshipRequestEntity = friendshipMongoRepository.
+        FriendshipRequestDocument friendshipRequestDocument = friendshipMongoRepository.
                 findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver);
 
-        return friendshipMapper.friendshipRequestEntityToFriendshipRequest(friendshipRequestEntity);
+        return friendshipMapper.friendshipRequestDocumentToFriendshipRequest(friendshipRequestDocument);
     }
 }

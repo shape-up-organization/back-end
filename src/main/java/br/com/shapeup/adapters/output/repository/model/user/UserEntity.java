@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -29,13 +30,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
-@Entity
-@Table(name = "tb_user")
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Table(name = "tb_user", indexes = @Index(columnList = "username", name = "idx_username"))
 public class UserEntity implements Serializable {
 
     @Id
@@ -49,7 +51,7 @@ public class UserEntity implements Serializable {
     @Column
     private String lastName;
 
-    @Column
+    @Column(name = "username")
     private String username;
 
     @Column

@@ -15,12 +15,14 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "tb_friends")
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class FriendsEntity implements Serializable {
@@ -45,7 +47,4 @@ public class FriendsEntity implements Serializable {
 
     @Column(name = "sent_at")
     private LocalDate sentAt;
-
-    public FriendsEntity() {
-    }
 }

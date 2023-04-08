@@ -9,6 +9,7 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.security.service.JwtService;
 import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class AuthAdapter implements AuthGateway {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final FindUserOutput findUserOutput;
 
     @Override
     public Map<String, Object> login(UserAuthLoginRequest userAuthLoginRequest) {
@@ -90,10 +92,13 @@ public class AuthAdapter implements AuthGateway {
             UserAuthLoginRequest userAuthLoginRequest,
             Authentication authentication
     ) {
+        var user = findUserOutput.findByEmail(userAuthLoginRequest.getEmail());
+
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
                     userAuthLoginRequest.getEmail(),
-                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId()
+                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId(),
+                    user.getUsername()
             );
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
