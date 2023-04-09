@@ -25,7 +25,7 @@ public class S3ServiceAdapter implements S3ServiceGateway {
 
     private final AmazonS3 s3Client;
     private final UserJpaRepository UserJpaRepository;
-    private String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
+    private final String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
     public URI uploadFile(PictureProfile pictureProfile) {
@@ -64,7 +64,7 @@ public class S3ServiceAdapter implements S3ServiceGateway {
     }
 
     private String generateNewFileName(UserEntity user, String fileName) {
-        return user.getUsername() + "--" + fileName;
+        return "profile_picture/" + user.getUsername() + "--" + fileName;
     }
 
     @SneakyThrows
@@ -86,8 +86,8 @@ public class S3ServiceAdapter implements S3ServiceGateway {
         return s3Client.getUrl(bucketName, fileName).toURI();
     }
 
-    private static void validateFileSizeLimit(InputStream inputStream) throws IOException {
-        Integer contentLength = inputStream.available();
+    private void validateFileSizeLimit(InputStream inputStream) throws IOException {
+        int contentLength = inputStream.available();
 
         if (contentLength > 5 * 1024 * 1024) {
             throw new RuntimeException("File size is too big");
