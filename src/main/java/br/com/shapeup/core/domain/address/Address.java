@@ -2,33 +2,24 @@ package br.com.shapeup.core.domain.address;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-import jakarta.persistence.Column;
-
 import java.util.Objects;
 
 public class Address extends Entity<AddressId> {
-
     private String street;
-
 
     private String number;
 
-
     private String neighborhood;
-
 
     private String city;
 
-
     private String state;
-
 
     private String complement;
 
-
     private String county;
 
-    public Address(String street, String number
+    private Address(String street, String number
             , String neighborhood, String city, String state
             , String complement, String county) {
         super(AddressId.unique());
@@ -40,6 +31,7 @@ public class Address extends Entity<AddressId> {
         this.complement = complement;
         this.county = county;
     }
+
     public static Address newAddress(String street,String number,String neighborhood,String city
     ,String state,String complement, String county){
         return newAddress(street, number, neighborhood, city, state, complement, county);
@@ -47,7 +39,7 @@ public class Address extends Entity<AddressId> {
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new AddressValidator(handler, this).validate();
     }
 
     public String getStreet() {
@@ -108,32 +100,27 @@ public class Address extends Entity<AddressId> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
 
         Address address = (Address) o;
 
-        if (!Objects.equals(street, address.street)) return false;
-        if (!Objects.equals(number, address.number)) return false;
-        if (!Objects.equals(neighborhood, address.neighborhood))
-            return false;
-        if (!Objects.equals(city, address.city)) return false;
-        if (!Objects.equals(state, address.state)) return false;
-        if (!Objects.equals(complement, address.complement)) return false;
-        return Objects.equals(county, address.county);
+        return getCity().equals(address.getCity()) &&
+                getCounty().equals(address.getCounty()) &&
+                getComplement().equals(address.getComplement()) &&
+                getState().equals(address.getState()) &&
+                getNumber().equals(address.getNumber()) &&
+                getNeighborhood().equals(address.getNeighborhood()) &&
+                getStreet().equals(address.getStreet());
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (street != null ? street.hashCode() : 0);
-        result = 31 * result + (number != null ? number.hashCode() : 0);
-        result = 31 * result + (neighborhood != null ? neighborhood.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (complement != null ? complement.hashCode() : 0);
-        result = 31 * result + (county != null ? county.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), getCity(), getCounty(), getComplement(), getState(), getNumber(),
+                getNeighborhood(), getNumber(), getStreet());
     }
 }

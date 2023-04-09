@@ -1,11 +1,10 @@
 package br.com.shapeup.core.domain.address;
 
 import br.com.shapeup.common.domain.Identifier;
-
 import java.util.Objects;
 import java.util.UUID;
 
-public class AddressId  extends Identifier {
+public class AddressId  extends Identifier<String> {
     private final String value;
 
     private AddressId(String value) {
