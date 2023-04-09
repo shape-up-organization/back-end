@@ -1,6 +1,7 @@
 package br.com.shapeup.core.usecase.friend;
 import br.com.shapeup.common.exceptions.friend.AddYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
+import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.domain.user.User;
@@ -8,6 +9,7 @@ import br.com.shapeup.core.ports.input.friend.FriendshipInput;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
+import java.util.List;
 
 public class FriendshipUsecase implements FriendshipInput {
     private final FriendshipOutput friendsOutput;
@@ -46,6 +48,14 @@ public class FriendshipUsecase implements FriendshipInput {
         return friendsOutput.acceptFriendRequest(user, friend);
     }
 
+    @Override
+    public List<User> getAllFriendship(String username) {
+        validateHasDuplicateFriendship(username, findUserOutput);
+        User currentUser = findUserOutput.findByUsername(username);
+
+        return friendsOutput.getAllFriendship(currentUser);
+    }
+
     private static void validateUserAlreadyFriend(String newFriendUsername, User user) {
         boolean isAlreadyFriend = user.getFriends().stream()
                 .anyMatch(friend -> friend.getUsername().equals(newFriendUsername));
@@ -69,6 +79,17 @@ public class FriendshipUsecase implements FriendshipInput {
 
         if (isSentByCurrentUser || isReceivedByFriend) {
             throw new FriendshipRequestNotFoundException();
+        }
+    }
+
+    private static void validateHasDuplicateFriendship(String username, FindUserOutput findUserOutput) {
+        var friends = findUserOutput.findByUsername(username).getFriends();
+
+        boolean hasDuplicateFriendship = friends.stream()
+                .anyMatch(friend -> friend.getUsername().equals(username));
+
+        if (hasDuplicateFriendship) {
+            throw new DuplicateFriendshipException(username);
         }
     }
 }
