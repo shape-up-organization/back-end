@@ -1,7 +1,9 @@
 package br.com.shapeup.security.config;
 
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.security.filter.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,22 +21,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthFilter authFilter;
-
     private final UserInfoUserDetailsService uds;
-
-    public SecurityConfig(JwtAuthFilter authFilter, UserInfoUserDetailsService uds) {
-        this.authFilter = authFilter;
-        this.uds = uds;
-    }
+    private final UserJpaRepository userJpaRepository;
 
     private static final String[] REQUIRED_AUTHENTICATION = {
             "/users/**",
             "/friends/**",
             "/profiles/**",
             "/posts/**",
+    };
+
+    private static final String[] PERMIT_ALL = {
+            "/auth/**",
+            "/ws/**",
+            "/",
     };
 
     @Bean
@@ -47,19 +51,19 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(REQUIRED_AUTHENTICATION).authenticated()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest()
                         .permitAll()
                 ).userDetailsService(uds)
                 .exceptionHandling()
+                .accessDeniedHandler((request, response, accessDeniedException) ->
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
                 .authenticationEntryPoint(
                         ((request, response, authException) ->
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
-
                 )
                 .and()
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -75,7 +79,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserInfoUserDetailsService();
+        return new UserInfoUserDetailsService(userJpaRepository);
     }
 
     @Bean

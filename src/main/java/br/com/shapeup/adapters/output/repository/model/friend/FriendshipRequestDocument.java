@@ -2,6 +2,8 @@ package br.com.shapeup.adapters.output.repository.model.friend;
 
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +15,9 @@ import static java.util.UUID.randomUUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FriendshipRequestEntity {
+@AllArgsConstructor
+@Builder
+public class FriendshipRequestDocument {
     @Id
     private String id = randomUUID().toString();
     private String usernameSender;
@@ -22,7 +26,7 @@ public class FriendshipRequestEntity {
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-    public FriendshipRequestEntity(String usernameSender, String usernameReceiver) {
+    public FriendshipRequestDocument(String usernameSender, String usernameReceiver) {
         this.usernameSender = usernameSender;
         this.usernameReceiver = usernameReceiver;
         this.accepted = false;

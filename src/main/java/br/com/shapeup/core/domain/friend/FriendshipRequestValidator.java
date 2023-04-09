@@ -8,7 +8,10 @@ public class FriendshipRequestValidator extends Validator {
 
     private final FriendshipRequest friendshipRequest;
 
-    protected FriendshipRequestValidator(ValidationHandler anHandler, FriendshipRequest friendshipRequest) {
+    protected FriendshipRequestValidator(
+            ValidationHandler anHandler,
+            FriendshipRequest friendshipRequest
+    ) {
         super(anHandler);
         this.friendshipRequest = friendshipRequest;
     }

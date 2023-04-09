@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.input.web.controller;
 
+import br.com.shapeup.common.utils.TokenUtils;
 import br.com.shapeup.core.ports.input.profile.ProfilePictureInput;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URL;
@@ -21,8 +22,12 @@ public class ProfileController {
     private final ProfilePictureInput profilePictureInput;
 
     @PostMapping("/picture")
-    public ResponseEntity<Map<String, URL>> uploadPicture(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
+    public ResponseEntity<Map<String, URL>> uploadPicture(
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request
+    ) {
+        String token = TokenUtils.getToken(request);
+
 
         var uploadPictureProfile = profilePictureInput.uploadPicture(file, token);
         var urlUserPictureProfileResponse = Map.of("picture-profile", uploadPictureProfile);

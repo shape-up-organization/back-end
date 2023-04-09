@@ -23,7 +23,7 @@ spring:
     database: POSTGRESQL
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     open-in-view: false
     properties:
       hibernate:

@@ -9,9 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserInfoUserDetails implements UserDetails {
-    private String email;
-    private String password;
-    private List<GrantedAuthority> authorities;
+    private final String email;
+    private final String password;
+    private final List<GrantedAuthority> authorities;
 
     public UserInfoUserDetails(UserEntity userEntity) {
         this.email = userEntity.getEmail();

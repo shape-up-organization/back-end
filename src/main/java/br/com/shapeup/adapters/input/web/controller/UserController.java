@@ -1,9 +1,10 @@
 package br.com.shapeup.adapters.input.web.controller;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
+import br.com.shapeup.common.utils.TokenUtils;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserPersistanceInput userPersistanceInput;
 
-    private final UserHttpMapper userHttpMapper;
-
     @DeleteMapping()
-    public ResponseEntity<Void> deleteByEmail(@RequestHeader(value = "Authorization")
-                                              String token) {
-        String jwtToken = token.replace("Bearer ", "");
+    public ResponseEntity<Void> deleteByEmail(HttpServletRequest request) {
+
+        String jwtToken = TokenUtils.getToken(request);
+
         var email = JwtService.extractEmailFromToken(jwtToken);
         userPersistanceInput.deleteByEmail(email);
 
@@ -35,9 +35,11 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateUserField(@RequestHeader(value = "Authorization") String token,
-                                                @RequestBody UserRequest userRequest) {
-        String jwtToken = token.replace("Bearer ", "");
+    public ResponseEntity<Void> updateUserField(
+            HttpServletRequest request,
+            @RequestBody UserRequest userRequest
+    ) {
+        String jwtToken = TokenUtils.getToken(request);
         var email = JwtService.extractEmailFromToken(jwtToken);
 
         userPersistanceInput.updateUser(email, userRequest);

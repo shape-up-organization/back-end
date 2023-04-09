@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class S3ServicePictureProfileAdapter implements S3ServicePictureProfileGateway {
     private final AmazonS3 s3Client;
     private final UserJpaRepository UserJpaRepository;
-    private String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
+    private final String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
     public URI uploadPictureProfileFile(PictureProfile pictureProfile) {
@@ -66,7 +66,7 @@ public class S3ServicePictureProfileAdapter implements S3ServicePictureProfileGa
     }
 
     private String generateNewFileName(UserEntity user, String fileName) {
-        return user.getUsername() + "--" + fileName;
+        return "profile_picture/" + user.getUsername() + "--" + fileName;
     }
 
     @SneakyThrows
@@ -88,8 +88,8 @@ public class S3ServicePictureProfileAdapter implements S3ServicePictureProfileGa
         return s3Client.getUrl(bucketName, fileName).toURI();
     }
 
-    private static void validateFileSizeLimit(InputStream inputStream) throws IOException {
-        Integer contentLength = inputStream.available();
+    private void validateFileSizeLimit(InputStream inputStream) throws IOException {
+        int contentLength = inputStream.available();
 
         if (contentLength > 5 * 1024 * 1024) {
             throw new RuntimeException("File size is too big");
