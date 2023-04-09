@@ -2,24 +2,29 @@ package br.com.shapeup.core.domain.comments;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-
 import java.util.Objects;
 
 public class Comment extends Entity<CommentId> {
+    private String userId;
+
+    private String postId;
+
     private String commentMessage;
 
-    public Comment( String commentMessage) {
+    private Comment(String commentMessage, String userId, String postId) {
         super(CommentId.unique());
         this.commentMessage = commentMessage;
+        this.postId = postId;
+        this.userId = userId;
     }
 
-    public static Comment newComment(String commentMessage){
-        return newComment(commentMessage);
+    public static Comment newComment(String commentMessage, String userId, String postId){
+        return newComment(commentMessage, userId, postId);
     }
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new CommentValidator(handler, this).validate();
     }
 
     public String getCommentMessage() {
@@ -30,21 +35,33 @@ public class Comment extends Entity<CommentId> {
         this.commentMessage = commentMessage;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
         Comment comment = (Comment) o;
-
-        return Objects.equals(commentMessage, comment.commentMessage);
+        return Objects.equals(userId, comment.userId) && Objects.equals(postId, comment.postId) && Objects.equals(commentMessage, comment.commentMessage);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (commentMessage != null ? commentMessage.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), userId, postId, commentMessage);
     }
 }
