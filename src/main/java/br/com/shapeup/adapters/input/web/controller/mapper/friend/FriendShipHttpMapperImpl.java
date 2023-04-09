@@ -1,14 +1,23 @@
 package br.com.shapeup.adapters.input.web.controller.mapper.friend;
 
 import br.com.shapeup.adapters.input.web.controller.response.friend.AcceptedFriendshipResponse;
+import br.com.shapeup.adapters.input.web.controller.response.friend.ListFriendshipResponse;
 import br.com.shapeup.adapters.input.web.controller.response.friend.RequestFriendshipResponse;
+import br.com.shapeup.adapters.output.repository.mongo.chat.ChatMongoRepository;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
+import br.com.shapeup.core.domain.user.User;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
 @Primary
+@RequiredArgsConstructor
 public class FriendShipHttpMapperImpl implements FriendshipHttpMapper {
+
+    private final ChatMongoRepository chatMongoRepository;
+
     @Override
     public RequestFriendshipResponse friendRequestToRequestFriendshipResponse(FriendshipRequest friendshipRequest) {
         return RequestFriendshipResponse.builder()
@@ -27,5 +36,16 @@ public class FriendShipHttpMapperImpl implements FriendshipHttpMapper {
                 .usernameReceiver(friendshipRequest.getUsernameReceiver())
                 .accepted(friendshipRequest.getAccepted())
                 .build();
+    }
+
+    @Override
+    public List<ListFriendshipResponse> usersToListFriendshipResponse(List<User> users) {
+
+        return users.stream()
+                .map(user -> ListFriendshipResponse.builder()
+                        .firstName(user.getName())
+                        .lastName(user.getLastName())
+                        .username(user.getUsername())
+                        .build()).toList();
     }
 }

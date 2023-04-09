@@ -2,20 +2,20 @@ package br.com.shapeup.adapters.input.web.controller.mapper.friend;
 
 
 import br.com.shapeup.adapters.input.web.controller.response.friend.AcceptedFriendshipResponse;
+import br.com.shapeup.adapters.input.web.controller.response.friend.ListFriendshipResponse;
 import br.com.shapeup.adapters.input.web.controller.response.friend.RequestFriendshipResponse;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import br.com.shapeup.core.domain.user.User;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {FriendshipHttpMapper.class})
 @Component
 public interface FriendshipHttpMapper {
-    FriendshipHttpMapper INSTANCE = Mappers.getMapper(FriendshipHttpMapper.class);
 
     RequestFriendshipResponse friendRequestToRequestFriendshipResponse(FriendshipRequest friendshipRequest);
 
     AcceptedFriendshipResponse friendRequestToAcceptedFriendshipResponse(FriendshipRequest friendshipRequest);
+
+    List<ListFriendshipResponse> usersToListFriendshipResponse(List<User> users);
 
 }
