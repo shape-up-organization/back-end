@@ -2,33 +2,40 @@ package br.com.shapeup.core.domain.squad;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SquadEvent extends Entity<SquadEventId> {
+    private String idSquad;
+
     private String name;
+
     private LocalDateTime date;
+
     private String description;
+
     private String tag;
 
+    private String idAddress;
 
-    public SquadEvent(String name, LocalDateTime date, String description, String tag) {
+    private SquadEvent(String name, LocalDateTime date, String description, String tag, String idSquad, String idAddress) {
         super(SquadEventId.unique());
         this.name = name;
         this.date = date;
         this.description = description;
         this.tag = tag;
-
+        this.idSquad = idSquad;
+        this.idAddress = idAddress;
     }
 
-    public static SquadEvent newSquadEvent(String name,LocalDateTime date,String description,String tag){
-        return newSquadEvent(name,date,description,tag);
+    public static SquadEvent newSquadEvent(String name,LocalDateTime date,String description,String tag,
+                                           String idSquad, String idAddress){
+        return newSquadEvent(name,date,description,tag,idSquad, idAddress);
     }
+
     @Override
     public void validate(ValidationHandler handler) {
-
+        new SquadEventValidator(handler, this).validate();
     }
 
     public String getName() {
@@ -63,27 +70,41 @@ public class SquadEvent extends Entity<SquadEventId> {
         this.tag = tag;
     }
 
+    public String getIdSquad() {
+        return idSquad;
+    }
+
+    public void setIdSquad(String idSquad) {
+        this.idSquad = idSquad;
+    }
+
+    public String getIdAddress() {
+        return idAddress;
+    }
+
+    public void setIdAddress(String idAddress) {
+        this.idAddress = idAddress;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         SquadEvent that = (SquadEvent) o;
-
-        if (!Objects.equals(name, that.name)) return false;
-        if (!Objects.equals(date, that.date)) return false;
-        if (!Objects.equals(description, that.description)) return false;
-        return Objects.equals(tag, that.tag);
+        return Objects.equals(idSquad, that.idSquad) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(date, that.date) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(tag, that.tag) &&
+                Objects.equals(idAddress, that.idAddress);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (tag != null ? tag.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), idSquad, name, date, description, tag, idAddress);
     }
 }

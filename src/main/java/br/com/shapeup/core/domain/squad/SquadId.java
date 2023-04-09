@@ -1,12 +1,10 @@
 package br.com.shapeup.core.domain.squad;
 
 import br.com.shapeup.common.domain.Identifier;
-
-
 import java.util.Objects;
 import java.util.UUID;
 
-public class SquadId  extends Identifier {
+public class SquadId  extends Identifier<String> {
     private final String value;
 
     private SquadId(String value) {

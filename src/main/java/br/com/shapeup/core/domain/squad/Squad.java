@@ -2,7 +2,6 @@ package br.com.shapeup.core.domain.squad;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-
 import java.util.Objects;
 
 public class Squad extends Entity<SquadId> {
@@ -10,9 +9,10 @@ public class Squad extends Entity<SquadId> {
     private String name;
 
     private boolean isActive;
+
     private int xp;
 
-    public Squad(String name, boolean isActive, int xp) {
+    private Squad(String name, boolean isActive, int xp) {
         super(SquadId.unique());
         this.name = name;
         this.isActive = isActive;
@@ -25,7 +25,7 @@ public class Squad extends Entity<SquadId> {
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new SquadValidator(handler, this).validate();
     }
 
     public String getName() {
@@ -54,23 +54,21 @@ public class Squad extends Entity<SquadId> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         Squad squad = (Squad) o;
 
-        if (isActive != squad.isActive) return false;
-        if (xp != squad.xp) return false;
-        return Objects.equals(name, squad.name);
+        return isActive == squad.isActive &&
+                xp == squad.xp &&
+                Objects.equals(name, squad.name);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (isActive ? 1 : 0);
-        result = 31 * result + xp;
-        return result;
+        return Objects.hash(super.hashCode(), name, isActive, xp);
     }
 }
