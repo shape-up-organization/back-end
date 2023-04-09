@@ -2,23 +2,28 @@ package br.com.shapeup.core.domain.comments;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-
 import java.util.Objects;
 
 public class AnswerComment extends Entity<AnswerCommentId> {
+    private String userId;
+
+    private String commentId;
+
     private String commentMessage;
 
-    public AnswerComment( String commentMessage) {
+    private AnswerComment(String commentMessage, String userId, String commentId) {
         super(AnswerCommentId.unique());
         this.commentMessage = commentMessage;
+        this.userId = userId;
+        this.commentId = commentId;
     }
-     public static AnswerComment newAnswerComment(String commentMessage){
-        return newAnswerComment(commentMessage);
+     public static AnswerComment newAnswerComment(String commentMessage, String userId, String commentId){
+        return newAnswerComment(commentMessage, userId, commentId);
      }
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new AnswerCommentValidator(handler, this).validate();
     }
 
     public String getCommentMessage() {
@@ -29,21 +34,36 @@ public class AnswerComment extends Entity<AnswerCommentId> {
         this.commentMessage = commentMessage;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
         AnswerComment that = (AnswerComment) o;
 
-        return Objects.equals(commentMessage, that.commentMessage);
+        return Objects.equals(userId, that.userId) &&
+                Objects.equals(commentId, that.commentId) &&
+                Objects.equals(commentMessage, that.commentMessage);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (commentMessage != null ? commentMessage.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), getUserId(), getCommentId(), getCommentMessage());
     }
 }

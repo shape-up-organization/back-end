@@ -1,12 +1,10 @@
 package br.com.shapeup.core.domain.comments;
 
 import br.com.shapeup.common.domain.Identifier;
-import br.com.shapeup.core.domain.squad.SquadId;
-
 import java.util.Objects;
 import java.util.UUID;
 
-public class AnswerCommentId extends Identifier {
+public class AnswerCommentId extends Identifier<String> {
     private final String value;
 
     private AnswerCommentId(String value) {
