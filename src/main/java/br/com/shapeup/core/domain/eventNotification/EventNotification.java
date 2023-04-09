@@ -2,26 +2,30 @@ package br.com.shapeup.core.domain.eventNotification;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-import com.amazonaws.services.dynamodbv2.xspec.M;
 
 import java.util.Objects;
 
 public class EventNotification extends Entity<EventNotificationId> {
     private String title;
+    
     private String message;
+    
+    private String eventId;
 
-    public EventNotification( String title, String message) {
+    private EventNotification(String title, String message, String eventId) {
         super(EventNotificationId.unique());
         this.title = title;
         this.message = message;
+        this.eventId = eventId;
     }
-    public static EventNotification newEventNotification(String title, String Message){
-        return newEventNotification(title, Message);
+
+    public static EventNotification newEventNotification(String title, String Message, String eventId) {
+        return newEventNotification(title, Message, eventId);
     }
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new EventNotificationValidator(handler, this).validate();
     }
 
     public String getTitle() {
@@ -40,6 +44,14 @@ public class EventNotification extends Entity<EventNotificationId> {
         this.message = message;
     }
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,16 +59,11 @@ public class EventNotification extends Entity<EventNotificationId> {
         if (!super.equals(o)) return false;
 
         EventNotification that = (EventNotification) o;
-
-        if (!Objects.equals(title, that.title)) return false;
         return Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), getMessage(), getTitle());
     }
 }

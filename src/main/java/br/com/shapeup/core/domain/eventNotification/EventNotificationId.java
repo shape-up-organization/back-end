@@ -1,12 +1,10 @@
 package br.com.shapeup.core.domain.eventNotification;
 
 import br.com.shapeup.common.domain.Identifier;
-import br.com.shapeup.core.domain.squad.SquadId;
-
 import java.util.Objects;
 import java.util.UUID;
 
-public class EventNotificationId extends Identifier {
+public class EventNotificationId extends Identifier<String> {
     private final String value;
 
     private EventNotificationId(String value) {
@@ -37,6 +35,7 @@ public class EventNotificationId extends Identifier {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
+
         EventNotificationId eventNotificationId = (EventNotificationId) o;
         return getValue().equals(eventNotificationId.getValue());
     }
