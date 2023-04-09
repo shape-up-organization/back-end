@@ -28,13 +28,14 @@ public class JwtService {
                 .getBody();
     }
 
-    private String createToken(Map<String, Object> claims, String userName, String name, String id) {
+    private String createToken(Map<String, Object> claims, String userName, String name, String id, String accountName) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(id)
                 .claim("id", id)
                 .setSubject(name)
                 .claim("name", name)
+                .claim("username", accountName)
                 .setSubject(userName)
                 .claim("email", userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -44,9 +45,9 @@ public class JwtService {
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String generateToken(String userName, String name, String id) {
+    public String generateToken(String userName, String name, String id, String accountName) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName, name, id);
+        return createToken(claims, userName, name, id, accountName);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -83,5 +84,14 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("email", String.class);
+    }
+
+    public static String extractAccountNameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Decoders.BASE64.decode(SECRET))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("username", String.class);
     }
 }
