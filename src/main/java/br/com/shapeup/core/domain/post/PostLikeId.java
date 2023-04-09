@@ -1,11 +1,10 @@
 package br.com.shapeup.core.domain.post;
 
 import br.com.shapeup.common.domain.Identifier;
-
 import java.util.Objects;
 import java.util.UUID;
 
-public class PostLikeId extends Identifier {
+public class PostLikeId extends Identifier<String> {
     private final String value;
 
     private PostLikeId(String value) {

@@ -2,29 +2,42 @@ package br.com.shapeup.core.domain.post;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
+import java.util.Objects;
 
 public class PostLike extends Entity<PostLikeId> {
-    private boolean isLiked;
+    private String idPost;
 
-    public PostLike( boolean isLiked) {
+    private String usernameLiked;
+
+    private PostLike(String idPost, String usernameLiked) {
         super(PostLikeId.unique());
-        this.isLiked = isLiked;
+        this.idPost = idPost;
+        this.usernameLiked = usernameLiked;
     }
-    public static PostLike newPostLike(boolean isLiked){
-        return new PostLike(isLiked);
+
+    public static PostLike newPostLike(String idPost, String usernameLiked){
+        return new PostLike(idPost, usernameLiked);
     }
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new PostLikeValidator(handler, this).validate();
     }
 
-    public boolean isLiked() {
-        return isLiked;
+    public String getIdPost() {
+        return idPost;
     }
 
-    public void setLiked(boolean liked) {
-        isLiked = liked;
+    public void setIdPost(String idPost) {
+        this.idPost = idPost;
+    }
+
+    public String getUsernameLiked() {
+        return usernameLiked;
+    }
+
+    public void setUsernameLiked(String usernameLiked) {
+        this.usernameLiked = usernameLiked;
     }
 
     @Override
@@ -32,16 +45,14 @@ public class PostLike extends Entity<PostLikeId> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
         PostLike postLike = (PostLike) o;
 
-        return isLiked == postLike.isLiked;
+        return Objects.equals(idPost, postLike.idPost) &&
+                Objects.equals(usernameLiked, postLike.usernameLiked);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (isLiked ? 1 : 0);
-        return result;
+        return Objects.hash(super.hashCode(), idPost, usernameLiked);
     }
 }
