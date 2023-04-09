@@ -9,14 +9,14 @@ public class PostLike extends Entity<PostLikeId> {
 
     private String usernameLiked;
 
-    private PostLike(String idPost, String usernameLiked) {
-        super(PostLikeId.unique());
+    private PostLike(PostLikeId id, String idPost, String usernameLiked) {
+        super(id);
         this.idPost = idPost;
         this.usernameLiked = usernameLiked;
     }
 
-    public static PostLike newPostLike(String idPost, String usernameLiked){
-        return new PostLike(idPost, usernameLiked);
+    public static PostLike newPostLike(PostLikeId id,String idPost, String usernameLiked){
+        return new PostLike(id, idPost, usernameLiked);
     }
 
     @Override

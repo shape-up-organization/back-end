@@ -9,14 +9,14 @@ public class Post extends Entity<PostId> {
 
     private String description;
 
-    private Post(String description, String userId) {
-        super(PostId.unique());
+    private Post(PostId id, String description, String userId) {
+        super(id);
         this.description = description;
         this.userId = userId;
     }
 
-    public static Post newPost(String description, String userId){
-        return new Post(description, userId);
+    public static Post newPost(PostId id,String description, String userId){
+        return new Post(id, description, userId);
     }
 
     @Override

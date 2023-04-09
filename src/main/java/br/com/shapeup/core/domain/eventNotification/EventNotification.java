@@ -12,15 +12,15 @@ public class EventNotification extends Entity<EventNotificationId> {
     
     private String eventId;
 
-    private EventNotification(String title, String message, String eventId) {
-        super(EventNotificationId.unique());
+    private EventNotification(EventNotificationId id,String title, String message, String eventId) {
+        super(id);
         this.title = title;
         this.message = message;
         this.eventId = eventId;
     }
 
-    public static EventNotification newEventNotification(String title, String Message, String eventId) {
-        return newEventNotification(title, Message, eventId);
+    public static EventNotification newEventNotification(EventNotificationId id,String title, String Message, String eventId) {
+        return new EventNotification(id, title, Message, eventId);
     }
 
     @Override

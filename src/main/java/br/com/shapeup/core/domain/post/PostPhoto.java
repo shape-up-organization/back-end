@@ -9,13 +9,13 @@ public class PostPhoto extends Entity<PostPhotoId> {
 
     private String photoUrlPhoto;
 
-    public PostPhoto(String photoUrlPhoto, String idPost) {
-        super(PostPhotoId.unique());
+    public PostPhoto(PostPhotoId id,String photoUrlPhoto, String idPost) {
+        super(id);
         this.photoUrlPhoto = photoUrlPhoto;
         this.idPost = idPost;
     }
-    public static PostPhoto newPostPhoto(String photoUrlPhoto, String idPost){
-        return new PostPhoto(photoUrlPhoto, idPost);
+    public static PostPhoto newPostPhoto(PostPhotoId id, String photoUrlPhoto, String idPost){
+        return new PostPhoto(id, photoUrlPhoto, idPost);
     }
 
     @Override

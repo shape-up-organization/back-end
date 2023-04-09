@@ -12,15 +12,15 @@ public class SquadMembers extends Entity<SquadMembersId> {
 
     private String position;
 
-    private SquadMembers(String position, String idSquad, String idUser) {
-        super(SquadMembersId.unique());
+    private SquadMembers(SquadMembersId id, String position, String idSquad, String idUser) {
+        super(id);
         this.position = position;
         this.idSquad = idSquad;
         this.idUser = idUser;
     }
 
-    public static SquadMembers newSquadMembers(String position, String idSquad, String idUser){
-        return newSquadMembers(position, idSquad, idUser);
+    public static SquadMembers newSquadMembers(SquadMembersId id,  String position, String idSquad, String idUser){
+        return new SquadMembers(id, position, idSquad, idUser);
     }
     @Override
     public void validate(ValidationHandler handler) {

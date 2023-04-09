@@ -12,15 +12,15 @@ public class Squad extends Entity<SquadId> {
 
     private int xp;
 
-    private Squad(String name, boolean isActive, int xp) {
-        super(SquadId.unique());
+    private Squad(SquadId id, String name, boolean isActive, int xp) {
+        super(id);
         this.name = name;
         this.isActive = isActive;
         this.xp = xp;
     }
 
-    public static Squad newSquad(String name, boolean isActive, int xp){
-        return new Squad(name,isActive,xp);
+    public static Squad newSquad(SquadId id,String name, boolean isActive, int xp){
+        return new Squad(id, name,isActive,xp);
     }
 
     @Override

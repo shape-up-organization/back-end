@@ -11,14 +11,14 @@ public class AnswerComment extends Entity<AnswerCommentId> {
 
     private String commentMessage;
 
-    private AnswerComment(String commentMessage, String userId, String commentId) {
-        super(AnswerCommentId.unique());
+    private AnswerComment(AnswerCommentId id, String commentMessage, String userId, String commentId) {
+        super(id);
         this.commentMessage = commentMessage;
         this.userId = userId;
         this.commentId = commentId;
     }
-     public static AnswerComment newAnswerComment(String commentMessage, String userId, String commentId){
-        return newAnswerComment(commentMessage, userId, commentId);
+     public static AnswerComment newAnswerComment(AnswerCommentId id ,String commentMessage, String userId, String commentId){
+        return new AnswerComment(id, commentMessage, userId, commentId);
      }
 
     @Override

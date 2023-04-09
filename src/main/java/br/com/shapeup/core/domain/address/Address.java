@@ -19,10 +19,10 @@ public class Address extends Entity<AddressId> {
 
     private String county;
 
-    private Address(String street, String number
+    private Address(AddressId id, String street, String number
             , String neighborhood, String city, String state
             , String complement, String county) {
-        super(AddressId.unique());
+        super(id);
         this.street = street;
         this.number = number;
         this.neighborhood = neighborhood;
@@ -33,8 +33,9 @@ public class Address extends Entity<AddressId> {
     }
 
     public static Address newAddress(String street,String number,String neighborhood,String city
-    ,String state,String complement, String county){
-        return newAddress(street, number, neighborhood, city, state, complement, county);
+    ,String state,String complement, String county, AddressId id)
+    {
+        return new Address(id, street, number, neighborhood, city, state, complement, county);
     }
 
     @Override

@@ -18,8 +18,8 @@ public class SquadEvent extends Entity<SquadEventId> {
 
     private String idAddress;
 
-    private SquadEvent(String name, LocalDateTime date, String description, String tag, String idSquad, String idAddress) {
-        super(SquadEventId.unique());
+    private SquadEvent(SquadEventId id, String name, LocalDateTime date, String description, String tag, String idSquad, String idAddress) {
+        super(id);
         this.name = name;
         this.date = date;
         this.description = description;
@@ -28,9 +28,9 @@ public class SquadEvent extends Entity<SquadEventId> {
         this.idAddress = idAddress;
     }
 
-    public static SquadEvent newSquadEvent(String name,LocalDateTime date,String description,String tag,
+    public static SquadEvent newSquadEvent(SquadEventId id, String name,LocalDateTime date,String description,String tag,
                                            String idSquad, String idAddress){
-        return newSquadEvent(name,date,description,tag,idSquad, idAddress);
+        return new SquadEvent(id, name,date,description,tag,idSquad, idAddress);
     }
 
     @Override

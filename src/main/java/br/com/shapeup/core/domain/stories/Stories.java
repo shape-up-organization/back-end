@@ -8,17 +8,17 @@ import java.util.Objects;
 public class Stories extends Entity<StoriesId> {
     private String pictureStorieUrl;
 
-    public Stories( String pictureStorieUrl) {
-        super(StoriesId.unique());
+    public Stories(StoriesId id, String pictureStorieUrl) {
+        super(id);
         this.pictureStorieUrl = pictureStorieUrl;
     }
-    public static Stories newStories(String pictureStorieUrl){
-        return newStories(pictureStorieUrl);
+    public static Stories newStories(StoriesId id, String pictureStorieUrl){
+        return new Stories(id, pictureStorieUrl);
     }
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        // new StoriesValidator(handler, this).validate();
     }
 
     public String getPictureStorieUrl() {
