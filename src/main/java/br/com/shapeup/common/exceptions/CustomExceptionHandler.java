@@ -11,6 +11,7 @@ import br.com.shapeup.common.exceptions.user.UserInvalidLastName;
 import br.com.shapeup.common.exceptions.user.UserInvalidNameException;
 import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -98,7 +98,8 @@ public class CustomExceptionHandler {
             UserInvalidLastName.class,
             UserInvalidNameException.class,
             UserExistsByCellPhoneException.class,
-            ExpiredJwtException.class
+            ExpiredJwtException.class,
+            UserAlreadyExistsException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
