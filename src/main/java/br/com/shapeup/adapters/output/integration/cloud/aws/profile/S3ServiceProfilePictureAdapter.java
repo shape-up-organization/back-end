@@ -1,7 +1,7 @@
 package br.com.shapeup.adapters.output.integration.cloud.aws.profile;
 
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
-import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
+import br.com.shapeup.adapters.output.repository.model.profile.ProfilePicture;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -21,20 +21,20 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class S3ServicePictureProfileAdapter implements S3ServicePictureProfileGateway {
+public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGateway {
     private final AmazonS3 s3Client;
     private final UserJpaRepository UserJpaRepository;
     private final String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
-    public URI uploadPictureProfileFile(PictureProfile pictureProfile) {
+    public URI uploadProfileFilePicture(ProfilePicture profilePicture) {
         try {
-            String fileName = pictureProfile.getOriginalFilename();
-            String contentType = pictureProfile.getContentType();
-            String uuid = pictureProfile.getUuid();
-            InputStream inputStream = pictureProfile.getInputStream();
+            String fileName = profilePicture.getOriginalFilename();
+            String contentType = profilePicture.getContentType();
+            String uuid = profilePicture.getUuid();
+            InputStream inputStream = profilePicture.getInputStream();
 
-            return uploadPictureProfileFile(inputStream, fileName, contentType, uuid);
+            return uploadProfileFilePicture(inputStream, fileName, contentType, uuid);
         } catch (IOException ex) {
             throw new RuntimeException("IO Error: " + ex.getMessage());
         }
@@ -42,7 +42,7 @@ public class S3ServicePictureProfileAdapter implements S3ServicePictureProfileGa
 
     @SneakyThrows
     @Override
-    public URI uploadPictureProfileFile(InputStream inputStream, String fileName, String contentType, String uuid) {
+    public URI uploadProfileFilePicture(InputStream inputStream, String fileName, String contentType, String uuid) {
         UserEntity user = getUserByUuid(uuid);
         String newFileName = generateNewFileName(user, fileName);
         uploadToS3(inputStream, newFileName, contentType, uuid);
@@ -51,11 +51,11 @@ public class S3ServicePictureProfileAdapter implements S3ServicePictureProfileGa
     }
 
     @Override
-    public URL getPictureProfileUrl(PictureProfile pictureProfile) {
-        String fileName = pictureProfile.getOriginalFilename();
-        String uuid = pictureProfile.getUuid();
-        String username = UserJpaRepository.findById(UUID.fromString(uuid)).get().getUsername();
-        String newFileName = username + "--" + fileName;
+    public URL getProfilePictureUrl(ProfilePicture profilePicture) {
+        String fileName = profilePicture.getOriginalFilename();
+        String uuid = profilePicture.getUuid();
+        UserEntity username = UserJpaRepository.findById(UUID.fromString(uuid)).get();
+        String newFileName = generateNewFileName(username, fileName);
 
         return s3Client.getUrl(bucketName, newFileName);
     }
