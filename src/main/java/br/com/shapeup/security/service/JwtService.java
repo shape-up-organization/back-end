@@ -50,6 +50,7 @@ public class JwtService {
                 .setSubject(userName)
                 .claim("id", id)
                 .claim("name", name)
+                .claim("lastName", lastName)
                 .claim("username", accountName)
                 .claim("email", userName)
                 .claim("xp", xp)
