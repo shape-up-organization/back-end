@@ -70,7 +70,8 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler({
             UserExistsByEmailException.class,
-            AlreadySentFriendRequestException.class
+            AlreadySentFriendRequestException.class,
+            UsernameInUseException.class
     })
     public ResponseEntity<Object> handleConflictException(
             Exception exception,
@@ -100,8 +101,7 @@ public class CustomExceptionHandler {
             UserInvalidNameException.class,
             UserExistsByCellPhoneException.class,
             ExpiredJwtException.class,
-            UserAlreadyExistsException.class,
-            UsernameInUseException.class
+            UserAlreadyExistsException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
