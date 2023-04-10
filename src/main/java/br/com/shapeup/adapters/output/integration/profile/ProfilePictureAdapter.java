@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class ProfilePictureAdapter implements ProfilePictureOutput {
+
     private final UserJpaRepository userRepositoryJpa;
     private final S3ServiceProfilePictureGateway s3Service;
 
@@ -23,9 +24,7 @@ public class ProfilePictureAdapter implements ProfilePictureOutput {
     public URL uploadPicture(Object file, String tokenJwt) {
 
         UserEntity user = validateUserExistsInDatabaseByEmailAndReturnSame(tokenJwt);
-
         ProfilePicture profilePicture = sendPictureToS3AndReturnSame((MultipartFile) file, user);
-
         URL url = s3Service.getProfilePictureUrl(profilePicture);
 
         user.setProfilePicture(url.toString());
