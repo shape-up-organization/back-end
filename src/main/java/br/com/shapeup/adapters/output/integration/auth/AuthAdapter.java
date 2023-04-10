@@ -7,12 +7,12 @@ import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
+import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.security.service.JwtService;
-import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -130,7 +130,7 @@ public class AuthAdapter implements AuthGateway {
     private void validateUserExistsByUserNameInDatabase(String username) {
         Boolean userNameIsAlreadyInUse = UserJpaRepository.existsByUsername(username);
         if (userNameIsAlreadyInUse) {
-            throw new UserAlreadyExistsException("User already exists");
+            throw new UsernameInUseException("Username is not available");
         }
     }
 }

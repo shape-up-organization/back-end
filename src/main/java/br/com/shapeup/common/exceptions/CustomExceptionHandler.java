@@ -1,5 +1,6 @@
 package br.com.shapeup.common.exceptions;
 
+import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
 import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
@@ -99,7 +100,8 @@ public class CustomExceptionHandler {
             UserInvalidNameException.class,
             UserExistsByCellPhoneException.class,
             ExpiredJwtException.class,
-            UserAlreadyExistsException.class
+            UserAlreadyExistsException.class,
+            UsernameInUseException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
