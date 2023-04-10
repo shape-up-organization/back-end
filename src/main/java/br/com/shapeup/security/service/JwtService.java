@@ -58,7 +58,8 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .setHeaderParam("type", "JWT")
                 .base64UrlEncodeWith(Encoders.BASE64URL)
-                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String generateToken(
@@ -83,7 +84,7 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    private Key getSignKey() {
+    public Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -117,5 +118,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("username", String.class);
+    }
+
+    public String generateTokenFromClaims(Claims claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+
     }
 }
