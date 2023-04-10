@@ -16,6 +16,7 @@ services:
     networks:
       - pg-db-network
       - mongo-network
+      - redis-network
     restart: always
 
   pgadmin:
@@ -47,13 +48,18 @@ services:
       TZ: "America/Sao_Paulo"
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_USERNAME: dev
-      MONGO_INITDB_PASSWORD: dev
-      MONGO_INITDB_DATABASE: shapeupdev
     networks:
       - mongo-network
 
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      - redis-network
+
 networks:
-  pg-db-network: {}
-  mongo-network: {}
+  pg-db-network: { }
+  mongo-network: { }
+  redis-network: { }
