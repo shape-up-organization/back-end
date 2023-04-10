@@ -7,11 +7,11 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class PictureProfile implements MultipartFile {
+public class ProfilePicture implements MultipartFile {
     private MultipartFile file;
     private String uuid;
 
-    public PictureProfile(MultipartFile file, String uuid) {
+    public ProfilePicture(MultipartFile file, String uuid) {
         this.file = file;
         this.uuid = uuid;
     }

@@ -29,9 +29,9 @@ public class ProfileController {
         String token = TokenUtils.getToken(request);
 
 
-        var uploadPictureProfile = profilePictureInput.uploadPicture(file, token);
-        var urlUserPictureProfileResponse = Map.of("picture-profile", uploadPictureProfile);
+        var uploadProfilePicture = profilePictureInput.uploadPicture(file, token);
+        var urlUserProfilePictureResponse = Map.of("picture-profile", uploadProfilePicture);
 
-        return ResponseEntity.status(HttpStatus.OK.value()).body(urlUserPictureProfileResponse);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(urlUserProfilePictureResponse);
     }
 }
