@@ -11,9 +11,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class ChatController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -26,12 +28,9 @@ public class ChatController {
     }
 
     @MessageMapping("/private-message")
-    @SendToUser("/private")
-    public Message recMessage(@Payload Message message, @DestinationVariable String username) {
-        simpMessagingTemplate.convertAndSendToUser(username, "/private", message);
-
+    public Message recMessage(@Payload Message message) {
+        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
         chatGateway.saveMessageToDatabase(message);
-
         return message;
     }
 }

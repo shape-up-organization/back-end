@@ -17,11 +17,12 @@ public class User extends Entity<UserId> {
     private Password password;
     private Birth birth;
     private String biography;
-
+    private Long xp;
+    private String profilePicture;
     private List<User> friends = new ArrayList<>();
 
     public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-            Birth birth, String biography) {
+            Birth birth, String biography, Long xp, String profilePicture) {
         super(id);
         this.name = name;
         this.lastName = lastName;
@@ -31,12 +32,18 @@ public class User extends Entity<UserId> {
         this.password = password;
         this.birth = birth;
         this.biography = biography;
+        this.xp = xp;
+        this.profilePicture = profilePicture;
     }
 
     public static User newUser(UUID anId, String name, String lastName, String username, Email email, CellPhone cellPhone,
-            Password password, Birth birth, String biography) {
+            Password password, Birth birth, String biography, Long xp, String profilePicture) {
         var id = UserId.from(anId);
-        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography);
+        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography, xp, profilePicture);
+    }
+
+    private void updateXp(Long xp) {
+        this.xp = xp;
     }
 
     @Override
@@ -126,6 +133,22 @@ public class User extends Entity<UserId> {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public Long getXp() {
+        return xp;
+    }
+
+    public void setXp(Long xp) {
+        this.xp = xp;
     }
 
     @Override

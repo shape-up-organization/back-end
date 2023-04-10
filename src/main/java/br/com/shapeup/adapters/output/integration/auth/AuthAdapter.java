@@ -7,11 +7,12 @@ import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
+import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.security.service.JwtService;
-import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +50,7 @@ public class AuthAdapter implements AuthGateway {
         validateCellPhoneAlreadyExistsInDatabase(userAuthRegisterRequest.getCellPhone());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
+        userEntity.setXp(0L);
 
         log.info("Starting process to save user on database: {}", userEntity.getUsername());
         UserJpaRepository.save(userEntity);
@@ -92,13 +93,17 @@ public class AuthAdapter implements AuthGateway {
             UserAuthLoginRequest userAuthLoginRequest,
             Authentication authentication
     ) {
-        var user = findUserOutput.findByEmail(userAuthLoginRequest.getEmail());
+        User user = findUserOutput.findByEmail(userAuthLoginRequest.getEmail());
 
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
-                    userAuthLoginRequest.getEmail(),
-                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId(),
-                    user.getUsername()
+                    user.getId().getValue(),
+                    user.getName(),
+                    user.getLastName(),
+                    user.getEmail().getValue(),
+                    user.getUsername(),
+                    user.getProfilePicture(),
+                    user.getXp().toString()
             );
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
@@ -111,8 +116,8 @@ public class AuthAdapter implements AuthGateway {
 
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                userAuthLoginRequest.getEmail(),
-                userAuthLoginRequest.getPassword())
+                        userAuthLoginRequest.getEmail(),
+                        userAuthLoginRequest.getPassword())
         );
     }
 
@@ -125,7 +130,7 @@ public class AuthAdapter implements AuthGateway {
     private void validateUserExistsByUserNameInDatabase(String username) {
         Boolean userNameIsAlreadyInUse = UserJpaRepository.existsByUsername(username);
         if (userNameIsAlreadyInUse) {
-            throw new UserAlreadyExistsException("User already exists");
+            throw new UsernameInUseException("Username is not available");
         }
     }
 }

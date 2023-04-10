@@ -70,6 +70,12 @@ public class UserEntity implements Serializable {
     @Column
     private String biography;
 
+    @Column
+    private String profilePicture;
+
+    @Column(columnDefinition = "int8 default 0")
+    private Long xp = 0L;
+
     @Column(columnDefinition = "boolean default true")
     private boolean isActive = true;
 

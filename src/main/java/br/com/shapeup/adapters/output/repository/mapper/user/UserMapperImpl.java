@@ -27,7 +27,9 @@ public class UserMapperImpl implements UserMapper {
                 CellPhone.create(userEntity.getCellPhone()),
                 Password.create(userEntity.getPassword()),
                 Birth.create(userEntity.getBirth()),
-                userEntity.getBiography()
+                userEntity.getBiography(),
+                userEntity.getXp(),
+                userEntity.getProfilePicture()
         );
     }
 

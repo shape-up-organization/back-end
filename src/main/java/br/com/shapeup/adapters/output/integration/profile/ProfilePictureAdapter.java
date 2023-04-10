@@ -1,8 +1,8 @@
 package br.com.shapeup.adapters.output.integration.profile;
 
-import br.com.shapeup.adapters.output.integration.cloud.aws.profile.S3ServicePictureProfileGateway;
+import br.com.shapeup.adapters.output.integration.cloud.aws.profile.S3ServiceProfilePictureGateway;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
-import br.com.shapeup.adapters.output.repository.model.profile.PictureProfile;
+import br.com.shapeup.adapters.output.repository.model.profile.ProfilePicture;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.ports.output.profile.ProfilePictureOutput;
@@ -16,28 +16,32 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class ProfilePictureAdapter implements ProfilePictureOutput {
+
     private final UserJpaRepository userRepositoryJpa;
-    private final S3ServicePictureProfileGateway s3Service;
+    private final S3ServiceProfilePictureGateway s3Service;
 
     @Override
     public URL uploadPicture(Object file, String tokenJwt) {
 
         UserEntity user = validateUserExistsInDatabaseByEmailAndReturnSame(tokenJwt);
+        ProfilePicture profilePicture = sendPictureToS3AndReturnSame((MultipartFile) file, user);
+        URL url = s3Service.getProfilePictureUrl(profilePicture);
 
-        PictureProfile pictureProfile = sendPictureToS3AndReturnSame((MultipartFile) file, user);
+        user.setProfilePicture(url.toString());
+        userRepositoryJpa.save(user);
 
-        return s3Service.getPictureProfileUrl(pictureProfile);
+        return url;
     }
 
-    private PictureProfile sendPictureToS3AndReturnSame(MultipartFile file, UserEntity user) {
+    private ProfilePicture sendPictureToS3AndReturnSame(MultipartFile file, UserEntity user) {
 
-        PictureProfile pictureProfile = new PictureProfile(file, user.getId().toString());
+        ProfilePicture profilePicture = new ProfilePicture(file, user.getId().toString());
         try {
-            s3Service.uploadPictureProfileFile(pictureProfile);
+            s3Service.uploadProfileFilePicture(profilePicture);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return pictureProfile;
+        return profilePicture;
     }
 
     private UserEntity validateUserExistsInDatabaseByEmailAndReturnSame(String tokenJwt) {
