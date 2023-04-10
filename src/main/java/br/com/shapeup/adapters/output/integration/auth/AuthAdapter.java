@@ -9,6 +9,7 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.security.service.JwtService;
 import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
@@ -92,17 +93,17 @@ public class AuthAdapter implements AuthGateway {
             UserAuthLoginRequest userAuthLoginRequest,
             Authentication authentication
     ) {
-        UserEntity userEntity = findUserOutput.findByEmailEntity(userAuthLoginRequest.getEmail());
+        User user = findUserOutput.findByEmail(userAuthLoginRequest.getEmail());
 
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
-                    userEntity.getId().toString(),
-                    userEntity.getName(),
-                    userEntity.getLastName(),
-                    userEntity.getEmail(),
-                    userEntity.getUsername(),
-                    userEntity.getProfilePicture(),
-                    userEntity.getXp().toString()
+                    user.getId().getValue(),
+                    user.getName(),
+                    user.getLastName(),
+                    user.getEmail().getValue(),
+                    user.getUsername(),
+                    user.getProfilePicture(),
+                    user.getXp().toString()
             );
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
