@@ -28,7 +28,6 @@ public class ProfileController {
         String token = TokenUtils.getToken(request);
 
         var uploadProfilePicture = profilePictureInput.uploadPicture(file, token);
-
         String newToken = TokenUtils.updateProfilePictureAndGenerateNewToken(token, uploadProfilePicture);
 
         var updatedProfilePictureReponse = new UpdatedProfilePictureReponse(
