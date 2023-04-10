@@ -11,10 +11,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtService {
 
     private static final String SECRET = Encoders.BASE64.encode("5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437".getBytes());
@@ -28,26 +30,48 @@ public class JwtService {
                 .getBody();
     }
 
-    private String createToken(Map<String, Object> claims, String userName, String name, String id, String accountName) {
+    private String createToken(
+            Map<String, Object> claims,
+            String id,
+            String name,
+            String lastName,
+            String userName,
+            String accountName,
+            String profilePicture,
+            String xp
+    ) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(id)
-                .claim("id", id)
                 .setSubject(name)
+                .setSubject(lastName)
+                .setSubject(xp)
+                .setSubject(profilePicture)
+                .setSubject(userName)
+                .claim("id", id)
                 .claim("name", name)
                 .claim("username", accountName)
-                .setSubject(userName)
                 .claim("email", userName)
+                .claim("xp", xp)
+                .claim("profilePicture", profilePicture)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("type", "JWT")
                 .base64UrlEncodeWith(Encoders.BASE64URL)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String generateToken(String userName, String name, String id, String accountName) {
+    public String generateToken(
+            String id,
+            String name,
+            String lastName,
+            String userName,
+            String accountName,
+            String xp,
+            String profilePicture
+    ) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName, name, id, accountName);
+        return createToken(claims, id, name, lastName, userName, accountName, xp, profilePicture);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

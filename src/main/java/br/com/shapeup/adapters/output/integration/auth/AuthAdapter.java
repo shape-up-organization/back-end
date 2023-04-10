@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +49,7 @@ public class AuthAdapter implements AuthGateway {
         validateCellPhoneAlreadyExistsInDatabase(userAuthRegisterRequest.getCellPhone());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
+        userEntity.setXp(0L);
 
         log.info("Starting process to save user on database: {}", userEntity.getUsername());
         UserJpaRepository.save(userEntity);
@@ -92,13 +92,17 @@ public class AuthAdapter implements AuthGateway {
             UserAuthLoginRequest userAuthLoginRequest,
             Authentication authentication
     ) {
-        var user = findUserOutput.findByEmail(userAuthLoginRequest.getEmail());
+        UserEntity userEntity = findUserOutput.findByEmailEntity(userAuthLoginRequest.getEmail());
 
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
-                    userAuthLoginRequest.getEmail(),
-                    userAuthLoginRequest.getName(), userAuthLoginRequest.getId(),
-                    user.getUsername()
+                    userEntity.getId().toString(),
+                    userEntity.getName(),
+                    userEntity.getLastName(),
+                    userEntity.getEmail(),
+                    userEntity.getUsername(),
+                    userEntity.getProfilePicture(),
+                    userEntity.getXp().toString()
             );
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);
@@ -111,8 +115,8 @@ public class AuthAdapter implements AuthGateway {
 
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                userAuthLoginRequest.getEmail(),
-                userAuthLoginRequest.getPassword())
+                        userAuthLoginRequest.getEmail(),
+                        userAuthLoginRequest.getPassword())
         );
     }
 
