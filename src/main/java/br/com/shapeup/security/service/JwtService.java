@@ -126,6 +126,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setHeaderParam("type", "JWT")
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
 
