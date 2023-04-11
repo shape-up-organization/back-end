@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListFriendshipResponse {
+    private String id;
     private String firstName;
     private String lastName;
     private String username;
