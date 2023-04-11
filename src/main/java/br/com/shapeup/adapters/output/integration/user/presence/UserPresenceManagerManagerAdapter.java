@@ -26,11 +26,8 @@ public class UserPresenceManagerManagerAdapter implements UserPresenceManagerGat
     }
 
     public Flux<UserPresenceEvent> getUserPresenceStream(String userId) {
+
         return Flux.create(sink -> {
-            sink.onCancel(() -> markUserAsOffline(userId));
-
-            markUserAsOnline(userId);
-
             Flux.interval(Duration.ofSeconds(10))
                     .map(it -> new UserPresenceEvent(userId, isUserOnline(userId)))
                     .doOnCancel(() -> markUserAsOffline(userId))
