@@ -10,6 +10,8 @@ import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import java.util.List;
+import br.com.shapeup.common.exceptions.friend.NotFriendException;
+import java.io.NotActiveException;
 
 public class FriendshipUsecase implements FriendshipInput {
     private final FriendshipOutput friendsOutput;
@@ -92,4 +94,38 @@ public class FriendshipUsecase implements FriendshipInput {
             throw new DuplicateFriendshipException(username);
         }
     }
+    private static void validateExistsFrienship(String friendUsername, User user) {
+        boolean isAlreadyFriend = user.getFriends().stream()
+                .anyMatch(friend -> friend.getUsername().equals(friendUsername));
+
+        if (!isAlreadyFriend) {
+            throw new NotFriendException(user.getUsername()); // depois tera uma exception dizendo que nao é amigo
+        }
+    }
+
+
+    @Override
+    public void deleteFriendshipRequest(String friendUsername, String email) {
+        User user = findUserOutput.findByEmail(email);
+        User newFriend = findUserOutput.findByUsername(friendUsername);
+
+        validateIsSameUser(friendUsername, user);
+
+        validateUserAlreadyFriend(friendUsername, user);
+
+        friendsOutput.deleteFriendshipRequest(user, newFriend);
+    }
+
+    @Override
+    public void deleteFriend(String friendUsername, String email) {
+        User user = findUserOutput.findByEmail(email);
+        User newFriend = findUserOutput.findByUsername(friendUsername);
+
+        validateIsSameUser(friendUsername, user);
+
+        validateExistsFrienship(friendUsername, user);
+
+        friendsOutput.deleteFriend(user, newFriend);
+    }
 }
+

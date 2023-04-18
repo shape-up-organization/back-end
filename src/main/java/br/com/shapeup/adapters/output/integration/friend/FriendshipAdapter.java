@@ -156,4 +156,15 @@ public class FriendshipAdapter implements FriendshipOutput {
         return friendsEntityList.stream()
                 .map(FriendsEntity::getUserSender).toList();
     }
+
+    @Override
+    public void deleteFriendshipRequest(User user, User newFriend) {
+        friendsMongoRepository.deleteByUsernameSenderAndUsernameReceiver(user.getUsername(), newFriend.getUsername());
+    }
+    @Override
+    public void deleteFriend(User user, User newFriend) {
+        UserEntity currentUserEntity = userMapper.userToUserEntity(user);
+        UserEntity newFriendEntity = userMapper.userToUserEntity(newFriend);
+        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(currentUserEntity.getId(),newFriendEntity.getId());
+    }
 }

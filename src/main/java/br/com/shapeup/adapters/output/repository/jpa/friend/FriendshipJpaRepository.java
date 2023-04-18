@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface FriendshipJpaRepository extends JpaRepository<FriendsEntity, UUID> {
 
     List<FriendsEntity> findAllByUserReceiver(UserEntity userReceiver);
+
+    void deleteByUserReceiverIdAndUserSenderId(UUID userReceiverId, UUID userSenderId);
 }

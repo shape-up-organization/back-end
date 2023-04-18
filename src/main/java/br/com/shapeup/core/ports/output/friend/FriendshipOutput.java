@@ -10,4 +10,9 @@ public interface FriendshipOutput {
     FriendshipRequest acceptFriendRequest(User currentUser, User newFriend);
 
     List<User> getAllFriendship(User currentUser);
+
+
+    void deleteFriendshipRequest(User user, User newFriend);
+
+    void deleteFriend(User user, User newFriend);
 }

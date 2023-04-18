@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,6 +72,25 @@ public class FriendshipController {
         List<ListFriendshipResponse> listFriendshipResponses = friendshipHttpMapper.usersToListFriendshipResponse(friendshipRequests);
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(listFriendshipResponses);
+    }
+    @DeleteMapping("/delete-friendship-request/{friendUsername}")
+    public ResponseEntity<Void> deleteFriendshipRequest(HttpServletRequest request, @Valid @PathVariable String friendUsername) {
+        String token = request.getHeader("Authorization").substring(7);
+        String email = JwtService.extractEmailFromToken(token);
+
+        friendshipInput.deleteFriendshipRequest(friendUsername, email);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/delete-friend/{friendUsername}")
+    public ResponseEntity<Void> deleteFriendshipByUsername(HttpServletRequest request, @Valid @PathVariable String friendUsername) {
+        String token = request.getHeader("Authorization").substring(7);
+        String email = JwtService.extractEmailFromToken(token);
+
+        friendshipInput.deleteFriend(friendUsername, email);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
