@@ -10,6 +10,8 @@ ARG AWS_BUCKET_NAME
 ENV POSTGRES_URL=jdbc:postgresql://postgres-db:5432/shapeupdev \
     POSTGRES_USER=dev \
     POSTGRES_PASSWORD=dev \
+    MONGO_DATABASE=shapeupdev \
+    MONGO_HOST=localhost \
     MONGO_PORT=27017 \
     AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
