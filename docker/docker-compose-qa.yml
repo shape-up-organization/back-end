@@ -62,7 +62,7 @@ services:
 
   shape-up-api:
     container_name: shape-up-api
-    image: shapeup/shapeup-api:48
+    image: shapeup/shapeup-api:49
     env_file:
       - .env
     environment:
