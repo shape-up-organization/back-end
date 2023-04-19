@@ -54,7 +54,7 @@ services:
   redis:
     image: redis:latest
     ports:
-      - 6379:6379
+      - "6379:6379"
     restart: always
     networks:
       - redis-network
@@ -62,7 +62,7 @@ services:
 
   shape-up-api:
     container_name: shape-up-api
-    image: shapeup/shapeup-api:42
+    image: shapeup/shapeup-api:43
     env_file:
       - .env
     environment:
