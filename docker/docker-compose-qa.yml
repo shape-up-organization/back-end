@@ -16,6 +16,7 @@ services:
       - "5432:5432"
     networks:
       - pg-db-network
+      - general-network
     restart: always
 
   pgadmin:
@@ -31,6 +32,7 @@ services:
       - postgres-db
     networks:
       - pg-db-network
+      - general-network
     restart: always
 
   mongo-db:
@@ -41,14 +43,13 @@ services:
       - ./volumes/database/mongo-dev:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     environment:
-      MONGO_INITDB_USERNAME: dev
-      MONGO_INITDB_PASSWORD: dev
       MONGO_INITDB_DATABASE: shapeupdev
       TZ: "America/Sao_Paulo"
     ports:
       - "27017:27017"
     networks:
       - mongo-network
+      - general-network
 
   redis:
     image: redis:latest
@@ -57,10 +58,11 @@ services:
     restart: always
     networks:
       - redis-network
+      - general-network
 
   shape-up-api:
     container_name: shape-up-api
-    image: shapeup/shapeup-api:latest
+    image: shapeup/shapeup-api:42
     env_file:
       - .env
     environment:
@@ -79,9 +81,11 @@ services:
       - pg-db-network
       - mongo-network
       - redis-network
+      - general-network
     restart: always
 
 networks:
   pg-db-network: { }
   mongo-network: { }
   redis-network: { }
+  general-network: { }
