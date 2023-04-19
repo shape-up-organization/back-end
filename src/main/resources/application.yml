@@ -12,8 +12,8 @@ spring:
       auto-index-creation: true
       uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      host: localhost
+      port: 6379
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
