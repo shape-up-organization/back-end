@@ -168,3 +168,4 @@ public class FriendshipAdapter implements FriendshipOutput {
         friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(currentUserEntity.getId(),newFriendEntity.getId());
     }
 }
+
