@@ -124,6 +124,12 @@ public class FriendshipAdapter implements FriendshipOutput {
             );
 
             friendshipJpaRepository.save(friendEntitySenderUpdated);
+
+            friendsMongoRepository.findByUsernameSenderAndUsernameReceiver(
+                    friendshipRequestDocument.getUsernameSender(),
+                    friendshipRequestDocument.getUsernameReceiver()
+            ).ifPresent(friendsMongoRepository::delete);
+
             friendsMongoRepository.save(friendshipRequestDocument);
         } catch (Exception e) {
             log.error("Error while saving friend request: cause: {}", e.getMessage());

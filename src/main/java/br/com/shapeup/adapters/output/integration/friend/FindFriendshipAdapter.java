@@ -23,7 +23,8 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     @Override
     public void hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver) {
         Boolean alreadySentFriendRequest = friendshipMongoRepository
-                .existsByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver);
+                .findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver)
+                .isPresent();
 
         if (alreadySentFriendRequest) {
             log.error("The user {} already sent a friendship request to the user {}", usernameSender, usernameReceiver);
@@ -36,8 +37,14 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     public FriendshipRequest findFriendshipRequest(String usernameSender, String usernameReceiver) {
 
         FriendshipRequestDocument friendshipRequestDocument = friendshipMongoRepository.
-                findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver);
+                findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver).get();
 
         return friendshipMapper.friendshipRequestDocumentToFriendshipRequest(friendshipRequestDocument);
+    }
+
+    @Override
+    public Boolean hasSentFriendRequest(String usernameSender, String usernameReceiver) {
+        return friendshipMongoRepository.findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver)
+                .isPresent();
     }
 }
