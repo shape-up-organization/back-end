@@ -1,6 +1,7 @@
 package br.com.shapeup.adapters.output.repository.jpa.user;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
     Boolean existsByCellPhoneContains(@NonNull String cellPhone);
 
     Optional<UserEntity> findByUsername(String username);
+
+    List<UserEntity> findAllByNameIgnoreCaseAndLastNameIgnoreCase(String name, String lastName);
 
 }

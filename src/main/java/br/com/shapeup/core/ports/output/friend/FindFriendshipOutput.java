@@ -5,4 +5,6 @@ import br.com.shapeup.core.domain.friend.FriendshipRequest;
 public interface FindFriendshipOutput {
     void hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver);
     FriendshipRequest findFriendshipRequest(String usernameSender, String usernameReceiver);
+
+    Boolean hasSentFriendRequest(String usernameSender, String usernameReceiver);
 }
