@@ -1,6 +1,8 @@
 package br.com.shapeup.core.usecase.friend;
+
 import br.com.shapeup.common.exceptions.friend.AddYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
+import br.com.shapeup.common.exceptions.friend.DeleteYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
@@ -9,8 +11,11 @@ import br.com.shapeup.core.ports.input.friend.FriendshipInput;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
+
 import java.util.List;
+
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
+
 import java.io.NotActiveException;
 
 public class FriendshipUsecase implements FriendshipInput {
@@ -75,6 +80,14 @@ public class FriendshipUsecase implements FriendshipInput {
         }
     }
 
+    private static void validateDeleteIsSameUser(String newFriendUsername, User user) {
+        boolean isSameUser = user.getUsername().equals(newFriendUsername);
+
+        if (isSameUser) {
+            throw new DeleteYourselfAsAFriendException();
+        }
+    }
+
     private static void verifyFriendshipRequestValidity(User user, User friend, FriendshipRequest friendshipRequest) {
         boolean isSentByCurrentUser = friendshipRequest.getUsernameSender().equals(user.getUsername());
         boolean isReceivedByFriend = friendshipRequest.getUsernameReceiver().equals(friend.getUsername());
@@ -94,6 +107,8 @@ public class FriendshipUsecase implements FriendshipInput {
             throw new DuplicateFriendshipException(username);
         }
     }
+
+    // pra essa validação dar certo é necessario trazer  a lista de amigos do usuario populada - ver no metodo de GetAllFriends
     private static void validateExistsFrienship(String friendUsername, User user) {
         boolean isAlreadyFriend = user.getFriends().stream()
                 .anyMatch(friend -> friend.getUsername().equals(friendUsername));
@@ -121,8 +136,9 @@ public class FriendshipUsecase implements FriendshipInput {
         User user = findUserOutput.findByEmail(email);
         User newFriend = findUserOutput.findByUsername(friendUsername);
 
-        validateIsSameUser(friendUsername, user);
-
+        validateDeleteIsSameUser(friendUsername, user);
+        List<User> friends = friendsOutput.getAllFriendship(user);
+        user.setFriends(friends);
         validateExistsFrienship(friendUsername, user);
 
         friendsOutput.deleteFriend(user, newFriend);
