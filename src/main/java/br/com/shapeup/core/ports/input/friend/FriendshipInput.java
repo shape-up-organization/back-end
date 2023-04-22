@@ -11,4 +11,9 @@ public interface FriendshipInput {
     FriendshipRequest acceptFriendRequest(String friendUsername, String email);
 
     List<User> getAllFriendship(String username);
+
+
+    void deleteFriendshipRequest(String friendUsername, String email);
+
+    void deleteFriend(String friendUsername,String email);
 }

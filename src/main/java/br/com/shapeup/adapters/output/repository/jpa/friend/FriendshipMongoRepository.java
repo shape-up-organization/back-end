@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FriendshipMongoRepository extends MongoRepository<FriendshipRequestDocument, String> {
+    Boolean existsByUsernameSenderAndUsernameReceiver(String usernameSender, String usernameReceiver);
+
+
+    void deleteByUsernameSenderAndUsernameReceiver(String usernameSender,String usernameReceiver);
     Optional<FriendshipRequestDocument> findByUsernameSenderAndUsernameReceiver(String usernameSender, String usernameReceiver);
 }
