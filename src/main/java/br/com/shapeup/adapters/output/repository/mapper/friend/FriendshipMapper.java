@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-//@Mapper(componentModel = "spring", uses = {FriendshipMapper.class})
+@Mapper(componentModel = "spring", uses = {FriendshipMapper.class})
 @Component
 public interface FriendshipMapper {
 

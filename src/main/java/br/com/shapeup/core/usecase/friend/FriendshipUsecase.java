@@ -108,7 +108,7 @@ public class FriendshipUsecase implements FriendshipInput {
         }
     }
 
-    // pra essa validação dar certo é necessario trazer  a lista de amigos do usuario populada - ver no metodo de GetAllFriends
+
     private static void validateExistsFrienship(String friendUsername, User user) {
         boolean isAlreadyFriend = user.getFriends().stream()
                 .anyMatch(friend -> friend.getUsername().equals(friendUsername));
