@@ -25,9 +25,9 @@ public class UserHttpMapperImpl implements UserHttpMapper {
     }
 
     @Override
-    public List<UserResponse> usersToUserResponses(List<User> searchUsers, FriendshipStatus friendshipStatus) {
+    public List<UserResponse> usersToUserResponses(List<User> searchUsers, List<FriendshipStatus> friendshipStatus) {
         return searchUsers.stream()
-                .map(user -> userToUserResponse(user, friendshipStatus))
+                .map(user -> userToUserResponse(user, friendshipStatus.get(searchUsers.indexOf(user))))
                 .toList();
     }
 

@@ -12,7 +12,7 @@ public interface UserHttpMapper {
 
     UserResponse userToUserResponse(User userSearch, FriendshipStatus friendshipStatus);
 
-    List<UserResponse> usersToUserResponses(List<User> searchUsers, FriendshipStatus friendshipStatus);
+    List<UserResponse> usersToUserResponses(List<User> searchUsers, List<FriendshipStatus> friendshipStatus);
 
     List<String> usersToUsernames(List<User> searchUsers);
 }

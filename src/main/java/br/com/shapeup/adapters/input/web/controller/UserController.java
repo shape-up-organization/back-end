@@ -64,7 +64,7 @@ public class UserController {
         String jwtToken = TokenUtils.getToken(request);
         var email = JwtService.extractEmailFromToken(jwtToken);
 
-        FriendshipStatus friendshipStatus = userPersistanceInput.getFriendshipStatus(email, List.of(username));
+        FriendshipStatus friendshipStatus = userPersistanceInput.getFriendshipStatus(email, username);
         User searchUser = userPersistanceInput.findUserByUsername(username);
 
         UserResponse userResponse = userHttpMapper.userToUserResponse(searchUser, friendshipStatus);
@@ -82,10 +82,8 @@ public class UserController {
         var email = JwtService.extractEmailFromToken(jwtToken);
 
         List<User> searchUsers = userPersistanceInput.findAllUserByFullName(name, lastName);
-
         List<String> usernames = userHttpMapper.usersToUsernames(searchUsers);
-
-        FriendshipStatus friendshipStatus = userPersistanceInput.getFriendshipStatus(email, usernames);
+        List<FriendshipStatus> friendshipStatus = userPersistanceInput.getFriendshipStatus(email, usernames);
 
         List<UserResponse> userResponses = userHttpMapper.usersToUserResponses(searchUsers, friendshipStatus);
 

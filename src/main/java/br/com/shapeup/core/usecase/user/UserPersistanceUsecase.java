@@ -35,7 +35,12 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public FriendshipStatus getFriendshipStatus(String currentUserEmail, List<String> searchUserUsername) {
+    public FriendshipStatus getFriendshipStatus(String currentUserEmail, String searchUserUsername) {
+        return userPersistanceOutput.getFriendshipStatus(currentUserEmail, searchUserUsername);
+    }
+
+    @Override
+    public List<FriendshipStatus> getFriendshipStatus(String currentUserEmail, List<String> searchUserUsername) {
         return userPersistanceOutput.getFriendshipStatus(currentUserEmail, searchUserUsername);
     }
 
@@ -43,7 +48,6 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     public List<User> findAllUserByFullName(String name, String lastName) {
         return userPersistanceOutput.findAllUserByFullName(name, lastName);
     }
-
 
     private void validateSearchUser(User searchUser, String username) {
         if (searchUser == null) {
