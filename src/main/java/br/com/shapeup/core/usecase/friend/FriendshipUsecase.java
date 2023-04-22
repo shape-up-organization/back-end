@@ -124,7 +124,7 @@ public class FriendshipUsecase implements FriendshipInput {
         User user = findUserOutput.findByEmail(email);
         User newFriend = findUserOutput.findByUsername(friendUsername);
 
-        validateIsSameUser(friendUsername, user);
+        validateDeleteIsSameUser(friendUsername, user);
 
         validateUserAlreadyFriend(friendUsername, user);
 
