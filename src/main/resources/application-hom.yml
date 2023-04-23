@@ -1,0 +1,46 @@
+server:
+#  port: 443
+#  ssl:
+#    enabled: true
+#    key-store-type: PKCS12
+#    key-store: classpath:shapeup-api.p12
+#    key-store-password: ${KEY_STORE_PASSWORD}
+#    key-alias: shapeup-api
+
+spring:
+  activate:
+    on-profile:
+      - hom
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      database: ${MONGO_DATABASE}
+      host: ${MONGO_HOST}
+      port: ${MONGO_PORT}
+      username: ${MONGO_USER}
+      password: ${MONGO_PASSWORD}
+      auto-index-creation: true
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: ${POSTGRES_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
