@@ -19,6 +19,8 @@ spring:
   config:
     import:
       - optional:file:./variables-local.properties
+    activate:
+      on-profile: local
   datasource:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}

@@ -1,7 +1,0 @@
-server:
-  port: 7000
-
-spring:
-  activate:
-    on-profile:
-      - qa
