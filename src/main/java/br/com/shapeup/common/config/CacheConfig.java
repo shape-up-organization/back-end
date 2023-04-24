@@ -1,6 +1,8 @@
 package br.com.shapeup.common.config;
 
 import java.time.Duration;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +18,12 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 @EnableCaching
 public class CacheConfig {
 
+    @Value("${spring.data.redis.host}")
+    private String hostNameRedis;
+
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration("localhost", 6379));
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(hostNameRedis, 6379));
     }
 
     @Bean
