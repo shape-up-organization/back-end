@@ -7,7 +7,7 @@ import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.ShapeUpBaseException;
-import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
+import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.ObjectUtils;
 import br.com.shapeup.core.domain.user.User;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +61,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateUser(String email, UserRequest userRequest) {
         UserEntity userEntity = userJpaRepository.findByEmail(email).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
+            throw new InvalidCredentialException();
         });
 
         Try.run(() -> ObjectUtils.copyNonNullProperties(userEntity, userRequest))
