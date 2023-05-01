@@ -5,7 +5,6 @@ import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.core.domain.post.Post;
 import br.com.shapeup.core.domain.user.User;
 import org.springframework.data.domain.Page;
-
 import java.net.URL;
 import java.util.List;
 
