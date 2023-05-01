@@ -52,7 +52,7 @@ public class PostController {
     ){
         List<PostResponse> posts = postPersistenceInput.getPostsByUsername(username, page, size);
 
-        if (posts == null || posts.isEmpty()) {
+        if (posts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
@@ -81,7 +81,7 @@ public class PostController {
 
         List<PostResponse> posts = postPersistenceInput.getUserPosts(email, page, size);
 
-        if (posts == null || posts.isEmpty()) {
+        if (posts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 

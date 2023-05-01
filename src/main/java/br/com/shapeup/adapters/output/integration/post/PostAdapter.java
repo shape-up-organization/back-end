@@ -13,6 +13,7 @@ import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoReposi
 import br.com.shapeup.adapters.output.repository.mongo.post.comment.PostCommentMongoRepository;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.common.utils.DateUtils;
 import br.com.shapeup.core.ports.output.post.PostOutput;
 import br.com.shapeup.security.service.JwtService;
 import lombok.AllArgsConstructor;
@@ -136,17 +137,12 @@ public class PostAdapter implements PostOutput {
         PostResponse postResponse = new PostResponse(
                 postEntity.getId().toString(),
                 postEntity.getDescription(),
-                formatDateTime(postEntity.getCreatedAt()),
+                DateUtils.formatDateTime(postEntity.getCreatedAt()),
                 postLikeMongoRepository.countAllByPostId(idPost),
-                postCommentMongoRepository.countAllByIdPost(idPost),
+                postCommentMongoRepository.countAllByfkIdPost(idPost),
                 photoUrls
         );
 
         return postResponse;
-    }
-
-    private String formatDateTime(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return dateTime.format(formatter);
     }
 }
