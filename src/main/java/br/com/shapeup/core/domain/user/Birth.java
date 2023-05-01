@@ -23,7 +23,7 @@ public class Birth extends ValueObject {
 
     public static Birth create(String birth) throws ParseException {
         LocalDate localDate = LocalDate.parse(birth, DATE_FORMATTER);
-
+        validateBirth(localDate);
         return Birth.create(localDate);
     }
 
