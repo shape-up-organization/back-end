@@ -4,13 +4,12 @@ import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegiste
 import br.com.shapeup.adapters.output.repository.model.friend.FriendsEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.domain.user.User;
-import java.util.List;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     User userEntitytoUser(UserEntity userEntity);
 
@@ -21,4 +20,5 @@ public interface UserMapper {
     List<User> friendsEntityToUserFriendsList(List<FriendsEntity> friends);
 
     List<User> userEntityListToUserList(List<UserEntity> userEntityList);
+
 }
