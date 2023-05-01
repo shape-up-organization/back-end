@@ -9,6 +9,7 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.ShapeUpBaseException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.common.utils.ObjectUtils;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
@@ -64,7 +65,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
             throw new UserExistsByEmailException();
         });
 
-        Try.run(() -> BeanUtils.copyProperties(userEntity, userRequest))
+        Try.run(() -> ObjectUtils.copyNonNullProperties(userEntity, userRequest))
                 .onFailure(e -> {
                     log.error("[USER PERSISTENCE ADAPTER] - Error on copy properties: {}", e.getMessage());
                     throw new ShapeUpBaseException(e.getMessage(), e.getCause());
