@@ -16,8 +16,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +26,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
+import org.hibernate.annotations.Formula;
+
+import java.io.Serializable;
+import java.time.LocalDate;
 
 
 @Getter
@@ -48,10 +49,14 @@ public class UserEntity implements Serializable {
     @Column
     private String name;
 
-    @Column
+    @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "full_name")
+    private String fullName;
+
     @Column(name = "username")
+    @Formula("CONCAT(name, ' ', last_name)")
     private String username;
 
     @Column
@@ -93,16 +98,17 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "userReceiver")
     private List<FriendsEntity> friendsReceiver = new ArrayList<>();
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        return isActive() == that.isActive() && Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getFullName(), that.getFullName()) && Objects.equals(getUsername(), that.getUsername()) && Objects.equals(getEmail(), that.getEmail()) && Objects.equals(getCellPhone(), that.getCellPhone()) && Objects.equals(getPassword(), that.getPassword()) && Objects.equals(getBirth(), that.getBirth()) && Objects.equals(getBiography(), that.getBiography()) && Objects.equals(getProfilePicture(), that.getProfilePicture()) && Objects.equals(getXp(), that.getXp()) && Objects.equals(getRoles(), that.getRoles()) && Objects.equals(getFriendsSender(), that.getFriendsSender()) && Objects.equals(getFriendsReceiver(), that.getFriendsReceiver());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(getId(), getName(), getLastName(), getFullName(), getUsername(), getEmail(), getCellPhone(), getPassword(), getBirth(), getBiography(), getProfilePicture(), getXp(), isActive(), getRoles(), getFriendsSender(), getFriendsReceiver());
     }
 }
