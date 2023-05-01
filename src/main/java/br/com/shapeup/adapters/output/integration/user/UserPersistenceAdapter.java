@@ -4,23 +4,22 @@ import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
-import br.com.shapeup.adapters.output.repository.model.friend.FriendsEntity;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+import br.com.shapeup.common.exceptions.ShapeUpBaseException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
-import br.com.shapeup.core.domain.user.Birth;
-import br.com.shapeup.core.domain.user.CellPhone;
-import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
+import io.vavr.control.Try;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,40 +64,11 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
             throw new UserExistsByEmailException();
         });
 
-        if (userRequest.getCellPhone() != null) {
-            CellPhone.validateCellPhone(userRequest.getCellPhone());
-            userEntity.setCellPhone(userRequest.getCellPhone());
-        }
-
-        if (userRequest.getBirth() != null) {
-            var birth = Birth.convertBirth(userRequest.getBirth());
-
-            Birth.validateBirth(birth);
-            userEntity.setBirth(birth);
-        }
-
-        if (userRequest.getBiography() != null) {
-            userEntity.setBiography(userRequest.getBiography());
-        }
-
-        if (userRequest.getName() != null) {
-            userEntity.setName(userRequest.getName());
-        }
-
-        if (userRequest.getLastName() != null) {
-            userEntity.setLastName(userRequest.getLastName());
-        }
-
-        if (userRequest.getUsername() != null) {
-            userEntity.setUsername(userRequest.getUsername());
-        }
-
-        if (userRequest.getPassword() != null) {
-            Password.validatePassword(userRequest.getPassword());
-
-            String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
-            userEntity.setPassword(encodedPassword);
-        }
+        Try.run(() -> BeanUtils.copyProperties(userEntity, userRequest))
+                .onFailure(e -> {
+                    log.error("[USER PERSISTENCE ADAPTER] - Error on copy properties: {}", e.getMessage());
+                    throw new ShapeUpBaseException(e.getMessage(), e.getCause());
+                });
 
         userJpaRepository.save(userEntity);
     }
