@@ -21,8 +21,15 @@
         <org.springframework.boot.version>3.0.5</org.springframework.boot.version>
         <reactor.core.version>3.4.12</reactor.core.version>
     </properties>
-    <dependencies>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
         <!--   Spring Boot Starter Dependencies Start     -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -202,6 +209,21 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
             <version>${reactor.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>0.10.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MrKloan</groupId>
+            <artifactId>result-type</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <!-- Other Dependencies End -->
 
