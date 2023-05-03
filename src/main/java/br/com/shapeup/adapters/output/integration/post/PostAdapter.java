@@ -139,7 +139,7 @@ public class PostAdapter implements PostOutput {
                 postEntity.getDescription(),
                 DateUtils.formatDateTime(postEntity.getCreatedAt()),
                 postLikeMongoRepository.countAllByPostId(idPost),
-                postCommentMongoRepository.countAllByfkIdPost(idPost),
+                postCommentMongoRepository.countAllByIdPost(idPost),
                 photoUrls
         );
 
