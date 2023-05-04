@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,8 +17,6 @@ import java.util.UUID;
 public class PostLikeEntity {
     @Id
     private UUID id = UUID.randomUUID();
-
-    private boolean isLiked;
 
     private String userId;
 

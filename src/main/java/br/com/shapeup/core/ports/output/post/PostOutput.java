@@ -11,9 +11,9 @@ import java.util.List;
 public interface PostOutput {
     List<URL> createPost(Object[] files, String token, PostRequest request);
 
-    List<PostResponse> getPostsByUsername(String username, int page, int size);
+    List<PostResponse> getPostsByUsername(User user, User otherUser, int page, int size);
 
-    PostResponse getPostById(String id);
+    PostResponse getPostById(User user, String id);
 
-    List<PostResponse> getUserPosts(String email ,int page, int size);
+    List<PostResponse> getUserPosts(User user,int page, int size);
 }

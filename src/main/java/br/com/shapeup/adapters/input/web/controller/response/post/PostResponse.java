@@ -24,4 +24,6 @@ public class PostResponse {
     private Integer countComments;
 
     private List<String> photoUrls;
+
+    private boolean isLiked;
 }
