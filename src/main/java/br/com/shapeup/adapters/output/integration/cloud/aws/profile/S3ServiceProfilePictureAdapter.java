@@ -66,7 +66,7 @@ public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGa
     }
 
     private String generateNewFileName(UserEntity user, String fileName) {
-        return "profile_picture/" + user.getUsername() + "--" + fileName;
+        return "profile_picture/" + user.getUsername() + "--" + fileName.replace(" ", "");
     }
 
     @SneakyThrows
