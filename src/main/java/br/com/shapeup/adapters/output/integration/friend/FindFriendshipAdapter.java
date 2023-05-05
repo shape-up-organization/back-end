@@ -6,6 +6,7 @@ import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestD
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,5 +47,19 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     public Boolean hasSentFriendRequest(String usernameSender, String usernameReceiver) {
         return friendshipMongoRepository.findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver)
                 .isPresent();
+    }
+
+    @Override
+    public List<FriendshipRequest> findAllFriendshipRequest(String usernameSender, String usernameReceiver) {
+        return friendshipMongoRepository.findAllByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver).stream()
+                .map(friendshipMapper::friendshipRequestDocumentToFriendshipRequest).toList();
+    }
+
+    @Override
+    public FriendshipRequest findAllFriendshipRequestAcceptedFalse(String usernameSender, String usernameReceiver, Boolean accepted) {
+        FriendshipRequestDocument friendshipRequestDocument = friendshipMongoRepository
+                .findByUsernameSenderAndUsernameReceiverAndAccepted(usernameSender, usernameReceiver, accepted).get();
+
+        return friendshipMapper.friendshipRequestDocumentToFriendshipRequest(friendshipRequestDocument);
     }
 }
