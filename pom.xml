@@ -30,6 +30,7 @@
     </repositories>
 
     <dependencies>
+
         <!--   Spring Boot Starter Dependencies Start     -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -196,6 +197,11 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
             <version>${reactor.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
         </dependency>
         <dependency>
             <groupId>io.vavr</groupId>

@@ -8,11 +8,11 @@ import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.ShapeUpBaseException;
+import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
+import br.com.shapeup.common.exceptions.ShapeUpBaseException;
 import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
-import br.com.shapeup.core.domain.user.Birth;
-import br.com.shapeup.core.domain.user.CellPhone;
-import br.com.shapeup.core.domain.user.Password;
+import br.com.shapeup.common.utils.ObjectUtils;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
@@ -39,7 +39,6 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     private final FindFriendshipOutput findFriendshipOutput;
     private final FindUserOutput findUserOutput;
     private final FriendshipJpaRepository friendshipJpaRepository;
-    private final FriendshipMongoRepository friendshipMongoRepository;
 
     @Override
     @Transactional
@@ -67,43 +66,14 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     @Override
     public void updateUser(String email, UserRequest userRequest) {
         UserEntity userEntity = userJpaRepository.findByEmail(email).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
+            throw new InvalidCredentialException();
         });
 
-        if (userRequest.getCellPhone() != null) {
-            CellPhone.validateCellPhone(userRequest.getCellPhone());
-            userEntity.setCellPhone(userRequest.getCellPhone());
-        }
-
-        if (userRequest.getBirth() != null) {
-            var birth = Birth.convertBirth(userRequest.getBirth());
-
-            Birth.validateBirth(birth);
-            userEntity.setBirth(birth);
-        }
-
-        if (userRequest.getBiography() != null) {
-            userEntity.setBiography(userRequest.getBiography());
-        }
-
-        if (userRequest.getName() != null) {
-            userEntity.setName(userRequest.getName());
-        }
-
-        if (userRequest.getLastName() != null) {
-            userEntity.setLastName(userRequest.getLastName());
-        }
-
-        if (userRequest.getUsername() != null) {
-            userEntity.setUsername(userRequest.getUsername());
-        }
-
-        if (userRequest.getPassword() != null) {
-            Password.validatePassword(userRequest.getPassword());
-
-            String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
-            userEntity.setPassword(encodedPassword);
-        }
+        Try.run(() -> ObjectUtils.copyNonNullProperties(userEntity, userRequest))
+                .onFailure(e -> {
+                    log.error("[USER PERSISTENCE ADAPTER] - Error on copy properties: {}", e.getMessage());
+                    throw new ShapeUpBaseException(e.getMessage(), e.getCause());
+                });
 
         userJpaRepository.save(userEntity);
     }

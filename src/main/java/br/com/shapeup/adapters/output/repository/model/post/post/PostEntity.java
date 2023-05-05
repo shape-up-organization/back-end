@@ -33,14 +33,14 @@ public class PostEntity {
     @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     private UserEntity userEntity;
 
-    @Column
-    private LocalDateTime created_at;
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
 
     public PostEntity(UUID userId, String description) {
         this.userEntity = new UserEntity();
         userEntity.setId(userId);
         this.description = description;
-        created_at = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
     }
 
     @Override

@@ -11,7 +11,7 @@ import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundExceptio
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
 import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
-import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
+import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
 import br.com.shapeup.common.exceptions.user.UserInvalidCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserInvalidEmailException;
@@ -76,7 +76,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserExistsByEmailException.class,
+            InvalidCredentialException.class,
             AlreadySentFriendRequestException.class,
             UsernameInUseException.class
     })
