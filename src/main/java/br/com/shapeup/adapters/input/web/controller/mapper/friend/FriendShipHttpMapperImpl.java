@@ -46,6 +46,7 @@ public class FriendShipHttpMapperImpl implements FriendshipHttpMapper {
                         .id(user.getId().getValue())
                         .firstName(user.getFullName().getName())
                         .lastName(user.getFullName().getLastName())
+                        .fullName(user.getFullName().getFullName())
                         .username(user.getUsername())
                         .xp(user.getXp())
                         .profilePicture(user.getProfilePicture())

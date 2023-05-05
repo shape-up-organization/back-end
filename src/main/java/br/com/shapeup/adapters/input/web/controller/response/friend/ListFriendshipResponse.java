@@ -15,6 +15,7 @@ public class ListFriendshipResponse {
     private String id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String username;
     private Long xp;
     private String profilePicture;
