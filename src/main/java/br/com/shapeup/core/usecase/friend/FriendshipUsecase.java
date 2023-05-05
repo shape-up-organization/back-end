@@ -51,22 +51,23 @@ public class FriendshipUsecase implements FriendshipInput {
         return Try.of(() -> findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername()))
                 .onFailure(throwable -> {
                     throw new FriendshipRequestNotFoundException("Friendship request not found or already accepted");
-                }).onSuccess(friendshipRequest -> {
-
+                })
+                .onSuccess(friendshipRequest -> {
                     validateUserAlreadyFriend(friendUsername, user);
                     verifyFriendshipRequestValidity(user, friend, friendshipRequest);
                     verifyFriendshipRequestAlreadyAccepted(friendshipRequest);
 
                     friendsOutput.acceptFriendRequest(user, friend);
-                    deleteOldFriendshipRequest(user, friend);
+                    friendshipRequest.setAccepted(true);
 
+                    deleteOldFriendshipRequest(user, friend);
                 }).get();
     }
 
     private void deleteOldFriendshipRequest(User user, User friend) {
         var oldFriendshipRequestWithNotAccepted = findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername());
 
-        if(oldFriendshipRequestWithNotAccepted.getAccepted().equals(false)) {
+        if (oldFriendshipRequestWithNotAccepted.getAccepted().equals(false)) {
             deleteFriendshipRequest(friend.getUsername(), user.getEmail().getValue());
         }
     }
@@ -173,9 +174,9 @@ public class FriendshipUsecase implements FriendshipInput {
 
     private void validateFriendshipRequestExists(User user, User newFriend) {
         Boolean hasSentFriendRequest = findFriendshipOutput
-                .hasSentFriendRequest(user.getUsername(), newFriend.getUsername());
+                .hasSentFriendRequest(newFriend.getUsername(), user.getUsername());
 
-        if(!hasSentFriendRequest){
+        if (!hasSentFriendRequest) {
             throw new FriendshipRequestNotFoundException();
         }
     }

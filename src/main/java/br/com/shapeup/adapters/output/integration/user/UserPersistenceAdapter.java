@@ -9,8 +9,6 @@ import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.ShapeUpBaseException;
 import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
-import br.com.shapeup.common.exceptions.ShapeUpBaseException;
-import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.ObjectUtils;
 import br.com.shapeup.core.domain.user.User;
@@ -19,14 +17,12 @@ import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import io.vavr.control.Try;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
@@ -34,11 +30,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final UserJpaRepository userJpaRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final FindFriendshipOutput findFriendshipOutput;
     private final FindUserOutput findUserOutput;
     private final FriendshipJpaRepository friendshipJpaRepository;
+    private final FriendshipMongoRepository friendshipMongoRepository;
 
     @Override
     @Transactional
