@@ -2,6 +2,7 @@ package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
+import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
@@ -18,9 +19,9 @@ import io.vavr.control.Try;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,11 +30,11 @@ import org.springframework.stereotype.Service;
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     private final UserJpaRepository userJpaRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final FindFriendshipOutput findFriendshipOutput;
     private final FindUserOutput findUserOutput;
     private final FriendshipJpaRepository friendshipJpaRepository;
+    private final FriendshipMongoRepository friendshipMongoRepository;
 
     @Override
     @Transactional
@@ -75,63 +76,65 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public User findUserByUsername(String username) {
-        UserEntity userEntity = userJpaRepository.findByUsername(username).orElseThrow(() -> {
-            log.error("[USER PERSISTENCE ADAPTER] - User not found by username: {}", username);
-            throw new UserNotFoundException(username);
-        });
 
-        var user = userMapper.userEntitytoUser(userEntity);
-        log.debug("[USER PERSISTENCE ADAPTER] - User found by username: {}", username);
-
-        return user;
+        return Try.of(() -> userJpaRepository.findByUsername(username))
+                .onSuccess(userEntity -> log.info("[USER PERSISTENCE ADAPTER] - User found by username: {}", username))
+                .onFailure(throwable -> log.error("[USER PERSISTENCE ADAPTER] - User not found by username: {}", username, throwable))
+                .map(userEntity -> userEntity.orElseThrow(() -> new UserNotFoundException(username)))
+                .map(userMapper::userEntitytoUser)
+                .get();
     }
 
     @Override
     public List<User> findAllUserByFullName(String name, String lastName) {
-        List<UserEntity> userEntities = userJpaRepository.findAllByNameIgnoreCaseAndLastNameIgnoreCase(name, lastName);
+        List<UserEntity> userEntities = userJpaRepository.findByNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(name, lastName);
 
         return userMapper.userEntityListToUserList(userEntities);
     }
 
     @Override
-    public FriendshipStatus getFriendshipStatus(String currentUserEmail, String searchUserUsername) {
-        var currentUser = findUserOutput.findByEmail(currentUserEmail);
-        var searchUser = findUserOutput.findByUsername(searchUserUsername);
+    public FriendshipStatus getFriendshipStatusForUser(String currentUserEmail, String searchUserUsername) {
+        User currentUser = findUserOutput.findByEmail(currentUserEmail);
+        User searchUser = findUserOutput.findByUsername(searchUserUsername);
 
         boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(currentUser.getUsername(), searchUser.getUsername());
         UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
 
         var friends = friendshipJpaRepository.findAllByUserReceiver(currentUserEntity);
 
+        AtomicReference<String> userSenderFriendshipRequest = new AtomicReference<>("");
+        var friendshipRequest = friendshipMongoRepository.findByUsernameSenderAndUsernameReceiver(currentUser.getUsername(), searchUser.getUsername());
+
+        friendshipRequest.ifPresent(friendship -> userSenderFriendshipRequest.set(friendship.getUsernameSender()));
+
         boolean isFriend = friends.stream()
                 .anyMatch(friend -> friend.getUserSender()
                         .getUsername()
                         .equals(searchUser.getUsername()));
 
-        return new FriendshipStatus(haveFriendRequest, isFriend);
+        return new FriendshipStatus(haveFriendRequest, isFriend, userSenderFriendshipRequest.get());
     }
 
     @Override
-    public List<FriendshipStatus> getFriendshipStatus(String currentUserEmail, List<String> searchUserUsername) {
+    public List<FriendshipStatus> getFriendshipStatusForUser(String currentUserEmail, List<String> searchUserUsername) {
         var currentUser = findUserOutput.findByEmail(currentUserEmail);
         List<FriendshipStatus> friendshipStatuses = new ArrayList<>();
 
         for (String username : searchUserUsername) {
-            var searchUser = findUserOutput.findByUsername(username);
-
-            Boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(currentUser.getUsername(), searchUser.getUsername());
-            UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
-
-            var friends = friendshipJpaRepository.findAllByUserReceiver(currentUserEntity);
-
-            Boolean isFriend = friends.stream()
-                    .anyMatch(friend -> friend.getUserSender()
-                            .getUsername()
-                            .equals(searchUser.getUsername()));
-
-            friendshipStatuses.add(new FriendshipStatus(haveFriendRequest, isFriend));
+            friendshipStatuses.add(getFriendshipStatusForUser(currentUserEmail, username));
         }
 
         return friendshipStatuses;
+    }
+
+    @Override
+    public List<User> findAllUserByUsername(String username) {
+        return Try.of(() -> userJpaRepository.findAllByUsernameStartingWithIgnoreCase(username))
+                .map(userMapper::userEntityListToUserList)
+                .onSuccess(users -> log.info("[USER PERSISTENCE ADAPTER] - Users found by username: {}", username))
+                .onFailure(throwable -> {
+                    log.error("[USER PERSISTENCE ADAPTER] - Users not found by username: {}", username);
+                    throw new ShapeUpBaseException(throwable.getMessage(), throwable.getCause());
+                }).get();
     }
 }

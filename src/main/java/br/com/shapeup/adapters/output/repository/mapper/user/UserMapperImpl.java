@@ -8,10 +8,11 @@ import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -37,8 +38,8 @@ public class UserMapperImpl implements UserMapper {
     public UserEntity userToUserEntity(User user) {
         return UserEntity.builder()
                 .id(UUID.fromString(user.getId().getValue()))
-                .name(user.getName())
-                .lastName(user.getLastName())
+                .name(user.getFullName().getName())
+                .lastName(user.getFullName().getLastName())
                 .username(user.getUsername())
                 .email(user.getEmail().getValue())
                 .cellPhone(user.getCellPhone().getValue())

@@ -2,15 +2,14 @@ package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-import br.com.shapeup.core.domain.validation.handler.ThrowsValidationHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class User extends Entity<UserId> {
-    private String name;
-    private String lastName;
+
+    private FullName fullName;
     private String username;
     private Email email;
     private CellPhone cellPhone;
@@ -24,8 +23,7 @@ public class User extends Entity<UserId> {
     public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
             Birth birth, String biography, Long xp, String profilePicture) {
         super(id);
-        this.name = name;
-        this.lastName = lastName;
+        this.fullName = FullName.create(name, lastName);
         this.username = username;
         this.email = email;
         this.cellPhone = cellPhone;
@@ -51,32 +49,9 @@ public class User extends Entity<UserId> {
         new UserValidator(handler, this).validate();
     }
 
-    public void validateName() {
-        new UserValidator(new ThrowsValidationHandler(), this).validateName();
-    }
-
-    public void validateLastName() {
-        new UserValidator(new ThrowsValidationHandler(), this).validateLastName();
-    }
 
     public UserId getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getUsername() {
@@ -151,24 +126,25 @@ public class User extends Entity<UserId> {
         this.xp = xp;
     }
 
+    public FullName getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(FullName fullName) {
+        this.fullName = fullName;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         User user = (User) o;
-        return getName().equals(user.getName()) && getLastName().equals(user.getLastName())
-                && getUsername().equals(user.getUsername()) && getEmail().equals(user.getEmail())
-                && getCellPhone().equals(user.getCellPhone()) && getPassword().equals(user.getPassword())
-                && getBirth().equals(user.getBirth());
+        return Objects.equals(getFullName(), user.getFullName()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getCellPhone(), user.getCellPhone()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getBirth(), user.getBirth()) && Objects.equals(getBiography(), user.getBiography()) && Objects.equals(getXp(), user.getXp()) && Objects.equals(getProfilePicture(), user.getProfilePicture()) && Objects.equals(getFriends(), user.getFriends());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getName(), getLastName(), getUsername(), getEmail(), getCellPhone(),
-                getPassword(), getBirth());
+        return Objects.hash(super.hashCode(), getFullName(), getUsername(), getEmail(), getCellPhone(), getPassword(), getBirth(), getBiography(), getXp(), getProfilePicture(), getFriends());
     }
 }

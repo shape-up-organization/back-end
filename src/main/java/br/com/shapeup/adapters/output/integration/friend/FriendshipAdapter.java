@@ -166,8 +166,8 @@ public class FriendshipAdapter implements FriendshipOutput {
     }
 
     @Override
-    public void deleteFriendshipRequest(User user, User newFriend) {
-        friendsMongoRepository.deleteByUsernameSenderAndUsernameReceiver(user.getUsername(), newFriend.getUsername());
+    public void deleteFriendshipRequest(String friendshipRequestId) {
+        friendsMongoRepository.deleteById(friendshipRequestId);
     }
     @Override
     @Transactional
