@@ -14,6 +14,7 @@ import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 
+import io.vavr.control.Try;
 import java.util.List;
 
 public class FriendshipUsecase implements FriendshipInput {
@@ -47,13 +48,27 @@ public class FriendshipUsecase implements FriendshipInput {
 
         User user = findUserOutput.findByEmail(email);
         User friend = findUserOutput.findByUsername(friendUsername);
-        FriendshipRequest friendshipRequest = findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername());
+        return Try.of(() -> findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername()))
+                .onFailure(throwable -> {
+                    throw new FriendshipRequestNotFoundException("Friendship request not found or already accepted");
+                }).onSuccess(friendshipRequest -> {
 
-        validateUserAlreadyFriend(friendUsername, user);
-        verifyFriendshipRequestValidity(user, friend, friendshipRequest);
-        verifyFriendshipRequestAlreadyAccepted(friendshipRequest);
+                    validateUserAlreadyFriend(friendUsername, user);
+                    verifyFriendshipRequestValidity(user, friend, friendshipRequest);
+                    verifyFriendshipRequestAlreadyAccepted(friendshipRequest);
 
-        return friendsOutput.acceptFriendRequest(user, friend);
+                    friendsOutput.acceptFriendRequest(user, friend);
+                    deleteOldFriendshipRequest(user, friend);
+
+                }).get();
+    }
+
+    private void deleteOldFriendshipRequest(User user, User friend) {
+        var oldFriendshipRequestWithNotAccepted = findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername());
+
+        if(oldFriendshipRequestWithNotAccepted.getAccepted().equals(false)) {
+            deleteFriendshipRequest(friend.getUsername(), user.getEmail().getValue());
+        }
     }
 
     @Override
@@ -71,11 +86,13 @@ public class FriendshipUsecase implements FriendshipInput {
         User user = findUserOutput.findByEmail(email);
         User newFriend = findUserOutput.findByUsername(friendUsername);
 
+        var friendshipRequestsNotAccepeted = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(newFriend.getUsername(), user.getUsername(), false);
+
         validateFriendshipRequestExists(user, newFriend);
         validateDeleteIsSameUser(friendUsername, user);
         validateUserAlreadyFriend(friendUsername, user);
 
-        friendsOutput.deleteFriendshipRequest(user, newFriend);
+        friendsOutput.deleteFriendshipRequest(friendshipRequestsNotAccepeted.getId().getValue());
     }
 
     @Override
