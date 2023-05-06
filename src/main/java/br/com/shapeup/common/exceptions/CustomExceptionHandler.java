@@ -9,6 +9,7 @@ import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyAcceptedException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
+import br.com.shapeup.common.exceptions.profile.ProfilePictureNotFoundException;
 import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
 import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
@@ -57,9 +58,14 @@ public class CustomExceptionHandler {
     }
 
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(
-            UserNotFoundException exception,
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            FriendshipRequestNotFoundException.class,
+            ProfilePictureNotFoundException.class
+    })
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Object> handleNotFoundException(
+            Exception exception,
             HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(HttpServletResponse.SC_NOT_FOUND,
@@ -110,7 +116,6 @@ public class CustomExceptionHandler {
             ExpiredJwtException.class,
             UserAlreadyExistsException.class,
             NotFriendException.class,
-            FriendshipRequestNotFoundException.class,
             DeleteYourselfAsAFriendException.class,
             AddYourselfAsAFriendException.class
     })
