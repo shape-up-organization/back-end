@@ -46,7 +46,8 @@ public class ProfileController {
         String username = JwtService.extractAccountNameFromToken(token);
 
         profilePictureInput.deletePicture(username);
+        String newToken = TokenUtils.updateProfilePictureAndGenerateNewToken(token, null);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+        return ResponseEntity.status(HttpStatus.OK.value()).body(newToken);
     }
 }
