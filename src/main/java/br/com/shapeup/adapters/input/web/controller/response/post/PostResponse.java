@@ -24,4 +24,14 @@ public class PostResponse {
     private Integer countComments;
 
     private List<String> photoUrls;
+
+    private String username;
+
+    private String profilePicture;
+
+    private String name;
+
+    private String lastName;
+
+    private Long xp;
 }

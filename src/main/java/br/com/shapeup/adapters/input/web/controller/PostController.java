@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class PostController {
     private final PostInput postPersistenceInput;
 
@@ -33,11 +34,11 @@ public class PostController {
     public ResponseEntity<List<Map<String, URL>>> createPost(PostRequest request,
                                            @RequestParam("file") MultipartFile[] files,
                                            HttpServletRequest jwtToken) {
-        String token =
-                jwtToken.getHeader("Authorization").substring(7);
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
 
         List<URL> postUrls =
-                postPersistenceInput.createPost(files, token, request);
+                postPersistenceInput.createPost(files, email, request);
 
         List<Map<String, URL>> postUrlResponse = postUrls.stream()
                 .map(postUrl -> Collections.singletonMap("urlPost", postUrl))
@@ -53,7 +54,7 @@ public class PostController {
     ){
         List<PostResponse> posts = postPersistenceInput.getPostsByUsername(username, page, size);
 
-        if (posts.isEmpty()) {
+        if (posts == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
@@ -72,15 +73,15 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<PostResponse>> getUserPosts(HttpServletRequest jwtToken,
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> getPostsFriends(HttpServletRequest jwtToken,
                                                                  @RequestParam("page") int page,
                                                                  @RequestParam("size") int size
     ){
         String token = TokenUtils.getToken(jwtToken);
         String email = JwtService.extractEmailFromToken(token);
 
-        List<PostResponse> posts = postPersistenceInput.getUserPosts(email, page, size);
+        List<PostResponse> posts = postPersistenceInput.getPostsFriends(email, page, size);
 
         if (posts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
