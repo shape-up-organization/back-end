@@ -5,13 +5,18 @@ import br.com.shapeup.adapters.output.repository.model.profile.ProfilePicture;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import io.github.cdimascio.dotenv.Dotenv;
+import io.vavr.control.Try;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -60,6 +65,22 @@ public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGa
         return s3Client.getUrl(bucketName, newFileName);
     }
 
+    @Override
+    public Boolean haveProfilePictureInBucket(String username) {
+        String prefix = "profile_picture/" + username;
+        List<S3ObjectSummary> objectSummaries = listObjectsWithPrefix(prefix);
+        return !objectSummaries.isEmpty();
+    }
+
+    @Override
+    public void deletePicture(String username) {
+
+        Try.run(() -> listObjectsWithPrefix("profile_picture/" + username)
+                .forEach(s3ObjectSummary -> s3Client.deleteObject(bucketName, s3ObjectSummary.getKey())))
+                .onFailure(ex -> log.error("Error deleting profile picture: " + ex.getMessage()))
+                .onSuccess(v -> log.info("Profile picture deleted successfully."));
+    }
+
     private UserEntity getUserByUuid(String uuid) {
         return UserJpaRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UserNotFoundException(uuid));
@@ -79,7 +100,7 @@ public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGa
         metadata.setContentLength(inputStream.available());
 
         log.info("Uploading file to S3...");
-            s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
         log.info("File uploaded successfully.");
     }
 
@@ -94,5 +115,14 @@ public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGa
         if (contentLength > 5 * 1024 * 1024) {
             throw new RuntimeException("File size is too big");
         }
+    }
+
+    private List<S3ObjectSummary> listObjectsWithPrefix(String prefix) {
+        ListObjectsV2Request request = new ListObjectsV2Request()
+                .withBucketName(bucketName)
+                .withPrefix(prefix);
+
+        ListObjectsV2Result result = s3Client.listObjectsV2(request);
+        return result.getObjectSummaries();
     }
 }

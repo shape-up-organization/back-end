@@ -6,6 +6,7 @@ import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
+
 import java.util.List;
 
 public class UserPersistanceUsecase implements UserPersistanceInput {
@@ -28,25 +29,24 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     @Override
     public User findUserByUsername(String username) {
         User searchUser = userPersistanceOutput.findUserByUsername(username);
-
         validateSearchUser(searchUser, username);
-
         return searchUser;
     }
 
     @Override
-    public FriendshipStatus getFriendshipStatus(String currentUserEmail, String searchUserUsername) {
-        return userPersistanceOutput.getFriendshipStatus(currentUserEmail, searchUserUsername);
-    }
-
-    @Override
     public List<FriendshipStatus> getFriendshipStatus(String currentUserEmail, List<String> searchUserUsername) {
-        return userPersistanceOutput.getFriendshipStatus(currentUserEmail, searchUserUsername);
+        return userPersistanceOutput.getFriendshipStatusForUser(currentUserEmail, searchUserUsername);
     }
 
     @Override
     public List<User> findAllUserByFullName(String name, String lastName) {
         return userPersistanceOutput.findAllUserByFullName(name, lastName);
+    }
+
+    @Override
+    public List<User> findAllUserByUsername(String username) {
+
+        return userPersistanceOutput.findAllUserByUsername(username);
     }
 
     private void validateSearchUser(User searchUser, String username) {

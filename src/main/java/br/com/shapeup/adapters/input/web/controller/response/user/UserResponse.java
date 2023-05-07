@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.input.web.controller.response.user;
 
+import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,12 +25,12 @@ public class UserResponse {
     @NotBlank
     private String profilePicture;
 
+    @NotBlank
+    private String biography;
+
     @NotNull
     private Long xp;
 
     @NotNull
-    private Boolean isFriend;
-
-    @NotNull
-    private Boolean haveFriendRequest;
+    private FriendshipStatus friendshipStatus;
 }

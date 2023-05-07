@@ -1,12 +1,13 @@
 package br.com.shapeup.adapters.output.repository.jpa.user;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
@@ -14,11 +15,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
 
     Boolean existsByUsername(String username);
 
-    Boolean existsByCellPhone(String cellPhone);
-
     Optional<UserEntity> findByEmail(String email);
-
-    void deleteByEmail(String email);
 
     Optional<UserEntity> findById(UUID uuid);
 
@@ -26,6 +23,8 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findByUsername(String username);
 
-    List<UserEntity> findAllByNameIgnoreCaseAndLastNameIgnoreCase(String name, String lastName);
+    List<UserEntity> findByNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(String name, String lastName);
+
+    List<UserEntity> findAllByUsernameStartingWithIgnoreCase(String username);
 
 }

@@ -3,21 +3,21 @@ package br.com.shapeup.adapters.input.web.controller;
 import br.com.shapeup.adapters.input.web.controller.response.profile.UpdatedProfilePictureReponse;
 import br.com.shapeup.common.utils.TokenUtils;
 import br.com.shapeup.core.ports.input.profile.ProfilePictureInput;
+import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @RequestMapping("/profiles")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class ProfileController {
 
     private final ProfilePictureInput profilePictureInput;
@@ -38,5 +38,16 @@ public class ProfileController {
         );
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(updatedProfilePictureReponse);
+    }
+
+    @DeleteMapping("/picture")
+    public ResponseEntity<?> deletePicture(HttpServletRequest request) {
+        String token = TokenUtils.getToken(request);
+        String username = JwtService.extractAccountNameFromToken(token);
+
+        profilePictureInput.deletePicture(username);
+        String newToken = TokenUtils.updateProfilePictureAndGenerateNewToken(token, null);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(newToken);
     }
 }

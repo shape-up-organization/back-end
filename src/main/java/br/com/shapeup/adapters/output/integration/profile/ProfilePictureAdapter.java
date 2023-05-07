@@ -33,6 +33,16 @@ public class ProfilePictureAdapter implements ProfilePictureOutput {
         return url;
     }
 
+    @Override
+    public Boolean haveProfilePictureInBucket(String username) {
+        return s3Service.haveProfilePictureInBucket(username);
+    }
+
+    @Override
+    public void deletePicture(String username) {
+        s3Service.deletePicture(username);
+    }
+
     private ProfilePicture sendPictureToS3AndReturnSame(MultipartFile file, UserEntity user) {
 
         ProfilePicture profilePicture = new ProfilePicture(file, user.getId().toString());

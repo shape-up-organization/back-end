@@ -40,3 +40,7 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui
+
+logging:
+  level:
+    root: info

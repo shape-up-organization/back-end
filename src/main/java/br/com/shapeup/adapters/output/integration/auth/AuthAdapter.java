@@ -8,7 +8,7 @@ import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
 import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
-import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
+import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
@@ -68,7 +68,7 @@ public class AuthAdapter implements AuthGateway {
         Boolean userExists = UserJpaRepository.existsByEmail(userAuthRegisterRequest.getEmail());
 
         if (userExists) {
-            throw new UserExistsByEmailException();
+            throw new InvalidCredentialException();
         }
     }
 
@@ -98,12 +98,13 @@ public class AuthAdapter implements AuthGateway {
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
                     user.getId().getValue(),
-                    user.getName(),
-                    user.getLastName(),
+                    user.getFullName().getName(),
+                    user.getFullName().getLastName(),
                     user.getEmail().getValue(),
                     user.getUsername(),
                     user.getProfilePicture(),
-                    user.getXp().toString()
+                    user.getXp().toString(),
+                    user.getBiography()
             );
             log.info("User {} authenticated", userAuthLoginRequest.getEmail());
             return Map.of("jwt-token", tokenGenerated);

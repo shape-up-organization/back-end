@@ -1,10 +1,18 @@
 package br.com.shapeup.common.exceptions;
 
 import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
+import br.com.shapeup.common.exceptions.friend.AddYourselfAsAFriendException;
+import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
+import br.com.shapeup.common.exceptions.friend.DeleteYourselfAsAFriendException;
+import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
+import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyAcceptedException;
+import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
+import br.com.shapeup.common.exceptions.friend.NotFriendException;
+import br.com.shapeup.common.exceptions.profile.ProfilePictureNotFoundException;
 import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
-import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
+import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserInvalidBirthException;
 import br.com.shapeup.common.exceptions.user.UserInvalidCellPhoneException;
 import br.com.shapeup.common.exceptions.user.UserInvalidEmailException;
@@ -50,9 +58,14 @@ public class CustomExceptionHandler {
     }
 
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(
-            UserNotFoundException exception,
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            FriendshipRequestNotFoundException.class,
+            ProfilePictureNotFoundException.class
+    })
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Object> handleNotFoundException(
+            Exception exception,
             HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(HttpServletResponse.SC_NOT_FOUND,
@@ -69,7 +82,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserExistsByEmailException.class,
+            InvalidCredentialException.class,
             AlreadySentFriendRequestException.class,
             UsernameInUseException.class
     })
@@ -101,7 +114,10 @@ public class CustomExceptionHandler {
             UserInvalidNameException.class,
             UserExistsByCellPhoneException.class,
             ExpiredJwtException.class,
-            UserAlreadyExistsException.class
+            UserAlreadyExistsException.class,
+            NotFriendException.class,
+            DeleteYourselfAsAFriendException.class,
+            AddYourselfAsAFriendException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
@@ -158,6 +174,30 @@ public class CustomExceptionHandler {
         var apiErrorMessage = new ApiErrorMessage(
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 HttpStatus.INTERNAL_SERVER_ERROR,
+                request.getRequestURI(),
+                exception.getMessage()
+        );
+
+        return new ResponseEntity<>(
+                apiErrorMessage,
+                new HttpHeaders(),
+                apiErrorMessage.getHttpStatus()
+        );
+    }
+
+    @ExceptionHandler({
+            AlreadyFriendException.class,
+            FriendshipRequestAlreadyAcceptedException.class,
+            DuplicateFriendshipException.class
+    })
+    public ResponseEntity<Object> handleConflictRequestException(
+            Exception exception,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        var apiErrorMessage = new ApiErrorMessage(
+                HttpServletResponse.SC_CONFLICT,
+                HttpStatus.CONFLICT,
                 request.getRequestURI(),
                 exception.getMessage()
         );
