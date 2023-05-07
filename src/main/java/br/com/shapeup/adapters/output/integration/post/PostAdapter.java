@@ -5,6 +5,7 @@ import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.adapters.output.integration.cloud.aws.post.S3ServicePostGateway;
 import br.com.shapeup.adapters.output.repository.jpa.post.PostJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
+import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostPhotoEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
@@ -14,6 +15,7 @@ import br.com.shapeup.adapters.output.repository.mongo.post.comment.PostCommentM
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.DateUtils;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.PostOutput;
 import br.com.shapeup.security.service.JwtService;
 import lombok.AllArgsConstructor;
@@ -25,8 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -40,6 +40,7 @@ public class PostAdapter implements PostOutput {
     private final PostPhotoMongoRepository postPhotoMongoRepository;
     private final PostLikeMongoRepository postLikeMongoRepository;
     private final PostCommentMongoRepository postCommentMongoRepository;
+    private final UserMapper userMapper;
 
     @Override
     public List<URL> createPost(Object[] files, String token, PostRequest request) {
@@ -83,30 +84,26 @@ public class PostAdapter implements PostOutput {
     }
 
     @Override
-    public List<PostResponse> getPostsByUsername(String username, int page, int size) {
-        UserEntity userEntity = userRepositoryJpa.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
-
-        return getPostsByUser(userEntity, page, size);
+    public List<PostResponse> getPostsByUsername(User user, User otherUser, int page, int size) {
+        return getPostsByUser(otherUser, page, size, user);
     }
 
     @Override
-    public PostResponse getPostById(String id) {
-        return getPostById(UUID.fromString(id));
+    public PostResponse getPostById(User user, String postId) {
+        return getPostById(UUID.fromString(postId), user, null);
     }
 
     @Override
-    public List<PostResponse> getUserPosts(String email, int page, int size) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
-
-        return getPostsByUser(userEntity, page, size);
+    public List<PostResponse> getUserPosts(User user, int page, int size) {
+        return getPostsByUser(user, page, size, null);
     }
 
-    private List<PostResponse> getPostsByUser(UserEntity user, int page, int size) {
+    private List<PostResponse> getPostsByUser(User user, int page, int size, User otherUser) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        Page<PostEntity> posts  = postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(user, pageRequest);
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+
+        Page<PostEntity> posts  = postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(userEntity, pageRequest);
 
         if (posts == null) {
             return null;
@@ -114,13 +111,13 @@ public class PostAdapter implements PostOutput {
 
         List<PostResponse> postsResponse = posts
                 .stream()
-                .map(post -> getPostById(post.getId()))
+                .map(post -> getPostById(post.getId(), user, otherUser))
                 .toList();
 
         return postsResponse;
     }
 
-    private PostResponse getPostById(UUID id) {
+    private PostResponse getPostById(UUID id, User user, User otherUser) {
         String idPost = id.toString();
 
         PostEntity postEntity = postJpaRepository.findById(id)
@@ -134,15 +131,25 @@ public class PostAdapter implements PostOutput {
                 .map(PostPhotoEntity::getPhotoUrl)
                 .toList();
 
+        boolean isLiked = whoLiked(user, otherUser);
+
         PostResponse postResponse = new PostResponse(
                 postEntity.getId().toString(),
                 postEntity.getDescription(),
                 DateUtils.formatDateTime(postEntity.getCreatedAt()),
                 postLikeMongoRepository.countAllByPostId(idPost),
                 postCommentMongoRepository.countAllByIdPost(idPost),
-                photoUrls
+                photoUrls,
+                isLiked
         );
 
         return postResponse;
+    }
+
+    private boolean whoLiked(User user, User otherUser) {
+        if(otherUser == null) {
+            return postLikeMongoRepository.existsByUserId(user.getId().getValue());
+        }
+        return postLikeMongoRepository.existsByUserId(otherUser.getId().getValue());
     }
 }
