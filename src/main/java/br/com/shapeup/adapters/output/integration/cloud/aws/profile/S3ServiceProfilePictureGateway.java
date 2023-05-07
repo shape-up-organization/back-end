@@ -10,4 +10,6 @@ public interface S3ServiceProfilePictureGateway {
     URI uploadProfileFilePicture(ProfilePicture multipartFile) throws URISyntaxException;
     URI uploadProfileFilePicture(InputStream inputStream, String fileName, String contentType, String uuid);
     URL getProfilePictureUrl(ProfilePicture profilePicture);
+    Boolean haveProfilePictureInBucket(String username);
+    void deletePicture(String username);
 }
