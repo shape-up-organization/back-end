@@ -25,6 +25,9 @@ public class UserResponse {
     @NotBlank
     private String profilePicture;
 
+    @NotBlank
+    private String biography;
+
     @NotNull
     private Long xp;
 
