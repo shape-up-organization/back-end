@@ -2,6 +2,7 @@ package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
+import br.com.shapeup.adapters.input.web.controller.response.user.UserFieldsUpdateResponse;
 import br.com.shapeup.adapters.input.web.controller.response.user.UserResponse;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.common.utils.TokenUtils;
@@ -9,6 +10,7 @@ import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<Void> updateUserField(
+    public ResponseEntity<UserFieldsUpdateResponse> updateUserField(
             HttpServletRequest request,
             @RequestBody UserRequest userRequest
     ) {
@@ -54,8 +56,15 @@ public class UserController {
         var email = JwtService.extractEmailFromToken(jwtToken);
 
         userPersistanceInput.updateUser(email, userRequest);
+        String newToken = TokenUtils.updateUserAndGenerateNewToken(jwtToken, userRequest);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+        return ResponseEntity.status(HttpStatus.OK.value()).body(
+                UserFieldsUpdateResponse
+                        .builder()
+                        .token(newToken)
+                        .updatedAt(String.valueOf(LocalDateTime.now()))
+                        .build()
+        );
     }
 
     @GetMapping("/search-username/{username}")
