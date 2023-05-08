@@ -12,7 +12,6 @@ public interface FriendshipInput {
 
     List<User> getAllFriendship(String username);
 
-
     void deleteFriendshipRequest(String friendUsername, String email);
 
     void deleteFriend(String friendUsername,String email);

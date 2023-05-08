@@ -88,13 +88,19 @@ public class FriendshipUsecase implements FriendshipInput {
         User user = findUserOutput.findByEmail(email);
         User newFriend = findUserOutput.findByUsername(friendUsername);
 
-        var friendshipRequestsNotAccepeted = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(newFriend.getUsername(), user.getUsername(), false);
+
+
+        var friendshipRequestsNotAccepted = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(
+                newFriend.getUsername(),
+                user.getUsername(),
+                false
+        );
 
         validateFriendshipRequestExists(user, newFriend);
         validateDeleteIsSameUser(friendUsername, user);
         validateUserAlreadyFriend(friendUsername, user);
 
-        friendsOutput.deleteFriendshipRequest(friendshipRequestsNotAccepeted.getId().getValue());
+        friendsOutput.deleteFriendshipRequest(friendshipRequestsNotAccepted.getId().getValue());
     }
 
     @Override
@@ -186,7 +192,7 @@ public class FriendshipUsecase implements FriendshipInput {
         Boolean hasSentFriendRequest = findFriendshipOutput
                 .hasSentFriendRequest(newFriend.getUsername(), user.getUsername());
 
-        if(hasSentFriendRequest) {
+        if (hasSentFriendRequest) {
             throw new FriendshipRequestAlreadyExistsException();
         }
     }

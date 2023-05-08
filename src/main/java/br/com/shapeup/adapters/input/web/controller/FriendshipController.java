@@ -77,7 +77,7 @@ public class FriendshipController {
     }
     @DeleteMapping("/delete-friendship-request/{friendUsername}")
     public ResponseEntity<Void> deleteFriendshipRequest(HttpServletRequest request, @Valid @PathVariable String friendUsername) {
-        String token = request.getHeader("Authorization").substring(7);
+        String token = TokenUtils.getToken(request);
         String email = JwtService.extractEmailFromToken(token);
 
         friendshipInput.deleteFriendshipRequest(friendUsername, email);

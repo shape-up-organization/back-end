@@ -46,11 +46,8 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
         return friendshipMapper.friendshipRequestDocumentToFriendshipRequest(friendshipRequestDocument);
     }
 
-    // MENSAGEM EM PORTUGUES
     @Override
     public Boolean hasSentFriendRequest(String usernameSender, String usernameReceiver) {
-
-//        findFriendshipRequestByUsername(usernameSender, usernameReceiver);
 
         return friendshipMongoRepository.findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver)
                 .isPresent();
