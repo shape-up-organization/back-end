@@ -58,6 +58,7 @@ public class UserMapperImpl implements UserMapper {
                 .cellPhone(userAuthRegisterRequest.getCellPhone())
                 .password(userAuthRegisterRequest.getPassword())
                 .birth(LocalDate.parse(userAuthRegisterRequest.getBirth(), Birth.DATE_FORMATTER))
+                .fullName(userAuthRegisterRequest.getName() + " " + userAuthRegisterRequest.getLastName())
                 .build();
     }
 

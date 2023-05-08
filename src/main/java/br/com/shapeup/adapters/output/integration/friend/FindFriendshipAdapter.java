@@ -3,8 +3,10 @@ package br.com.shapeup.adapters.output.integration.friend;
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
 import br.com.shapeup.adapters.output.repository.mapper.friend.FriendshipMapper;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestDocument;
+import br.com.shapeup.common.domain.dto.UsernameSenderAndUsernameReceiverDto;
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
+import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     private final FriendshipMongoRepository friendshipMongoRepository;
 
     private final FriendshipMapper friendshipMapper;
+
 
     @Override
     public void hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver) {
@@ -45,6 +48,7 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
 
     @Override
     public Boolean hasSentFriendRequest(String usernameSender, String usernameReceiver) {
+
         return friendshipMongoRepository.findByUsernameSenderAndUsernameReceiver(usernameSender, usernameReceiver)
                 .isPresent();
     }
@@ -61,5 +65,34 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
                 .findByUsernameSenderAndUsernameReceiverAndAccepted(usernameSender, usernameReceiver, accepted).get();
 
         return friendshipMapper.friendshipRequestDocumentToFriendshipRequest(friendshipRequestDocument);
+    }
+
+    @Override
+    public UsernameSenderAndUsernameReceiverDto findFriendshipRequestByUsername(User currentUser, User searchUser) {
+        List<FriendshipRequestDocument> friendshipRequests = friendshipMongoRepository.findAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(currentUser.getUsername());
+        var usernameSenderAndUsernameReceiverDto = new UsernameSenderAndUsernameReceiverDto();
+
+        for (FriendshipRequestDocument friendshipRequest : friendshipRequests) {
+
+            if (friendshipRequest.getUsernameSender().equals(currentUser.getUsername())) {
+
+                if (friendshipRequest.getUsernameReceiver().equals(searchUser.getUsername())) {
+                    return usernameSenderAndUsernameReceiverDto.builder()
+                            .usernameSender(friendshipRequest.getUsernameSender())
+                            .usernameReceiver(friendshipRequest.getUsernameReceiver())
+                            .build();
+                }
+            } else if (friendshipRequest.getUsernameReceiver().equals(currentUser.getUsername())) {
+
+                if (friendshipRequest.getUsernameSender().equals(searchUser.getUsername())) {
+                    return usernameSenderAndUsernameReceiverDto.builder()
+                            .usernameSender(friendshipRequest.getUsernameSender())
+                            .usernameReceiver(friendshipRequest.getUsernameReceiver())
+                            .build();
+                }
+            }
+        }
+
+        return usernameSenderAndUsernameReceiverDto;
     }
 }

@@ -53,7 +53,6 @@ public class UserEntity implements Serializable {
     private String lastName;
 
     @Column(name = "full_name")
-    @Formula("CONCAT(name, ' ', last_name)")
     private String fullName;
 
     @Column(name = "username")

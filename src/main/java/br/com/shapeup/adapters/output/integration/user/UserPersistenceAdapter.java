@@ -5,6 +5,7 @@ import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaReposit
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
+import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestDocument;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.ShapeUpBaseException;
@@ -19,7 +20,6 @@ import io.vavr.control.Try;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -86,8 +86,8 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     }
 
     @Override
-    public List<User> findAllUserByFullName(String name, String lastName) {
-        List<UserEntity> userEntities = userJpaRepository.findByNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(name, lastName);
+    public List<User> findAllUserByFullName(String fullName) {
+        List<UserEntity> userEntities = userJpaRepository.findByFullNameContainsIgnoreCase(fullName);
 
         return userMapper.userEntityListToUserList(userEntities);
     }
@@ -96,23 +96,19 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     public FriendshipStatus getFriendshipStatusForUser(String currentUserEmail, String searchUserUsername) {
         User currentUser = findUserOutput.findByEmail(currentUserEmail);
         User searchUser = findUserOutput.findByUsername(searchUserUsername);
+        var usernameSenderAndUsernameReceiver = findFriendshipOutput.findFriendshipRequestByUsername(currentUser, searchUser);
 
         boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(currentUser.getUsername(), searchUser.getUsername());
         UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
 
         var friends = friendshipJpaRepository.findAllByUserReceiver(currentUserEntity);
 
-        AtomicReference<String> userSenderFriendshipRequest = new AtomicReference<>("");
-        var friendshipRequest = friendshipMongoRepository.findByUsernameSenderAndUsernameReceiver(currentUser.getUsername(), searchUser.getUsername());
-
-        friendshipRequest.ifPresent(friendship -> userSenderFriendshipRequest.set(friendship.getUsernameSender()));
-
         boolean isFriend = friends.stream()
                 .anyMatch(friend -> friend.getUserSender()
                         .getUsername()
                         .equals(searchUser.getUsername()));
 
-        return new FriendshipStatus(haveFriendRequest, isFriend, userSenderFriendshipRequest.get());
+        return new FriendshipStatus(haveFriendRequest, isFriend, usernameSenderAndUsernameReceiver.getUsernameSender());
     }
 
     @Override

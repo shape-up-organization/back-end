@@ -4,6 +4,7 @@ import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestD
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,4 +17,7 @@ public interface FriendshipMongoRepository extends MongoRepository<FriendshipReq
     List<FriendshipRequestDocument> findAllByUsernameSenderAndUsernameReceiver(String usernameSender, String usernameReceiver);
 
     Optional<FriendshipRequestDocument> findByUsernameSenderAndUsernameReceiverAndAccepted(String usernameSender, String usernameReceiver, Boolean accepted);
+
+    @Query("{'$or':[ {'usernameSender':?0}, {'usernameReceiver':?0} ]}")
+    List<FriendshipRequestDocument> findAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(String username);
 }

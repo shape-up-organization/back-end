@@ -7,6 +7,7 @@ import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException
 import br.com.shapeup.common.exceptions.friend.DeleteYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyAcceptedException;
+import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyExistsException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
 import br.com.shapeup.common.exceptions.profile.ProfilePictureNotFoundException;
@@ -84,7 +85,8 @@ public class CustomExceptionHandler {
     @ExceptionHandler({
             InvalidCredentialException.class,
             AlreadySentFriendRequestException.class,
-            UsernameInUseException.class
+            UsernameInUseException.class,
+            FriendshipRequestAlreadyExistsException.class
     })
     public ResponseEntity<Object> handleConflictException(
             Exception exception,
