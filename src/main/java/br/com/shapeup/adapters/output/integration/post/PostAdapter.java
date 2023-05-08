@@ -17,11 +17,9 @@ import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.DateUtils;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.PostOutput;
-import br.com.shapeup.security.service.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
@@ -34,27 +32,27 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class PostAdapter implements PostOutput {
-    private final UserJpaRepository userRepositoryJpa;
+    private final UserMapper userMapper;
     private final S3ServicePostGateway s3Service;
     private final PostJpaRepository postJpaRepository;
     private final PostPhotoMongoRepository postPhotoMongoRepository;
     private final PostLikeMongoRepository postLikeMongoRepository;
     private final PostCommentMongoRepository postCommentMongoRepository;
-    private final UserMapper userMapper;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
-    public List<URL> createPost(Object[] files, String token, PostRequest request) {
-        UserEntity user = validateUserExistsInDatabaseByEmailAndReturnSame(token);
+    public List<URL> createPost(Object[] files, User user, PostRequest request) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
 
         List<URI> savingImages = Arrays.stream(files)
-                .map(file -> sendPostPhotosToS3AndReturnSame((MultipartFile) file, user))
+                .map(file -> sendPostPhotosToS3AndReturnSame((MultipartFile) file, userEntity))
                 .toList();
 
         List<URL> postUrls = Arrays.stream(files)
-                .map(file -> s3Service.getPostPictureUrl((MultipartFile) file, user.getUsername()))
+                .map(file -> s3Service.getPostPictureUrl((MultipartFile) file, userEntity.getUsername()))
                 .toList();
 
-        PostEntity postEntity = new PostEntity(user.getId(), request.getDescription());
+        PostEntity postEntity = new PostEntity(userEntity.getId(), request.getDescription());
 
         PostEntity savedPost  = postJpaRepository.save(postEntity);
 
@@ -65,12 +63,6 @@ public class PostAdapter implements PostOutput {
         postPhotoMongoRepository.saveAll(postPhotosEntitys);
 
         return postUrls;
-    }
-
-    private UserEntity validateUserExistsInDatabaseByEmailAndReturnSame(String tokenJwt) {
-        String userEmail = JwtService.extractEmailFromToken(tokenJwt);
-
-        return userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException(userEmail));
     }
 
     private URI sendPostPhotosToS3AndReturnSame(MultipartFile file, UserEntity user) {
@@ -84,72 +76,103 @@ public class PostAdapter implements PostOutput {
     }
 
     @Override
-    public List<PostResponse> getPostsByUsername(User user, User otherUser, int page, int size) {
-        return getPostsByUser(otherUser, page, size, user);
+    public List<PostResponse> getPostsByUsername(User currentUser, User otherUser, int page, int size) {
+        UserEntity userEntity = userMapper.userToUserEntity(currentUser);
+        UserEntity otherUserEntity = userMapper.userToUserEntity(otherUser);
+
+        return getPostsByUser(userEntity, otherUserEntity, page, size);
     }
 
     @Override
-    public PostResponse getPostById(User user, String postId) {
-        return getPostById(UUID.fromString(postId), user, null);
+    public PostResponse getPostById(User currentUser, String id) {
+        PostEntity postEntity = postJpaRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new PostNotFoundException(id));
+
+        UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
+
+        return mountPostById(postEntity, currentUserEntity);
     }
 
-    @Override
-    public List<PostResponse> getUserPosts(User user, int page, int size) {
-        return getPostsByUser(user, page, size, null);
-    }
+    private List<PostResponse> getPostsByUser(UserEntity currentUser, UserEntity otherUser, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
 
-    private List<PostResponse> getPostsByUser(User user, int page, int size, User otherUser) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
-
-        UserEntity userEntity = userMapper.userToUserEntity(user);
-
-        Page<PostEntity> posts  = postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(userEntity, pageRequest);
-
-        if (posts == null) {
-            return null;
-        }
+        Page<PostEntity> posts  =
+                postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(otherUser, pageRequest);
 
         List<PostResponse> postsResponse = posts
                 .stream()
-                .map(post -> getPostById(post.getId(), user, otherUser))
+                .map(postEntity -> mountPostById(postEntity, currentUser))
                 .toList();
 
         return postsResponse;
     }
 
-    private PostResponse getPostById(UUID id, User user, User otherUser) {
-        String idPost = id.toString();
+    private PostResponse mountPostById(PostEntity postEntity, UserEntity currentUser) {
+        String postId = postEntity.getId().toString();
 
-        PostEntity postEntity = postJpaRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(idPost));
-
-        List<PostPhotoEntity> urlPosts = postPhotoMongoRepository.findAllByIdPost(idPost);
+        List<PostPhotoEntity> urlPosts = postPhotoMongoRepository.findAllByIdPost(postId);
 
         List<String> photoUrls = urlPosts
                 .stream()
-                .filter(postPhoto -> postPhoto.getIdPost().equals(idPost))
+                .filter(postPhoto -> postPhoto.getIdPost().equals(postId))
                 .map(PostPhotoEntity::getPhotoUrl)
                 .toList();
 
-        boolean isLiked = whoLiked(user, otherUser);
+        UserEntity user = findUserById(postEntity.getUserEntity().getId());
+
+        String userId = currentUser.getId().toString();
+
+        boolean isLiked = postLikeMongoRepository.existsByPostIdAndUserId(postId, userId);
 
         PostResponse postResponse = new PostResponse(
                 postEntity.getId().toString(),
                 postEntity.getDescription(),
                 DateUtils.formatDateTime(postEntity.getCreatedAt()),
-                postLikeMongoRepository.countAllByPostId(idPost),
-                postCommentMongoRepository.countAllByIdPost(idPost),
+                postLikeMongoRepository.countAllByPostId(postId),
+                postCommentMongoRepository.countAllByIdPost(postId),
                 photoUrls,
-                isLiked
+                isLiked,
+                user.getUsername(),
+                user.getProfilePicture(),
+                user.getName(),
+                user.getLastName(),
+                user.getXp()
         );
 
         return postResponse;
     }
 
-    private boolean whoLiked(User user, User otherUser) {
-        if(otherUser == null) {
-            return postLikeMongoRepository.existsByUserId(user.getId().getValue());
-        }
-        return postLikeMongoRepository.existsByUserId(otherUser.getId().getValue());
+    @Override
+    public List<PostResponse> getPostsFriends(User user, int page, int size) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Page<PostEntity> posts =
+                postJpaRepository.findPostFriends(userEntity.getId(), pageRequest);
+
+        return posts
+                .stream()
+                .map(postEntity -> mountPostById(postEntity, userEntity))
+                .toList();
+    }
+
+    @Override
+    public boolean existsPostById(String postId) {
+        UUID postIdUUID = UUID.fromString(postId);
+
+        return postJpaRepository.existsById(postIdUUID);
+    }
+
+    private UserEntity findUserById(UUID id) {
+        return userJpaRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id.toString()));
+    }
+
+    @Override
+    public boolean existsPostByUsername(User user, int page, int size) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+
+        return postJpaRepository.existsByUserEntity(userEntity);
     }
 }

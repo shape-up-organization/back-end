@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PostConfig {
     @Bean
-    public PostUsecase postUsecase(PostAdapter postAdapter, PostLikeAdapter postLikeAdapter,
-                                   FindUserAdapter findUserAdapter) {
+    public PostUsecase postUsecase(PostAdapter postAdapter,
+                                   PostLikeAdapter postLikeAdapter,
+                                   FindUserAdapter findUserAdapter
+    ) {
         return new PostUsecase(postAdapter, postLikeAdapter, findUserAdapter);
     }
 }

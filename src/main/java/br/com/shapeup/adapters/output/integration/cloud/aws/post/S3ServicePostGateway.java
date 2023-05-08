@@ -2,7 +2,6 @@ package br.com.shapeup.adapters.output.integration.cloud.aws.post;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;

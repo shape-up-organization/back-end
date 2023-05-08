@@ -10,7 +10,7 @@ public interface PostInput {
 
     List<PostResponse> getPostsByUsername(String email, String username, int page, int size);
 
-    List<PostResponse> getUserPosts(String email ,int page, int size);
+    List<PostResponse> getPostsFriends(String email, int page, int size);
 
     PostResponse getPostsById (String email, String postId);
 
