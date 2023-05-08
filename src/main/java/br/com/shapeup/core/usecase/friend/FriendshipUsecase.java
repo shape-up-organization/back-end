@@ -5,6 +5,7 @@ import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
 import br.com.shapeup.common.exceptions.friend.DeleteYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyAcceptedException;
+import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyExistsException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
@@ -13,7 +14,6 @@ import br.com.shapeup.core.ports.input.friend.FriendshipInput;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
-
 import io.vavr.control.Try;
 import java.util.List;
 
@@ -35,6 +35,7 @@ public class FriendshipUsecase implements FriendshipInput {
 
         validateUserAlreadyFriend(newFriendUsername, user);
         validateIsSameUser(newFriendUsername, user);
+        validateFriendshipRequestAlreadyExistis(user, newFriend);
 
         findFriendshipOutput.hasNotSentFriendRequestYet(user.getUsername(), newFriend.getUsername());
 
@@ -178,6 +179,15 @@ public class FriendshipUsecase implements FriendshipInput {
 
         if (!hasSentFriendRequest) {
             throw new FriendshipRequestNotFoundException();
+        }
+    }
+
+    private void validateFriendshipRequestAlreadyExistis(User user, User newFriend) {
+        Boolean hasSentFriendRequest = findFriendshipOutput
+                .hasSentFriendRequest(newFriend.getUsername(), user.getUsername());
+
+        if(hasSentFriendRequest) {
+            throw new FriendshipRequestAlreadyExistsException();
         }
     }
 
