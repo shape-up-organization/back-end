@@ -96,40 +96,19 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     public FriendshipStatus getFriendshipStatusForUser(String currentUserEmail, String searchUserUsername) {
         User currentUser = findUserOutput.findByEmail(currentUserEmail);
         User searchUser = findUserOutput.findByUsername(searchUserUsername);
+        var usernameSenderAndUsernameReceiver = findFriendshipOutput.findFriendshipRequestByUsername(currentUser, searchUser);
 
         boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(currentUser.getUsername(), searchUser.getUsername());
         UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
 
         var friends = friendshipJpaRepository.findAllByUserReceiver(currentUserEntity);
 
-        String usernameSenderFriendshipRequest = "";
-        String usernameReceiverFriendshipRequest = "";
-
-        List<FriendshipRequestDocument> friendshipRequests = friendshipMongoRepository.findAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(currentUser.getUsername());
-
-
-        for (FriendshipRequestDocument friendshipRequest : friendshipRequests) {
-            if (friendshipRequest.getUsernameSender().equals(currentUser.getUsername())) {
-
-                if (friendshipRequest.getUsernameReceiver().equals(searchUser.getUsername())) {
-                    usernameSenderFriendshipRequest = friendshipRequest.getUsernameSender();
-                    usernameReceiverFriendshipRequest = friendshipRequest.getUsernameReceiver();
-                }
-            } else if (friendshipRequest.getUsernameReceiver().equals(currentUser.getUsername())) {
-
-                if (friendshipRequest.getUsernameSender().equals(searchUser.getUsername())) {
-                    usernameSenderFriendshipRequest = friendshipRequest.getUsernameSender();
-                    usernameReceiverFriendshipRequest = friendshipRequest.getUsernameReceiver();
-                }
-            }
-        }
-
         boolean isFriend = friends.stream()
                 .anyMatch(friend -> friend.getUserSender()
                         .getUsername()
                         .equals(searchUser.getUsername()));
 
-        return new FriendshipStatus(haveFriendRequest, isFriend, usernameSenderFriendshipRequest);
+        return new FriendshipStatus(haveFriendRequest, isFriend, usernameSenderAndUsernameReceiver.getUsernameSender());
     }
 
     @Override
