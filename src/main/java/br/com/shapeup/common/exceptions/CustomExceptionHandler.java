@@ -9,6 +9,7 @@ import br.com.shapeup.common.exceptions.friend.DuplicateFriendshipException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestAlreadyAcceptedException;
 import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundException;
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
+import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.common.exceptions.profile.ProfilePictureNotFoundException;
 import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
@@ -61,7 +62,8 @@ public class CustomExceptionHandler {
     @ExceptionHandler({
             UserNotFoundException.class,
             FriendshipRequestNotFoundException.class,
-            ProfilePictureNotFoundException.class
+            ProfilePictureNotFoundException.class,
+            PostNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleNotFoundException(
