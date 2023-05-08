@@ -89,7 +89,6 @@ public class FriendshipUsecase implements FriendshipInput {
         User user = findUserOutput.findByEmail(email);
         User newFriend = findUserOutput.findByUsername(friendUsername);
 
-        // TODO Listar todas as solicitacoes de amizade e verificar quem eh o sender e o receiver
         UsernameSenderAndUsernameReceiverDto usernameSenderAndUsernameReceiverDto = findFriendshipOutput.findFriendshipRequestByUsername(user, newFriend);
 
         var friendshipRequestsNotAccepted = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(
