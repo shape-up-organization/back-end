@@ -25,6 +25,8 @@ public class PostResponse {
 
     private List<String> photoUrls;
 
+    private boolean isLiked;
+
     private String username;
 
     private String profilePicture;

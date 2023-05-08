@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/posts")
 @RequiredArgsConstructor
+@RequestMapping("/posts")
 @CrossOrigin(origins = "*")
 public class PostController {
     private final PostInput postPersistenceInput;
@@ -48,11 +48,15 @@ public class PostController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<List<PostResponse>> getPostsByUsername(@PathVariable String username,
+    public ResponseEntity<List<PostResponse>> getPostsByUsername(HttpServletRequest jwtToken,
+                                                                 @PathVariable String username,
                                                                  @RequestParam("page") int page,
                                                                  @RequestParam("size") int size
     ){
-        List<PostResponse> posts = postPersistenceInput.getPostsByUsername(username, page, size);
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        List<PostResponse> posts = postPersistenceInput.getPostsByUsername(email, username, page, size);
 
         if (posts == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -62,13 +66,13 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponse> getPostsById(@PathVariable String postId
+    public ResponseEntity<PostResponse> getPostsById(HttpServletRequest jwtToken,
+                                                     @PathVariable String postId
     ){
-        PostResponse post = postPersistenceInput.getPostsById(postId);
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
 
-        if (post == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
+        PostResponse post = postPersistenceInput.getPostsById(email, postId);
 
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
@@ -88,5 +92,16 @@ public class PostController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Void> likePost(@PathVariable String postId,
+                                         HttpServletRequest jwtToken) {
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        postPersistenceInput.likePost(postId, email);
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -46,7 +46,7 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
     }
 
     private String generateNewFileName(UserEntity user, String fileName) {
-        return "posts/" + user.getUsername() + "--post--" + fileName;
+        return "posts/" + user.getUsername() + "--post--" + fileName.replace(" ", "");
     }
 
     @SneakyThrows
@@ -79,7 +79,7 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
 
     public URL getPostPictureUrl(MultipartFile file, String username) {
         String fileName = file.getOriginalFilename();
-        String newFileName = username + "--post--" + fileName;
+        String newFileName = "posts/" + username + "--post--" + fileName.replace(" ", "");
         return s3Client.getUrl(bucketName, newFileName);
     }
 }

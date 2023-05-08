@@ -8,9 +8,11 @@ import java.util.List;
 public interface PostInput {
     List<URL> createPost(Object[] files, String token, PostRequest request);
 
-    List<PostResponse> getPostsByUsername(String username, int page, int size);
-
-    PostResponse getPostsById (String id);
+    List<PostResponse> getPostsByUsername(String email, String username, int page, int size);
 
     List<PostResponse> getPostsFriends(String email, int page, int size);
+
+    PostResponse getPostsById (String email, String postId);
+
+    void likePost(String postId, String email);
 }

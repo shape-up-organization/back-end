@@ -20,6 +20,7 @@ public class UserHttpMapperImpl implements UserHttpMapper {
                 .username(userSearch.getUsername())
                 .profilePicture(userSearch.getProfilePicture())
                 .xp(userSearch.getXp())
+                .biography(userSearch.getBiography())
                 .friendshipStatus(friendshipStatus)
                 .build();
     }
