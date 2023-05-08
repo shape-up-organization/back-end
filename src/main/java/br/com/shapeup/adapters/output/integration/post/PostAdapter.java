@@ -80,7 +80,7 @@ public class PostAdapter implements PostOutput {
         UserEntity userEntity = userMapper.userToUserEntity(currentUser);
         UserEntity otherUserEntity = userMapper.userToUserEntity(otherUser);
 
-        return getPostsByUser(userEntity, page, size);
+        return getPostsByUser(userEntity, otherUserEntity, page, size);
     }
 
     @Override
@@ -93,11 +93,11 @@ public class PostAdapter implements PostOutput {
         return mountPostById(postEntity, currentUserEntity);
     }
 
-    private List<PostResponse> getPostsByUser(UserEntity currentUser, int page, int size) {
+    private List<PostResponse> getPostsByUser(UserEntity currentUser, UserEntity otherUser, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         Page<PostEntity> posts  =
-                postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(currentUser, pageRequest);
+                postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(otherUser, pageRequest);
 
         List<PostResponse> postsResponse = posts
                 .stream()
