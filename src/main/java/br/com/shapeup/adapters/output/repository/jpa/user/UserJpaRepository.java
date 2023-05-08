@@ -23,7 +23,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findByUsername(String username);
 
-    List<UserEntity> findByNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(String name, String lastName);
+    List<UserEntity> findByFullNameContainsIgnoreCase(String fullName);
 
     List<UserEntity> findAllByUsernameStartingWithIgnoreCase(String username);
 

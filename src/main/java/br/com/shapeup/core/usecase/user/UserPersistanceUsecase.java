@@ -39,8 +39,8 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     }
 
     @Override
-    public List<User> findAllUserByFullName(String name, String lastName) {
-        return userPersistanceOutput.findAllUserByFullName(name, lastName);
+    public List<User> findAllUserByFullName(String fullName) {
+        return userPersistanceOutput.findAllUserByFullName(fullName);
     }
 
     @Override

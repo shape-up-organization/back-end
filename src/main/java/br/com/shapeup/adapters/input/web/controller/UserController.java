@@ -81,14 +81,13 @@ public class UserController {
 
     @GetMapping("/search-fullname")
     public ResponseEntity<List<UserResponse>> findAllUserByFullName(
-            @RequestParam String name,
-            @RequestParam String lastName,
+            @RequestParam String fullName,
             HttpServletRequest request
     ) {
         String jwtToken = TokenUtils.getToken(request);
         var email = JwtService.extractEmailFromToken(jwtToken);
 
-        List<User> searchUsers = userPersistanceInput.findAllUserByFullName(name, lastName);
+        List<User> searchUsers = userPersistanceInput.findAllUserByFullName(fullName);
         return getListResponseEntity(email, searchUsers);
     }
 

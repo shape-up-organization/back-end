@@ -16,7 +16,7 @@ public interface UserPersistanceOutput {
 
     User findUserByUsername(String username);
 
-    List<User> findAllUserByFullName(String name, String lastName);
+    List<User> findAllUserByFullName(String fullName);
 
     FriendshipStatus getFriendshipStatusForUser(String currentUserEmail, String searchUserUsername);
 
