@@ -1,5 +1,6 @@
 package br.com.shapeup.core.usecase.friend;
 
+import br.com.shapeup.common.domain.dto.UsernameSenderAndUsernameReceiverDto;
 import br.com.shapeup.common.exceptions.friend.AddYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
 import br.com.shapeup.common.exceptions.friend.DeleteYourselfAsAFriendException;
@@ -88,15 +89,16 @@ public class FriendshipUsecase implements FriendshipInput {
         User user = findUserOutput.findByEmail(email);
         User newFriend = findUserOutput.findByUsername(friendUsername);
 
-
+        // TODO Listar todas as solicitacoes de amizade e verificar quem eh o sender e o receiver
+        UsernameSenderAndUsernameReceiverDto usernameSenderAndUsernameReceiverDto = findFriendshipOutput.findFriendshipRequestByUsername(user, newFriend);
 
         var friendshipRequestsNotAccepted = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(
-                newFriend.getUsername(),
-                user.getUsername(),
+                usernameSenderAndUsernameReceiverDto.getUsernameSender(),
+                usernameSenderAndUsernameReceiverDto.getUsernameReceiver(),
                 false
         );
 
-        validateFriendshipRequestExists(user, newFriend);
+        validateFriendshipRequestExists(usernameSenderAndUsernameReceiverDto.getUsernameSender(), usernameSenderAndUsernameReceiverDto.getUsernameReceiver());
         validateDeleteIsSameUser(friendUsername, user);
         validateUserAlreadyFriend(friendUsername, user);
 
@@ -179,9 +181,9 @@ public class FriendshipUsecase implements FriendshipInput {
         }
     }
 
-    private void validateFriendshipRequestExists(User user, User newFriend) {
+    private void validateFriendshipRequestExists(String usernameSender, String usernameReceiver) {
         Boolean hasSentFriendRequest = findFriendshipOutput
-                .hasSentFriendRequest(newFriend.getUsername(), user.getUsername());
+                .hasSentFriendRequest(usernameSender, usernameReceiver);
 
         if (!hasSentFriendRequest) {
             throw new FriendshipRequestNotFoundException();
