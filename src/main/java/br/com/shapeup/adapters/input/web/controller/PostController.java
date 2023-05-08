@@ -33,7 +33,8 @@ public class PostController {
     @PostMapping
     public ResponseEntity<List<Map<String, URL>>> createPost(PostRequest request,
                                            @RequestParam("file") MultipartFile[] files,
-                                           HttpServletRequest jwtToken) {
+                                           HttpServletRequest jwtToken
+    ){
         String token = TokenUtils.getToken(jwtToken);
         String email = JwtService.extractEmailFromToken(token);
 
@@ -44,7 +45,7 @@ public class PostController {
                 .map(postUrl -> Collections.singletonMap("urlPost", postUrl))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(postUrlResponse);
+        return  ResponseEntity.ok(postUrlResponse);
     }
 
     @GetMapping("/username/{username}")
@@ -62,7 +63,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(posts);
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{postId}")
@@ -74,7 +75,7 @@ public class PostController {
 
         PostResponse post = postPersistenceInput.getPostsById(email, postId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(post);
+        return ResponseEntity.ok(post);
     }
 
     @GetMapping
@@ -88,15 +89,16 @@ public class PostController {
         List<PostResponse> posts = postPersistenceInput.getPostsFriends(email, page, size);
 
         if (posts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return  ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(posts);
+        return  ResponseEntity.ok(posts);
     }
 
     @PostMapping("/{postId}/like")
     public ResponseEntity<Void> likePost(@PathVariable String postId,
-                                         HttpServletRequest jwtToken) {
+                                         HttpServletRequest jwtToken
+    ) {
         String token = TokenUtils.getToken(jwtToken);
         String email = JwtService.extractEmailFromToken(token);
 

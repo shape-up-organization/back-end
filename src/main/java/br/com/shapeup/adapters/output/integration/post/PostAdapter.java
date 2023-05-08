@@ -76,34 +76,38 @@ public class PostAdapter implements PostOutput {
     }
 
     @Override
-    public List<PostResponse> getPostsByUsername(User user, int page, int size) {
-        UserEntity userEntity = userMapper.userToUserEntity(user);
+    public List<PostResponse> getPostsByUsername(User currentUser, User otherUser, int page, int size) {
+        UserEntity userEntity = userMapper.userToUserEntity(currentUser);
+        UserEntity otherUserEntity = userMapper.userToUserEntity(otherUser);
 
         return getPostsByUser(userEntity, page, size);
     }
 
     @Override
-    public PostResponse getPostById(String id) {
+    public PostResponse getPostById(User currentUser, String id) {
         PostEntity postEntity = postJpaRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new PostNotFoundException(id));
 
-        return getPostById(postEntity);
+        UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
+
+        return mountPostById(postEntity, currentUserEntity);
     }
 
-    private List<PostResponse> getPostsByUser(UserEntity user, int page, int size) {
+    private List<PostResponse> getPostsByUser(UserEntity currentUser, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<PostEntity> posts  = postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(user, pageRequest);
+        Page<PostEntity> posts  =
+                postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(currentUser, pageRequest);
 
         List<PostResponse> postsResponse = posts
                 .stream()
-                .map(this::getPostById)
+                .map(postEntity -> mountPostById(postEntity, currentUser))
                 .toList();
 
         return postsResponse;
     }
 
-    private PostResponse getPostById(PostEntity postEntity) {
+    private PostResponse mountPostById(PostEntity postEntity, UserEntity currentUser) {
         String postId = postEntity.getId().toString();
 
         List<PostPhotoEntity> urlPosts = postPhotoMongoRepository.findAllByIdPost(postId);
@@ -116,6 +120,10 @@ public class PostAdapter implements PostOutput {
 
         UserEntity user = findUserById(postEntity.getUserEntity().getId());
 
+        String userId = currentUser.getId().toString();
+
+        boolean isLiked = postLikeMongoRepository.existsByPostIdAndUserId(postId, userId);
+
         PostResponse postResponse = new PostResponse(
                 postEntity.getId().toString(),
                 postEntity.getDescription(),
@@ -123,6 +131,7 @@ public class PostAdapter implements PostOutput {
                 postLikeMongoRepository.countAllByPostId(postId),
                 postCommentMongoRepository.countAllByIdPost(postId),
                 photoUrls,
+                isLiked,
                 user.getUsername(),
                 user.getProfilePicture(),
                 user.getName(),
@@ -144,7 +153,7 @@ public class PostAdapter implements PostOutput {
 
         return posts
                 .stream()
-                .map(this::getPostById)
+                .map(postEntity -> mountPostById(postEntity, userEntity))
                 .toList();
     }
 

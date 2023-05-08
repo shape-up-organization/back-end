@@ -6,6 +6,7 @@ import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.core.ports.input.post.PostInput;
 import br.com.shapeup.core.ports.output.post.PostOutput;
+import br.com.shapeup.core.ports.output.post.like.PostLikeOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import java.net.URL;
 import java.util.List;
@@ -30,13 +31,13 @@ public class  PostUsecase implements PostInput {
 
     @Override
     public List<PostResponse> getPostsByUsername(String email, String username, int page, int size) {
-        User user = findUserOutput.findByEmail(email);
+        User currentUser = findUserOutput.findByEmail(email);
         User otherUser = findUserOutput.findByUsername(username);
 
         if (!hasPosts(otherUser, page, size)) {
             return null;
         };
-        return postOutput.getPostsByUsername(user, otherUser, page, size);
+        return postOutput.getPostsByUsername(currentUser, otherUser, page, size);
     }
 
     private boolean hasPosts(User user, int page, int size) {
@@ -53,6 +54,8 @@ public class  PostUsecase implements PostInput {
 
     @Override
     public void likePost(String postId, String email) {
+        validateExistsPost(postId);
+
         User user = findUserOutput.findByEmail(email);
 
         postLikeOutput.likePost(user, postId);
