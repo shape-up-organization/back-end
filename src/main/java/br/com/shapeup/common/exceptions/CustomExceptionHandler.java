@@ -1,6 +1,8 @@
 package br.com.shapeup.common.exceptions;
 
 import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
+import br.com.shapeup.common.exceptions.comment.CommentIsNotYours;
+import br.com.shapeup.common.exceptions.comment.CommentNotFoundException;
 import br.com.shapeup.common.exceptions.friend.AddYourselfAsAFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadyFriendException;
 import br.com.shapeup.common.exceptions.friend.AlreadySentFriendRequestException;
@@ -64,7 +66,8 @@ public class CustomExceptionHandler {
             UserNotFoundException.class,
             FriendshipRequestNotFoundException.class,
             ProfilePictureNotFoundException.class,
-            PostNotFoundException.class
+            PostNotFoundException.class,
+            CommentNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleNotFoundException(
@@ -121,7 +124,8 @@ public class CustomExceptionHandler {
             UserAlreadyExistsException.class,
             NotFriendException.class,
             DeleteYourselfAsAFriendException.class,
-            AddYourselfAsAFriendException.class
+            AddYourselfAsAFriendException.class,
+            CommentIsNotYours.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
