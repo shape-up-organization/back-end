@@ -97,6 +97,13 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "userReceiver")
     private List<FriendsEntity> friendsReceiver = new ArrayList<>();
 
+    public UserEntity(String name, String lastName, String username, String profilePicture, Long xp) {
+        this.name = name;
+        this.lastName = lastName;
+        this.username = username;
+        this.profilePicture = profilePicture;
+        this.xp = xp;
+    }
 
     @Override
     public boolean equals(Object o) {
