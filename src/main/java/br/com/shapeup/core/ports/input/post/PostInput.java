@@ -1,6 +1,7 @@
 package br.com.shapeup.core.ports.input.post;
 
 import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
+import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import java.net.URL;
 import java.util.List;
@@ -15,4 +16,6 @@ public interface PostInput {
     PostResponse getPostsById (String email, String postId);
 
     void likePost(String postId, String email);
+
+    void createPostWhitoutPhoto(String email, PostWithouPhotoRequest request);
 }

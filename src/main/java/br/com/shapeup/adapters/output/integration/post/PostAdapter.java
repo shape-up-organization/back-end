@@ -1,6 +1,7 @@
 package br.com.shapeup.adapters.output.integration.post;
 
 import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
+import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.adapters.output.integration.cloud.aws.post.S3ServicePostGateway;
 import br.com.shapeup.adapters.output.repository.jpa.post.PostJpaRepository;
@@ -174,5 +175,14 @@ public class PostAdapter implements PostOutput {
         UserEntity userEntity = userMapper.userToUserEntity(user);
 
         return postJpaRepository.existsByUserEntity(userEntity);
+    }
+
+    @Override
+    public void createPostWithoutPhoto(User user, PostWithouPhotoRequest request) {
+        UUID userId = UUID.fromString(user.getId().getValue());
+
+        PostEntity postEntity = new PostEntity(userId, request.getDescription());
+
+        postJpaRepository.save(postEntity);
     }
 }

@@ -1,6 +1,7 @@
 package br.com.shapeup.core.usecase.post;
 
 import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
+import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
@@ -72,5 +73,12 @@ public class  PostUsecase implements PostInput {
         User user = findUserOutput.findByEmail(email);
 
         return postOutput.getPostsFriends(user, page, size);
+    }
+
+    @Override
+    public void createPostWhitoutPhoto(String email, PostWithouPhotoRequest request) {
+        User user = findUserOutput.findByEmail(email);
+
+        postOutput.createPostWithoutPhoto(user, request);
     }
 }
