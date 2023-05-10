@@ -117,7 +117,7 @@ public class PostController {
         String token = TokenUtils.getToken(jwtToken);
         String email = JwtService.extractEmailFromToken(token);
 
-        postPersistenceInput.createPostWhitoutPhoto(email, request);
+        postPersistenceInput.createPostWithoutPhoto(email, request);
 
         return  ResponseEntity.status(201).build();
     }

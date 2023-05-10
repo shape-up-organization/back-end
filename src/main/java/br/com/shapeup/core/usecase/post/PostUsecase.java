@@ -76,7 +76,7 @@ public class  PostUsecase implements PostInput {
     }
 
     @Override
-    public void createPostWhitoutPhoto(String email, PostWithouPhotoRequest request) {
+    public void createPostWithoutPhoto(String email, PostWithouPhotoRequest request) {
         User user = findUserOutput.findByEmail(email);
 
         postOutput.createPostWithoutPhoto(user, request);

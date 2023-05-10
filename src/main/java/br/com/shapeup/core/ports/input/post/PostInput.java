@@ -17,5 +17,5 @@ public interface PostInput {
 
     void likePost(String postId, String email);
 
-    void createPostWhitoutPhoto(String email, PostWithouPhotoRequest request);
+    void createPostWithoutPhoto(String email, PostWithouPhotoRequest request);
 }
