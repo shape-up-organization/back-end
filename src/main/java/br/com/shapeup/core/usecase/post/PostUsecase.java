@@ -6,6 +6,7 @@ import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.core.ports.input.post.PostInput;
+import br.com.shapeup.core.ports.output.post.CreatePostOutput;
 import br.com.shapeup.core.ports.output.post.PostOutput;
 import br.com.shapeup.core.ports.output.post.like.PostLikeOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
@@ -16,18 +17,21 @@ public class  PostUsecase implements PostInput {
     private final PostOutput postOutput;
     private final FindUserOutput findUserOutput;
     private final PostLikeOutput postLikeOutput;
+    private final CreatePostOutput createPostOutput;
 
-    public PostUsecase(PostOutput postOutput, PostLikeOutput postLikeOutput, FindUserOutput findUserOutput) {
+    public PostUsecase(PostOutput postOutput, PostLikeOutput postLikeOutput,
+                       FindUserOutput findUserOutput, CreatePostOutput createPostOutput) {
         this.postOutput = postOutput;
         this.postLikeOutput = postLikeOutput;
         this.findUserOutput = findUserOutput;
+        this.createPostOutput = createPostOutput;
     }
 
     @Override
     public List<URL> createPost(Object[] files, String email, PostRequest request) {
         User user = findUserOutput.findByEmail(email);
 
-        return postOutput.createPost(files, user, request);
+        return createPostOutput.createPost(files, user, request);
     }
 
     @Override
@@ -79,6 +83,6 @@ public class  PostUsecase implements PostInput {
     public void createPostWithoutPhoto(String email, PostWithouPhotoRequest request) {
         User user = findUserOutput.findByEmail(email);
 
-        postOutput.createPostWithoutPhoto(user, request);
+        createPostOutput.createPostWithoutPhoto(user, request);
     }
 }

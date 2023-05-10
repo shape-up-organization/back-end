@@ -1,5 +1,6 @@
 package br.com.shapeup.common.config.bean;
 
+import br.com.shapeup.adapters.output.integration.post.CreatePostAdapter;
 import br.com.shapeup.adapters.output.integration.post.PostAdapter;
 import br.com.shapeup.adapters.output.integration.post.like.PostLikeAdapter;
 import br.com.shapeup.adapters.output.integration.user.FindUserAdapter;
@@ -12,8 +13,9 @@ public class PostConfig {
     @Bean
     public PostUsecase postUsecase(PostAdapter postAdapter,
                                    PostLikeAdapter postLikeAdapter,
-                                   FindUserAdapter findUserAdapter
+                                   FindUserAdapter findUserAdapter,
+                                   CreatePostAdapter createPostAdapter
     ) {
-        return new PostUsecase(postAdapter, postLikeAdapter, findUserAdapter);
+        return new PostUsecase(postAdapter, postLikeAdapter, findUserAdapter, createPostAdapter);
     }
 }
