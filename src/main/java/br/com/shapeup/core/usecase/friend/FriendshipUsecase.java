@@ -50,7 +50,12 @@ public class FriendshipUsecase implements FriendshipInput {
 
         User user = findUserOutput.findByEmail(email);
         User friend = findUserOutput.findByUsername(friendUsername);
-        return Try.of(() -> findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername()))
+
+        var usernameSenderAndUsernameReceiverDto = findFriendshipOutput.findFriendshipRequestByUsername(user, friend);
+        User userSender = findUserOutput.findByUsername(usernameSenderAndUsernameReceiverDto.getUsernameSender());
+        User userReceiver = findUserOutput.findByUsername(usernameSenderAndUsernameReceiverDto.getUsernameReceiver());
+
+        return Try.of(() -> findFriendshipOutput.findFriendshipRequest(usernameSenderAndUsernameReceiverDto.getUsernameSender(), usernameSenderAndUsernameReceiverDto.getUsernameReceiver()))
                 .onFailure(throwable -> {
                     throw new FriendshipRequestNotFoundException("Friendship request not found or already accepted");
                 })
@@ -59,15 +64,15 @@ public class FriendshipUsecase implements FriendshipInput {
                     verifyFriendshipRequestValidity(user, friend, friendshipRequest);
                     verifyFriendshipRequestAlreadyAccepted(friendshipRequest);
 
-                    friendsOutput.acceptFriendRequest(user, friend);
+                    friendsOutput.acceptFriendRequest(userSender, userReceiver);
                     friendshipRequest.setAccepted(true);
 
-                    deleteOldFriendshipRequest(user, friend);
+                    deleteOldFriendshipRequest(userSender, userReceiver);
                 }).get();
     }
 
     private void deleteOldFriendshipRequest(User user, User friend) {
-        var oldFriendshipRequestWithNotAccepted = findFriendshipOutput.findFriendshipRequest(friend.getUsername(), user.getUsername());
+        var oldFriendshipRequestWithNotAccepted = findFriendshipOutput.findFriendshipRequest(user.getUsername(), friend.getUsername());
 
         if (oldFriendshipRequestWithNotAccepted.getAccepted().equals(false)) {
             deleteFriendshipRequest(friend.getUsername(), user.getEmail().getValue());
@@ -87,35 +92,43 @@ public class FriendshipUsecase implements FriendshipInput {
     public void deleteFriendshipRequest(String friendUsername, String email) {
 
         User user = findUserOutput.findByEmail(email);
-        User newFriend = findUserOutput.findByUsername(friendUsername);
+        User friend = findUserOutput.findByUsername(friendUsername);
 
-        UsernameSenderAndUsernameReceiverDto usernameSenderAndUsernameReceiverDto = findFriendshipOutput.findFriendshipRequestByUsername(user, newFriend);
+        UsernameSenderAndUsernameReceiverDto usernameSenderAndUsernameReceiverDto = findFriendshipOutput.findFriendshipRequestByUsername(user, friend);
 
-        var friendshipRequestsNotAccepted = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(
+        var friendshipRequest = findFriendshipOutput.findFriendshipRequest(
+                usernameSenderAndUsernameReceiverDto.getUsernameSender(),
+                usernameSenderAndUsernameReceiverDto.getUsernameReceiver()
+        );
+
+        Boolean isAccepted = friendshipRequest.getAccepted();
+
+        var friendshipRequests = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(
                 usernameSenderAndUsernameReceiverDto.getUsernameSender(),
                 usernameSenderAndUsernameReceiverDto.getUsernameReceiver(),
-                false
+                isAccepted
         );
 
         validateFriendshipRequestExists(usernameSenderAndUsernameReceiverDto.getUsernameSender(), usernameSenderAndUsernameReceiverDto.getUsernameReceiver());
         validateDeleteIsSameUser(friendUsername, user);
         validateUserAlreadyFriend(friendUsername, user);
 
-        friendsOutput.deleteFriendshipRequest(friendshipRequestsNotAccepted.getId().getValue());
+        friendsOutput.deleteFriendshipRequest(friendshipRequests.getId().getValue());
     }
 
     @Override
     public void deleteFriend(String friendUsername, String email) {
         User user = findUserOutput.findByEmail(email);
-        User newFriend = findUserOutput.findByUsername(friendUsername);
+        User friend = findUserOutput.findByUsername(friendUsername);
 
         List<User> friends = friendsOutput.getAllFriendship(user);
         user.setFriends(friends);
 
         validateDeleteIsSameUser(friendUsername, user);
         validateExistsFriendship(friendUsername, user);
+        deleteFriendshipRequest(friendUsername, email);
 
-        friendsOutput.deleteFriend(user, newFriend);
+        friendsOutput.deleteFriend(user, friend);
     }
 
     private void validateUserAlreadyFriend(String newFriendUsername, User user) {

@@ -98,7 +98,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
         User searchUser = findUserOutput.findByUsername(searchUserUsername);
         var usernameSenderAndUsernameReceiver = findFriendshipOutput.findFriendshipRequestByUsername(currentUser, searchUser);
 
-        boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(currentUser.getUsername(), searchUser.getUsername());
+        boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(usernameSenderAndUsernameReceiver.getUsernameSender(), usernameSenderAndUsernameReceiver.getUsernameReceiver());
         UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
 
         var friends = friendshipJpaRepository.findAllByUserReceiver(currentUserEntity);

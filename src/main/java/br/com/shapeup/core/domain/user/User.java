@@ -49,7 +49,6 @@ public class User extends Entity<UserId> {
         new UserValidator(handler, this).validate();
     }
 
-
     public UserId getId() {
         return id;
     }
