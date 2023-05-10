@@ -5,6 +5,8 @@ import br.com.shapeup.common.utils.TokenUtils;
 import br.com.shapeup.core.ports.input.profile.ProfilePictureInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,13 +45,20 @@ public class ProfileController {
     }
 
     @DeleteMapping("/picture")
-    public ResponseEntity<?> deletePicture(HttpServletRequest request) {
+    public ResponseEntity<?> deletePicture(HttpServletRequest request) throws MalformedURLException {
         String token = TokenUtils.getToken(request);
         String username = JwtService.extractAccountNameFromToken(token);
 
         profilePictureInput.deletePicture(username);
-        String newToken = TokenUtils.updateProfilePictureAndGenerateNewToken(token, null);
+        URL defaultProfilePicture = new URL("https://shapeup-user-profile.s3.amazonaws.com/profile_picture/default-user.png");
 
-        return ResponseEntity.status(HttpStatus.OK.value()).body(newToken);
+        String newToken = TokenUtils.updateProfilePictureAndGenerateNewToken(token, defaultProfilePicture);
+
+        var updatedProfilePictureReponse = new UpdatedProfilePictureReponse(
+                newToken,
+                defaultProfilePicture.toString()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(updatedProfilePictureReponse);
     }
 }
