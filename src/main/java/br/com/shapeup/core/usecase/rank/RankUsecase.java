@@ -3,7 +3,7 @@ package br.com.shapeup.core.usecase.rank;
 import br.com.shapeup.adapters.input.web.controller.response.rank.RankResponse;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.rank.RankInput;
-import br.com.shapeup.core.ports.input.rank.RankOutput;
+import br.com.shapeup.core.ports.output.rank.RankOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import java.util.List;
 

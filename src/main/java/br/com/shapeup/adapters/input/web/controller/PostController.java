@@ -1,11 +1,13 @@
 package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
+import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.common.utils.TokenUtils;
 import br.com.shapeup.core.ports.input.post.PostInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +34,7 @@ public class PostController {
     private final PostInput postPersistenceInput;
 
     @PostMapping
-    public ResponseEntity<List<Map<String, URL>>> createPost(PostRequest request,
+    public ResponseEntity<List<Map<String, URL>>> createPost(@Valid PostRequest request,
                                            @RequestParam("file") MultipartFile[] files,
                                            HttpServletRequest jwtToken
     ){
@@ -105,5 +108,17 @@ public class PostController {
         postPersistenceInput.likePost(postId, email);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/without-photo")
+    public ResponseEntity<Void> createPostWhitoutPhoto(@RequestBody @Valid PostWithouPhotoRequest request,
+                                                       HttpServletRequest jwtToken
+    ){
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        postPersistenceInput.createPostWithoutPhoto(email, request);
+
+        return  ResponseEntity.status(201).build();
     }
 }

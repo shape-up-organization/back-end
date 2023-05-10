@@ -1,4 +1,4 @@
-package br.com.shapeup.core.ports.input.rank;
+package br.com.shapeup.core.ports.output.rank;
 
 import br.com.shapeup.adapters.input.web.controller.response.rank.RankResponse;
 import br.com.shapeup.core.domain.user.User;
