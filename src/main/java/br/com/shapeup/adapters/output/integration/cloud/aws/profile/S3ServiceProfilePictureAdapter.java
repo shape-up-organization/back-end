@@ -78,7 +78,7 @@ public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGa
         Try.run(() -> listObjectsWithPrefix("profile_picture/" + username)
                 .forEach(s3ObjectSummary -> s3Client.deleteObject(bucketName, s3ObjectSummary.getKey())))
                 .onFailure(ex -> log.error("Error deleting profile picture: " + ex.getMessage()))
-                .onSuccess(v -> log.info("Profile picture deleted successfully."));
+                .onSuccess(aVoid -> log.info("Profile picture deleted successfully."));
     }
 
     private UserEntity getUserByUuid(String uuid) {
