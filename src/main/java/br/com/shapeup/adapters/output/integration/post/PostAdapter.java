@@ -132,4 +132,22 @@ public class PostAdapter implements PostOutput {
 
         return postJpaRepository.existsByUserEntity(userEntity);
     }
+
+    @Override
+    public boolean existsPostByIdAndUser(User user, String postId) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+
+        UUID postIdUUID = UUID.fromString(postId);
+
+        return postJpaRepository.existsByUserEntityAndId(userEntity, postIdUUID);
+    }
+
+    @Override
+    public void deletePostById(User user, String postId) {
+
+        UUID postIdUUID = UUID.fromString(postId);
+
+        postCommentMongoRepository.deleteAllByIdPost(postId);
+        postJpaRepository.deleteById(postIdUUID);
+    }
 }

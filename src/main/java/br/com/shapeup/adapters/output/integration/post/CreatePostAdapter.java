@@ -14,10 +14,9 @@ import br.com.shapeup.core.ports.output.post.CreatePostOutput;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,15 +32,13 @@ public class CreatePostAdapter implements CreatePostOutput {
     public List<URL> createPost(Object[] files, User user, PostRequest request) {
         UserEntity userEntity = userMapper.userToUserEntity(user);
 
-        List<URI> savingImages = Arrays.stream(files)
-                .map(file -> sendPostPhotosToS3AndReturnSame((MultipartFile) file, userEntity))
-                .toList();
+        UUID postId = UUID.randomUUID();
 
-        List<URL> postUrls = Arrays.stream(files)
-                .map(file -> s3Service.getPostPictureUrl((MultipartFile) file, userEntity.getUsername()))
-                .toList();
+        savingImages(files, userEntity, postId);
 
-        PostEntity postEntity = new PostEntity(userEntity.getId(), request.getDescription());
+        List<URL> postUrls = getUrls(files, userEntity, postId);
+
+        PostEntity postEntity = new PostEntity(postId, userEntity, request.getDescription());
 
         PostEntity savedPost  = postJpaRepository.save(postEntity);
 
@@ -54,22 +51,60 @@ public class CreatePostAdapter implements CreatePostOutput {
         return postUrls;
     }
 
-    private URI sendPostPhotosToS3AndReturnSame(MultipartFile file, UserEntity user) {
-        try {
-            URI urlPhoto = s3Service.uploadPostPictureFile(file, user);
+    private List<URL> getUrls(Object[] files, UserEntity userEntity, UUID postId) {
+        List<URL> postUrls = new ArrayList<>();
 
-            return urlPhoto;
-        } catch (URISyntaxException e) {
+        for(int i = 0 ; i < files.length; i++) {
+            postUrls.add(s3Service.getPostPictureUrl(
+                    (MultipartFile) files[i], userEntity.getUsername(), postId, i));
+        }
+
+        return postUrls;
+    }
+
+    private void savingImages(Object[] files, UserEntity userEntity, UUID postId) {
+        for (int i = 0; i < files.length; i++) {
+            sendPostPhotosToS3AndReturnSame((MultipartFile) files[i], userEntity, postId, i);
+        }
+    }
+
+    private void sendPostPhotosToS3AndReturnSame(MultipartFile file, UserEntity user, UUID postId, int count) {
+        try {
+            s3Service.uploadPostPictureFile(file, user, postId, count);
+        }
+        catch (URISyntaxException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
     public void createPostWithoutPhoto(User user, PostWithouPhotoRequest request) {
-        UUID userId = UUID.fromString(user.getId().getValue());
 
-        PostEntity postEntity = new PostEntity(userId, request.getDescription());
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+        PostEntity postEntity = new PostEntity(userEntity, request.getDescription());
 
         postJpaRepository.save(postEntity);
+    }
+
+    @Override
+    public void deletePostPhotos(User user, String postId) {
+        List<PostPhotoEntity> urlPosts = postPhotoMongoRepository.findAllByIdPost(postId);
+
+        List<String> photoUrls = urlPosts
+                .stream()
+                .map(PostPhotoEntity::getPhotoUrl)
+                .toList();
+
+        postPhotoMongoRepository.deleteAllByIdPost(postId);
+
+        photoUrls = splitPhostUrl(photoUrls);
+
+        s3Service.deletePostPhotos(photoUrls);
+    }
+
+    private List<String> splitPhostUrl(List<String> photoUrls) {
+        return photoUrls.stream()
+                .map(url -> url.split("/posts/")[1])
+                .toList();
     }
 }

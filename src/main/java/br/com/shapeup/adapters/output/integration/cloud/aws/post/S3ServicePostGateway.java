@@ -6,9 +6,15 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
+import java.util.UUID;
 
 public interface S3ServicePostGateway {
-    URI uploadPostPictureFile(MultipartFile file, UserEntity user) throws URISyntaxException;
-    URI uploadPostPictureFile(InputStream inputStream, String fileName, String contentType, UserEntity user);
-    URL getPostPictureUrl(MultipartFile file, String username);
+    URI uploadPostPictureFile(MultipartFile file, UserEntity user, UUID postId, int count) throws URISyntaxException;
+
+    URI uploadPostPictureFile(InputStream inputStream, String fileName, String contentType, UserEntity user, UUID postId);
+
+    URL getPostPictureUrl(MultipartFile file, String username, UUID postId, int count);
+
+    void deletePostPhotos(List<String> photosUrls);
 }

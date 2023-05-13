@@ -15,4 +15,8 @@ public interface PostOutput {
     boolean existsPostById(String id);
 
     boolean existsPostByUsername(User user, int page, int size);
+
+    boolean existsPostByIdAndUser(User user, String postId);
+
+    void deletePostById(User user, String postId);
 }

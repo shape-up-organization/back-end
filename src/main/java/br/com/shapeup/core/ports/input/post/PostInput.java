@@ -18,4 +18,6 @@ public interface PostInput {
     void likePost(String postId, String email);
 
     void createPostWithoutPhoto(String email, PostWithouPhotoRequest request);
+
+    void deletePostById(String email, String postId);
 }
