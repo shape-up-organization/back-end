@@ -7,9 +7,7 @@ import java.util.UUID;
 public interface PostLikeMongoRepository extends MongoRepository<PostLikeEntity, UUID> {
     Integer countAllByPostId(String postId);
 
-    boolean existsByUserId(String userId);
-
-    void deleteByUserId(String userId);
-
     boolean existsByPostIdAndUserId(String postId, String id);
+
+    void deleteByUserIdAndPostId(String value, String postId);
 }

@@ -68,7 +68,15 @@ public class  PostUsecase implements PostInput {
 
         User user = findUserOutput.findByEmail(email);
 
-        postLikeOutput.likePost(user, postId);
+        boolean isLiked = postLikeOutput.postIsAlreadyLiked(user, postId);
+
+        if (isLiked) {
+            postLikeOutput.unlikePost(user, postId);
+        }
+
+        if(!isLiked) {
+            postLikeOutput.likePost(user, postId);
+        }
     }
 
     private void validateExistsPost(String id) {
