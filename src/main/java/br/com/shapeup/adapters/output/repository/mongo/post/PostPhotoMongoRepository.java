@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface PostPhotoMongoRepository extends MongoRepository<PostPhotoEntity, UUID> {
     List<PostPhotoEntity> findAllByIdPost(String idPost);
+
+    void deleteAllByIdPost(String postId);
 }

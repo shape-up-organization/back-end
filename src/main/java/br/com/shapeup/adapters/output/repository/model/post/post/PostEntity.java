@@ -36,11 +36,17 @@ public class PostEntity {
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-    public PostEntity(UUID userId, String description) {
-        this.userEntity = new UserEntity();
-        userEntity.setId(userId);
+    public PostEntity(UUID id, UserEntity userEntity, String description) {
+        this.id = id;
+        this.userEntity = userEntity;
         this.description = description;
         createdAt = LocalDateTime.now();
+    }
+
+    public PostEntity(UserEntity userEntity, String description) {
+            this.userEntity = userEntity;
+            this.description = description;
+            createdAt = LocalDateTime.now();
     }
 
     @Override
