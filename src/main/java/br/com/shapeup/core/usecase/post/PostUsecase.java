@@ -19,7 +19,7 @@ public class  PostUsecase implements PostInput {
     private final PostOutput postOutput;
     private final FindUserOutput findUserOutput;
     private final PostLikeOutput postLikeOutput;
-    private final PostS3Output PostS3Output;
+    private final PostS3Output postS3Output;
     private final CommentOutput commentOutput;
 
     public PostUsecase(PostOutput postOutput, PostLikeOutput postLikeOutput,
@@ -28,7 +28,7 @@ public class  PostUsecase implements PostInput {
         this.postOutput = postOutput;
         this.postLikeOutput = postLikeOutput;
         this.findUserOutput = findUserOutput;
-        this.PostS3Output = postS3Output;
+        this.postS3Output = postS3Output;
         this.commentOutput = commentOutput;
     }
 
@@ -36,7 +36,7 @@ public class  PostUsecase implements PostInput {
     public List<URL> createPost(Object[] files, String email, PostRequest request) {
         User user = findUserOutput.findByEmail(email);
 
-        return PostS3Output.createPost(files, user, request);
+        return postS3Output.createPost(files, user, request);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class  PostUsecase implements PostInput {
     public void createPostWithoutPhoto(String email, PostWithouPhotoRequest request) {
         User user = findUserOutput.findByEmail(email);
 
-        PostS3Output.createPostWithoutPhoto(user, request);
+        postOutput.createPostWithoutPhoto(user, request);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class  PostUsecase implements PostInput {
         validateExistsPost(postId);
         validateIsYourPost(user, postId);
 
-        PostS3Output.deletePostPhotos(user, postId);
+        postS3Output.deletePostPhotos(user, postId);
         commentOutput.deleteCommentsByPostId(postId);
         postOutput.deletePostById(user, postId);
     }

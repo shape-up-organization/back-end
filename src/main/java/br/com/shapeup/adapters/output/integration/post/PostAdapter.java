@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.output.integration.post;
 
+import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.adapters.output.repository.jpa.post.PostJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
@@ -48,7 +49,7 @@ public class PostAdapter implements PostOutput {
 
         UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
 
-        return mountPostById(postEntity, currentUserEntity);
+        return createPostById(postEntity, currentUserEntity);
     }
 
     private List<PostResponse> getPostsByUser(UserEntity currentUser, UserEntity otherUser, int page, int size) {
@@ -57,15 +58,13 @@ public class PostAdapter implements PostOutput {
         Page<PostEntity> posts  =
                 postJpaRepository.findPostEntitiesByUserEntityOrderByCreatedAtDesc(otherUser, pageRequest);
 
-        List<PostResponse> postsResponse = posts
+        return posts
                 .stream()
-                .map(postEntity -> mountPostById(postEntity, currentUser))
+                .map(postEntity -> createPostById(postEntity, currentUser))
                 .toList();
-
-        return postsResponse;
     }
 
-    private PostResponse mountPostById(PostEntity postEntity, UserEntity currentUser) {
+    private PostResponse createPostById(PostEntity postEntity, UserEntity currentUser) {
         String postId = postEntity.getId().toString();
 
         List<PostPhotoEntity> urlPosts = postPhotoMongoRepository.findAllByIdPost(postId);
@@ -82,7 +81,7 @@ public class PostAdapter implements PostOutput {
 
         boolean isLiked = postLikeMongoRepository.existsByPostIdAndUserId(postId, userId);
 
-        PostResponse postResponse = new PostResponse(
+        return new PostResponse(
                 postEntity.getId().toString(),
                 postEntity.getDescription(),
                 DateUtils.formatDateTime(postEntity.getCreatedAt()),
@@ -96,22 +95,18 @@ public class PostAdapter implements PostOutput {
                 user.getLastName(),
                 user.getXp()
         );
-
-        return postResponse;
     }
 
     @Override
     public List<PostResponse> getPostsFriends(User user, int page, int size) {
         UserEntity userEntity = userMapper.userToUserEntity(user);
 
-        PageRequest pageRequest = PageRequest.of(page, size);
-
         Page<PostEntity> posts =
-                postJpaRepository.findPostFriends(userEntity.getId(), pageRequest);
+                postJpaRepository.findPostFriends(userEntity.getId(), PageRequest.of(page, size));
 
         return posts
                 .stream()
-                .map(postEntity -> mountPostById(postEntity, userEntity))
+                .map(postEntity -> createPostById(postEntity, userEntity))
                 .toList();
     }
 
@@ -137,7 +132,6 @@ public class PostAdapter implements PostOutput {
     @Override
     public boolean existsPostByIdAndUser(User user, String postId) {
         UserEntity userEntity = userMapper.userToUserEntity(user);
-
         UUID postIdUUID = UUID.fromString(postId);
 
         return postJpaRepository.existsByUserEntityAndId(userEntity, postIdUUID);
@@ -146,10 +140,17 @@ public class PostAdapter implements PostOutput {
     @Override
     @Transactional
     public void deletePostById(User user, String postId) {
-
         UUID postIdUUID = UUID.fromString(postId);
 
         postCommentMongoRepository.deleteAllByIdPost(postId);
         postJpaRepository.deleteById(postIdUUID);
+    }
+
+    @Override
+    public void createPostWithoutPhoto(User user, PostWithouPhotoRequest request) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+        PostEntity postEntity = new PostEntity(userEntity, request.getDescription());
+
+        postJpaRepository.save(postEntity);
     }
 }

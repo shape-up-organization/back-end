@@ -9,7 +9,5 @@ import java.util.List;
 public interface PostS3Output {
     List<URL> createPost(Object[] files, User user, PostRequest request);
 
-    void createPostWithoutPhoto(User user, PostWithouPhotoRequest request);
-
     void deletePostPhotos(User user, String postId);
 }

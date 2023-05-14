@@ -1,7 +1,6 @@
 package br.com.shapeup.adapters.output.integration.post;
 
 import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
-import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.output.integration.cloud.aws.post.S3ServicePostGateway;
 import br.com.shapeup.adapters.output.repository.jpa.post.PostJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
@@ -76,15 +75,6 @@ public class PostS3Adapter implements PostS3Output {
         catch (URISyntaxException e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
-
-    @Override
-    public void createPostWithoutPhoto(User user, PostWithouPhotoRequest request) {
-
-        UserEntity userEntity = userMapper.userToUserEntity(user);
-        PostEntity postEntity = new PostEntity(userEntity, request.getDescription());
-
-        postJpaRepository.save(postEntity);
     }
 
     @Override
