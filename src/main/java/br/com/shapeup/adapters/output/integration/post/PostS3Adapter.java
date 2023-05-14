@@ -10,7 +10,8 @@ import br.com.shapeup.adapters.output.repository.model.post.post.PostPhotoEntity
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoRepository;
 import br.com.shapeup.core.domain.user.User;
-import br.com.shapeup.core.ports.output.post.CreatePostOutput;
+import br.com.shapeup.core.ports.output.post.PostS3Output;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class CreatePostAdapter implements CreatePostOutput {
+public class PostS3Adapter implements PostS3Output {
     private final UserMapper userMapper;
     private final S3ServicePostGateway s3Service;
     private final PostJpaRepository postJpaRepository;
@@ -87,6 +88,7 @@ public class CreatePostAdapter implements CreatePostOutput {
     }
 
     @Override
+    @Transactional
     public void deletePostPhotos(User user, String postId) {
         List<PostPhotoEntity> urlPosts = postPhotoMongoRepository.findAllByIdPost(postId);
 

@@ -15,6 +15,7 @@ import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.DateUtils;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.PostOutput;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -143,6 +144,7 @@ public class PostAdapter implements PostOutput {
     }
 
     @Override
+    @Transactional
     public void deletePostById(User user, String postId) {
 
         UUID postIdUUID = UUID.fromString(postId);

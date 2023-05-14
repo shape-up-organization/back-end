@@ -6,7 +6,7 @@ import br.com.shapeup.core.domain.user.User;
 import java.net.URL;
 import java.util.List;
 
-public interface CreatePostOutput {
+public interface PostS3Output {
     List<URL> createPost(Object[] files, User user, PostRequest request);
 
     void createPostWithoutPhoto(User user, PostWithouPhotoRequest request);
