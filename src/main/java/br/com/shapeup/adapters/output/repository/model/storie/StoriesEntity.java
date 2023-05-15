@@ -1,14 +1,13 @@
 package br.com.shapeup.adapters.output.repository.model.storie;
 
 import jakarta.persistence.Id;
+import java.util.Objects;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Document("tb_stories")
 @Getter

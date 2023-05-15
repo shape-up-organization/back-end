@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 import static java.util.UUID.randomUUID;
 
 @Document("friendship_requests")

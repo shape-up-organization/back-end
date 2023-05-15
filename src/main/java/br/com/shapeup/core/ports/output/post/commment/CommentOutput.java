@@ -3,7 +3,6 @@ package br.com.shapeup.core.ports.output.post.commment;
 import br.com.shapeup.adapters.input.web.controller.request.post.comment.CommentRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.comments.CommentResponse;
 import br.com.shapeup.core.domain.user.User;
-
 import java.util.List;
 
 public interface CommentOutput {

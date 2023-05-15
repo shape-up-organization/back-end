@@ -66,7 +66,7 @@ public class FullName extends ValueObject {
         return lastName;
     }
 
-    public String getFullName() {
+    public String get() {
         return String.format("%s %s", name, lastName);
     }
 }
