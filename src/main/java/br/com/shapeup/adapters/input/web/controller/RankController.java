@@ -50,4 +50,12 @@ public class RankController {
 
         return ResponseEntity.status(200).body(rank);
     }
+
+    @GetMapping("/global/pilha")
+    public ResponseEntity<List<RankResponse>> getGlobalRankPilha(
+    ){
+        List<RankResponse> rank = rankInput.getGlobalRankPilha();
+
+        return ResponseEntity.status(200).body(rank);
+    }
 }
