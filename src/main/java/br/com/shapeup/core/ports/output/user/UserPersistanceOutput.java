@@ -2,8 +2,8 @@ package br.com.shapeup.core.ports.output.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
+import br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity;
 import br.com.shapeup.core.domain.user.User;
-
 import java.util.List;
 
 public interface UserPersistanceOutput {
@@ -23,4 +23,8 @@ public interface UserPersistanceOutput {
     List<FriendshipStatus> getFriendshipStatusForUser(String currentUserEmail, List<String> searchUserUsername);
 
     List<User> findAllUserByUsername(String username);
+
+    void save(User user);
+
+    void saveAll(List<User> users);
 }

@@ -10,7 +10,6 @@ import br.com.shapeup.core.ports.input.post.comment.CommentInput;
 import br.com.shapeup.core.ports.output.post.PostOutput;
 import br.com.shapeup.core.ports.output.post.commment.CommentOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
-
 import java.util.List;
 
 public class CommentUsecase implements CommentInput {

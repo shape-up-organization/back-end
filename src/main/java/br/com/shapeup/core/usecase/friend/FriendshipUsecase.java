@@ -103,7 +103,7 @@ public class FriendshipUsecase implements FriendshipInput {
 
         Boolean isAccepted = friendshipRequest.getAccepted();
 
-        var friendshipRequests = findFriendshipOutput.findAllFriendshipRequestAcceptedFalse(
+        var friendshipRequests = findFriendshipOutput.findFriendshipRequestAcceptedFalse(
                 usernameSenderAndUsernameReceiverDto.getUsernameSender(),
                 usernameSenderAndUsernameReceiverDto.getUsernameReceiver(),
                 isAccepted

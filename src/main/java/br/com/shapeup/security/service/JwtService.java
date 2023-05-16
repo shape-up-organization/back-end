@@ -125,6 +125,15 @@ public class JwtService {
                 .get("username", String.class);
     }
 
+    public static String extractIdFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Decoders.BASE64.decode(SECRET))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id", String.class);
+    }
+
     public String generateTokenFromClaims(Claims claims) {
         return Jwts.builder()
                 .setClaims(claims)

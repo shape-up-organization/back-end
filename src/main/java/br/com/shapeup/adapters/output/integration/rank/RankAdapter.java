@@ -5,12 +5,12 @@ import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.rank.RankOutput;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor

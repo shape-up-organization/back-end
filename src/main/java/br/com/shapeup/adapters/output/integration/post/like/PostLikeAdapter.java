@@ -5,10 +5,10 @@ import br.com.shapeup.adapters.output.repository.mongo.post.PostLikeMongoReposit
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.like.PostLikeOutput;
 import jakarta.transaction.Transactional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Slf4j

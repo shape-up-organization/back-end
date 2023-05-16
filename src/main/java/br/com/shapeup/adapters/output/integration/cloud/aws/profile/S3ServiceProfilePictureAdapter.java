@@ -100,7 +100,7 @@ public class S3ServiceProfilePictureAdapter implements S3ServiceProfilePictureGa
         metadata.setContentLength(inputStream.available());
 
         log.info("Uploading file to S3...");
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+        s3Client.putObject(putObjectRequest);
         log.info("File uploaded successfully.");
     }
 

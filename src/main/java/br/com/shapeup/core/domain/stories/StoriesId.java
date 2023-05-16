@@ -1,8 +1,6 @@
 package br.com.shapeup.core.domain.stories;
 
 import br.com.shapeup.common.domain.Identifier;
-import br.com.shapeup.core.domain.squad.SquadId;
-
 import java.util.Objects;
 import java.util.UUID;
 

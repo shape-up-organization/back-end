@@ -20,9 +20,7 @@ import org.springframework.stereotype.Component;
 public class FindFriendshipAdapter implements FindFriendshipOutput {
 
     private final FriendshipMongoRepository friendshipMongoRepository;
-
     private final FriendshipMapper friendshipMapper;
-
 
     @Override
     public void hasNotSentFriendRequestYet(String usernameSender, String usernameReceiver) {
@@ -60,7 +58,7 @@ public class FindFriendshipAdapter implements FindFriendshipOutput {
     }
 
     @Override
-    public FriendshipRequest findAllFriendshipRequestAcceptedFalse(String usernameSender, String usernameReceiver, Boolean accepted) {
+    public FriendshipRequest findFriendshipRequestAcceptedFalse(String usernameSender, String usernameReceiver, Boolean accepted) {
         FriendshipRequestDocument friendshipRequestDocument = friendshipMongoRepository
                 .findByUsernameSenderAndUsernameReceiverAndAccepted(usernameSender, usernameReceiver, accepted).get();
 

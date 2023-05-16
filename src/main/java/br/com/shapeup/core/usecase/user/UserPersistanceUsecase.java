@@ -6,7 +6,6 @@ import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
-
 import java.util.List;
 
 public class UserPersistanceUsecase implements UserPersistanceInput {
