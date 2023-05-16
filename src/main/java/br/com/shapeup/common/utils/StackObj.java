@@ -36,13 +36,6 @@ public class StackObj<T> {
         return stack[top];
     }
 
-    public void exibe() {
-        System.out.println("Pilha: ");
-        for (int i = top; i >= 0; i--) {
-            System.out.print(stack[i] + " ");
-        }
-    }
-
     public int getTop() {
         return top;
     }

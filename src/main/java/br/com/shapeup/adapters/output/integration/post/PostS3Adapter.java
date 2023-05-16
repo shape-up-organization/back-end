@@ -8,6 +8,7 @@ import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostPhotoEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoRepository;
+import br.com.shapeup.common.utils.QueueObj;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.PostS3Output;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @AllArgsConstructor
@@ -62,6 +64,16 @@ public class PostS3Adapter implements PostS3Output {
         return postUrls;
     }
 
+    private List<URL> getUrlsAsync(QueueObj<Object> files, UserEntity userEntity, UUID postId) {
+        List<URL> postUrls = new ArrayList<>();
+
+        for(int i = 0 ; i < files.getSize(); i++) {
+            postUrls.add(s3Service.getPostPictureUrl(
+                    (MultipartFile) files.poll(), userEntity.getUsername(), postId, i));
+        }
+        return postUrls;
+    }
+
     private void savingImages(Object[] files, UserEntity userEntity, UUID postId) {
         for (int i = 0; i < files.length; i++) {
             sendPostPhotosToS3AndReturnSame((MultipartFile) files[i], userEntity, postId, i);
@@ -98,5 +110,43 @@ public class PostS3Adapter implements PostS3Output {
         return photoUrls.stream()
                 .map(url -> url.split("/posts/")[1])
                 .toList();
+    }
+
+    @Override
+    public void createPostAsync(QueueObj<Object> files, User user, PostRequest request) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+        UUID postId = UUID.randomUUID();
+
+        CompletableFuture.runAsync(() -> {
+            savingImagesAsync(files, userEntity, postId);
+
+            List<URL> postUrls = getUrlsAsync(files, userEntity, postId);
+
+            PostEntity postEntity =
+                    new PostEntity(postId, userEntity, request.getDescription());
+
+            postJpaRepository.save(postEntity);
+
+            List<PostPhotoEntity> postPhotosEntitys = postUrls.stream()
+                    .map(url -> new PostPhotoEntity(url.toString(), postId.toString()))
+                    .toList();
+
+            postPhotoMongoRepository.saveAll(postPhotosEntitys);
+        });
+    }
+
+    private void savingImagesAsync(QueueObj<Object> files, UserEntity userEntity, UUID postId) {
+        for (int i = 0; i < files.getSize(); i++) {
+            sendPostPhotosToS3AndReturnSameAsync((MultipartFile) files.poll(), userEntity, postId, i);
+        }
+    }
+
+    private void sendPostPhotosToS3AndReturnSameAsync(MultipartFile file, UserEntity user, UUID postId, int count) {
+        try {
+            s3Service.uploadPostPictureFile(file, user, postId, count);
+        }
+        catch (URISyntaxException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

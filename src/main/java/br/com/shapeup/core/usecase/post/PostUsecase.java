@@ -4,6 +4,7 @@ import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
 import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.common.exceptions.post.PostIsNotYoursException;
+import br.com.shapeup.common.utils.QueueObj;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.core.ports.input.post.PostInput;
@@ -117,5 +118,23 @@ public class  PostUsecase implements PostInput {
         postS3Output.deletePostPhotos(user, postId);
         commentOutput.deleteCommentsByPostId(postId);
         postOutput.deletePostById(user, postId);
+    }
+
+    @Override
+    public void createPostAsync(Object[] files, String email, PostRequest request) {
+        User user = findUserOutput.findByEmail(email);
+
+        QueueObj<Object> filesQueue = createQueueObj(files);
+
+        postS3Output.createPostAsync(filesQueue, user, request);
+    }
+
+    private static QueueObj<Object> createQueueObj(Object[] files) {
+        QueueObj<Object> filesQueue = new QueueObj<>(files.length);
+
+        for (Object file : files) {
+            filesQueue.insert(file);
+        }
+        return filesQueue;
     }
 }

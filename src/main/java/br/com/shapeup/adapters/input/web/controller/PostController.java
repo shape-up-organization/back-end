@@ -47,9 +47,22 @@ public class PostController {
 
         List<Map<String, URL>> postUrlResponse = postUrls.stream()
                 .map(postUrl -> Collections.singletonMap("urlPost", postUrl))
-                .collect(Collectors.toList());
+                .toList();
 
         return  ResponseEntity.status(200).body(postUrlResponse);
+    }
+
+    @PostMapping("/async")
+    public ResponseEntity<Void> createPostAsync(@Valid PostRequest request,
+                                                             @RequestParam("file") MultipartFile[] files,
+                                                             HttpServletRequest jwtToken
+    ){
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        postPersistenceInput.createPostAsync(files, email, request);
+
+        return  ResponseEntity.noContent().build();
     }
 
     @GetMapping("/username/{username}")
