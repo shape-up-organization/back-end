@@ -2,10 +2,8 @@ package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
-import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
-import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestDocument;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.exceptions.ShapeUpBaseException;
@@ -17,12 +15,12 @@ import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import io.vavr.control.Try;
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -34,7 +32,6 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     private final FindFriendshipOutput findFriendshipOutput;
     private final FindUserOutput findUserOutput;
     private final FriendshipJpaRepository friendshipJpaRepository;
-    private final FriendshipMongoRepository friendshipMongoRepository;
 
     @Override
     @Transactional
@@ -132,5 +129,19 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
                     log.error("[USER PERSISTENCE ADAPTER] - Users not found by username: {}", username);
                     throw new ShapeUpBaseException(throwable.getMessage(), throwable.getCause());
                 }).get();
+    }
+
+    @Override
+    public void save(User user) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+
+        userJpaRepository.save(userEntity);
+    }
+
+    @Override
+    public void saveAll(List<User> users) {
+        List<UserEntity> userEntities = userMapper.userListToUserEntityList(users);
+
+        userJpaRepository.saveAll(userEntities);
     }
 }
