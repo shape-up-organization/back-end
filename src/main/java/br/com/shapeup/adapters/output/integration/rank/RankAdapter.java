@@ -54,52 +54,42 @@ public class RankAdapter implements RankOutput {
         );
     }
 
-    private UserEntity toUserEntity(RankResponse rankResponse) {
-        return new UserEntity(
-                rankResponse.getName(),
-                rankResponse.getLastName(),
-                rankResponse.getUsername(),
-                rankResponse.getProfilePicture(),
-                rankResponse.getXp()
-        );
-    }
-
     @Override
     public List<RankResponse> getGlobalRankPilha() {
         List<UserEntity> rank = userJpaRepository.findTop10ByOrderByBirth();
 
-        StackObj<UserEntity> pilha = bubbleSortAndPush(rank);
+        StackObj<UserEntity> stack = bubbleSortAndPush(rank);
 
         List<RankResponse> rankResponse = new ArrayList<>();
 
-        while (!pilha.isEmpty()) {
-            UserEntity user = pilha.pop();
+        while (!stack.isEmpty()) {
+            UserEntity user = stack.pop();
             rankResponse.add(toRankResponse(user));
         }
 
         return rankResponse;
     }
 
-    public static StackObj<UserEntity> bubbleSortAndPush(List<UserEntity> usuarios) {
-        int length = usuarios.size();
+    public static StackObj<UserEntity> bubbleSortAndPush(List<UserEntity> users) {
+        int userSize = users.size();
 
-        StackObj<UserEntity> pilha = new StackObj<>(length);
+        StackObj<UserEntity> stack = new StackObj<>(userSize);
 
-        for (int i = 0; i < length - 1; i++)
+        for (int i = 0; i < userSize - 1; i++)
         {
-            for (int j = 0; j < length - 1 - i; j++)
+            for (int j = 0; j < userSize - 1 - i; j++)
             {
-                if (usuarios.get(j).getXp() < usuarios.get(j + 1).getXp())
+                if (users.get(j).getXp() < users.get(j + 1).getXp())
                 {
-                    UserEntity user = usuarios.get(j);
-                    usuarios.set(j, usuarios.get(j + 1));
-                    usuarios.set(j + 1, user);
+                    UserEntity user = users.get(j);
+                    users.set(j, users.get(j + 1));
+                    users.set(j + 1, user);
                 }
             }
-            pilha.push(usuarios.get(length - 1 - i));
+            stack.push(users.get(userSize - 1 - i));
         }
-        pilha.push(usuarios.get(0));
+        stack.push(users.get(0));
 
-        return pilha;
+        return stack;
     }
 }
