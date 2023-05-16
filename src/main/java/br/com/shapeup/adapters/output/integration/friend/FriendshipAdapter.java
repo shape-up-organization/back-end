@@ -10,10 +10,9 @@ import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.domain.friend.FriendshipRequestId;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -98,7 +97,11 @@ public class FriendshipAdapter implements FriendshipOutput {
         }
     }
 
-    private static FriendshipRequest createFriendshipRequestResponse(UserEntity currentUserEntity, UserEntity newFriendEntity, FriendshipRequestDocument friendshipRequestDocument) {
+    private static FriendshipRequest createFriendshipRequestResponse(
+            UserEntity currentUserEntity,
+            UserEntity newFriendEntity,
+            FriendshipRequestDocument friendshipRequestDocument
+    ) {
         return new FriendshipRequest(
                 FriendshipRequestId.from(friendshipRequestDocument.getId()),
                 currentUserEntity.getId().toString(),
@@ -107,7 +110,10 @@ public class FriendshipAdapter implements FriendshipOutput {
         );
     }
 
-    private void saveFriendshipRequest(FriendshipRequestDocument friendshipRequestDocument, FriendsEntity friendEntityReceiverUpdated) {
+    private void saveFriendshipRequest(
+            FriendshipRequestDocument friendshipRequestDocument,
+            FriendsEntity friendEntityReceiverUpdated
+    ) {
         try {
             friendshipJpaRepository.save(friendEntityReceiverUpdated);
 
@@ -139,8 +145,14 @@ public class FriendshipAdapter implements FriendshipOutput {
         }
     }
 
-    private static FriendshipRequestDocument createAcceptedFriendshipRequest(UserEntity currentUserEntity, UserEntity newFriendEntity) {
-        var friendshipRequestDocument = new FriendshipRequestDocument(currentUserEntity.getUsername(), newFriendEntity.getUsername());
+    private static FriendshipRequestDocument createAcceptedFriendshipRequest(
+            UserEntity currentUserEntity,
+            UserEntity newFriendEntity
+    ) {
+        var friendshipRequestDocument = new FriendshipRequestDocument(
+                currentUserEntity.getUsername(),
+                newFriendEntity.getUsername()
+        );
         friendshipRequestDocument.setAccepted(true);
         friendshipRequestDocument.setUpdatedAt(LocalDate.now());
         return friendshipRequestDocument;
@@ -169,13 +181,20 @@ public class FriendshipAdapter implements FriendshipOutput {
     public void deleteFriendshipRequest(String friendshipRequestId) {
         friendsMongoRepository.deleteById(friendshipRequestId);
     }
+
     @Override
     @Transactional
     public void deleteFriend(User user, User newFriend) {
         UserEntity currentUserEntity = userMapper.userToUserEntity(user);
         UserEntity newFriendEntity = userMapper.userToUserEntity(newFriend);
-        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(currentUserEntity.getId(),newFriendEntity.getId());
-        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(newFriendEntity.getId(),currentUserEntity.getId());
+        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(
+                currentUserEntity.getId(),
+                newFriendEntity.getId()
+        );
+        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(
+                newFriendEntity.getId(),
+                currentUserEntity.getId()
+        );
     }
 }
 

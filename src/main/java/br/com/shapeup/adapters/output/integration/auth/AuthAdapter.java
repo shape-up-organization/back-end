@@ -50,7 +50,7 @@ public class AuthAdapter implements AuthGateway {
         validateCellPhoneAlreadyExistsInDatabase(userAuthRegisterRequest.getCellPhone());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
-        userEntity.setXp(0L);
+        userEntity.setXp(10L);
 
         log.info("Starting process to save user on database: {}", userEntity.getUsername());
         UserJpaRepository.save(userEntity);

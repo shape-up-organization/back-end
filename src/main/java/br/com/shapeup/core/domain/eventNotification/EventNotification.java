@@ -2,7 +2,6 @@ package br.com.shapeup.core.domain.eventNotification;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-
 import java.util.Objects;
 
 public class EventNotification extends Entity<EventNotificationId> {

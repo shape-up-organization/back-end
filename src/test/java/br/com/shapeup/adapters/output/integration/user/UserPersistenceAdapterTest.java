@@ -1,10 +1,14 @@
 //package br.com.shapeup.adapters.output.integration.user;
 //
+//import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
+//import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
 //import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 //import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 //import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 //import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 //import br.com.shapeup.core.domain.user.User;
+//import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
+//import br.com.shapeup.core.ports.output.user.FindUserOutput;
 //import br.com.shapeup.factories.UserEntityFactory;
 //import br.com.shapeup.factories.UserFactory;
 //import org.junit.jupiter.api.Assertions;
@@ -24,16 +28,30 @@
 //@MockitoSettings(strictness = Strictness.LENIENT)
 //@ExtendWith(MockitoExtension.class)
 //class UserPersistenceAdapterTest {
-//    @Mock
-//    private UserJpaRepository UserJpaRepository;
-//    private UserMapper userMapper;
+//
 //    @InjectMocks
 //    private UserPersistenceAdapter userPersistenceAdapter;
+//    @Mock
+//    private UserJpaRepository UserJpaRepository;
+//    @Mock
+//    private FindFriendshipOutput findFriendshipOutput;
+//    @Mock
+//    private FindUserOutput findUserOutput;
+//    @Mock
+//    private FriendshipJpaRepository friendshipJpaRepository;
+//    @Mock
+//    private FriendshipMongoRepository friendshipMongoRepository;
+//    private UserMapper userMapper;
+//
 //
 //    @BeforeEach
 //    void setUp() {
-//        userMapper = UserMapper.INSTANCE;
-//        userPersistenceAdapter = new UserPersistenceAdapter(UserJpaRepository, userMapper);
+//        userPersistenceAdapter = new UserPersistenceAdapter(UserJpaRepository,
+//                userMapper,
+//                findFriendshipOutput,
+//                findUserOutput,
+//                friendshipJpaRepository,
+//                friendshipMongoRepository);
 //        MockitoAnnotations.openMocks(this);
 //    }
 //

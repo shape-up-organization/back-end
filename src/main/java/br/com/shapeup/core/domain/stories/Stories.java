@@ -2,7 +2,6 @@ package br.com.shapeup.core.domain.stories;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-
 import java.util.Objects;
 
 public class Stories extends Entity<StoriesId> {

@@ -1,6 +1,7 @@
 package br.com.shapeup.core.domain.user;
 
 import br.com.shapeup.common.domain.Entity;
+import br.com.shapeup.core.domain.quest.training.Training;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class User extends Entity<UserId> {
     private Long xp;
     private String profilePicture;
     private List<User> friends = new ArrayList<>();
+    private List<Training> trainings = new ArrayList<>();
 
     public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
             Birth birth, String biography, Long xp, String profilePicture) {
@@ -133,6 +135,14 @@ public class User extends Entity<UserId> {
         this.fullName = fullName;
     }
 
+    public List<Training> getTrainings() {
+        return trainings;
+    }
+
+    public void setTrainings(List<Training> trainings) {
+        this.trainings = trainings;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -144,6 +154,16 @@ public class User extends Entity<UserId> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getFullName(), getUsername(), getEmail(), getCellPhone(), getPassword(), getBirth(), getBiography(), getXp(), getProfilePicture(), getFriends());
+        return Objects.hash(super.hashCode(),
+                getFullName(),
+                getUsername(),
+                getEmail(),
+                getCellPhone(),
+                getPassword(),
+                getBirth(),
+                getBiography(),
+                getXp(),
+                getProfilePicture(),
+                getFriends());
     }
 }

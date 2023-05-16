@@ -23,4 +23,8 @@ public abstract class Identifier<T> extends ValueObject{
     public int hashCode() {
         return Objects.hash(value);
     }
+
+    public T getValue() {
+        return value;
+    }
 }

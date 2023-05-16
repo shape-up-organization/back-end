@@ -1,6 +1,7 @@
 package br.com.shapeup.adapters.output.repository.model.user;
 
 import br.com.shapeup.adapters.output.repository.model.friend.FriendsEntity;
+import br.com.shapeup.adapters.output.repository.model.quest.TrainingEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +29,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
-
-import java.io.Serializable;
-import java.time.LocalDate;
 
 
 @Getter
@@ -78,7 +77,7 @@ public class UserEntity implements Serializable {
     private String profilePicture;
 
     @Column(columnDefinition = "int8 default 0")
-    private Long xp = 0L;
+    private Long xp;
 
     @Column(columnDefinition = "boolean default true")
     private boolean isActive = true;
@@ -97,7 +96,21 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "userReceiver")
     private List<FriendsEntity> friendsReceiver = new ArrayList<>();
 
-    public UserEntity(String name, String lastName, String username, String profilePicture, Long xp) {
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tb_training_user",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id", updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "training_id", referencedColumnName = "training_id", updatable = false)
+    )
+    private List<TrainingEntity> trainings;
+
+    public UserEntity(
+            String name,
+            String lastName,
+            String username,
+            String profilePicture,
+            Long xp
+    ) {
         this.name = name;
         this.lastName = lastName;
         this.username = username;
