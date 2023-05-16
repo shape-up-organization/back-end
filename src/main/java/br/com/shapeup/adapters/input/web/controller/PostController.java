@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +49,7 @@ public class PostController {
                 .map(postUrl -> Collections.singletonMap("urlPost", postUrl))
                 .collect(Collectors.toList());
 
-        return  ResponseEntity.ok(postUrlResponse);
+        return  ResponseEntity.status(200).body(postUrlResponse);
     }
 
     @GetMapping("/username/{username}")
@@ -66,7 +67,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.status(200).body(posts);
     }
 
     @GetMapping("/{postId}")
@@ -78,7 +79,7 @@ public class PostController {
 
         PostResponse post = postPersistenceInput.getPostsById(email, postId);
 
-        return ResponseEntity.ok(post);
+        return ResponseEntity.status(200).body(post);
     }
 
     @GetMapping
@@ -95,7 +96,7 @@ public class PostController {
             return  ResponseEntity.noContent().build();
         }
 
-        return  ResponseEntity.ok(posts);
+        return  ResponseEntity.status(200).body(posts);
     }
 
     @PostMapping("/{postId}/like")
@@ -107,7 +108,7 @@ public class PostController {
 
         postPersistenceInput.likePost(postId, email);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(204).build();
     }
 
     @PostMapping("/without-photo")
@@ -120,5 +121,17 @@ public class PostController {
         postPersistenceInput.createPostWithoutPhoto(email, request);
 
         return  ResponseEntity.status(201).build();
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePostById(HttpServletRequest jwtToken,
+                                               @PathVariable String postId
+    ){
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        postPersistenceInput.deletePostById(email, postId);
+
+        return ResponseEntity.status(200).build();
     }
 }

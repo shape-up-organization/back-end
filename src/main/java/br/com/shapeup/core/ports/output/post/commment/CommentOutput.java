@@ -17,4 +17,6 @@ public interface CommentOutput {
     List<CommentResponse> getPostComments(String postId, int page, int size);
 
     CommentResponse getCommentById(String commentId);
+
+    void deleteCommentsByPostId(String postId);
 }

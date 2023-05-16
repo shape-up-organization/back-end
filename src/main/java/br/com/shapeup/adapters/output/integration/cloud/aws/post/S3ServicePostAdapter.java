@@ -2,18 +2,24 @@ package br.com.shapeup.adapters.output.integration.cloud.aws.post;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import io.github.cdimascio.dotenv.Dotenv;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
+import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -21,16 +27,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3ServicePostAdapter implements S3ServicePostGateway {
     private final AmazonS3 s3Client;
 
-    private String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
+    private final String bucketName = Dotenv.load().get("AWS_BUCKET_NAME");
 
     @Override
-    public URI uploadPostPictureFile(MultipartFile file, UserEntity user) {
+    public URI uploadPostPictureFile(MultipartFile file, UserEntity user, UUID postId, int count) {
         try {
-            String fileName = file.getOriginalFilename();
+            String fileName = file.getOriginalFilename() + count;
             String contentType = file.getContentType();
             InputStream inputStream = file.getInputStream();
 
-            return uploadPostPictureFile(inputStream, fileName, contentType, user);
+            return uploadPostPictureFile(inputStream, fileName, contentType, user, postId);
 
         } catch (IOException ex) {
             throw new RuntimeException("IO Error: " + ex.getMessage());
@@ -39,14 +45,15 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
 
     @SneakyThrows
     @Override
-    public URI uploadPostPictureFile(InputStream inputStream, String fileName, String contentType, UserEntity user) {
-        String newFileName = generateNewFileName(user, fileName);
+    public URI uploadPostPictureFile(InputStream inputStream, String fileName, String contentType, UserEntity user, UUID postId) {
+        String newFileName = generateNewFileName(user, fileName, postId);
         uploadToS3(inputStream, newFileName, contentType, user.getUsername());
         return generateS3Url(newFileName);
     }
 
-    private String generateNewFileName(UserEntity user, String fileName) {
-        return "posts/" + user.getUsername() + "--post--" + fileName.replace(" ", "");
+    private String generateNewFileName(UserEntity user, String fileName, UUID postId) {
+        return "posts/" + user.getUsername() + "--" + postId + "--post--" +
+                fileName.replace(" ", "");
     }
 
     @SneakyThrows
@@ -77,9 +84,28 @@ public class S3ServicePostAdapter implements S3ServicePostGateway {
         return s3Client.getUrl(bucketName, fileName).toURI();
     }
 
-    public URL getPostPictureUrl(MultipartFile file, String username) {
-        String fileName = file.getOriginalFilename();
-        String newFileName = "posts/" + username + "--post--" + fileName.replace(" ", "");
+    public URL getPostPictureUrl(MultipartFile file, String username, UUID postId, int count) {
+        String fileName = file.getOriginalFilename() + count;
+        String newFileName = "posts/" + username + "--" + postId + "--post--" +
+                fileName.replace(" ", "");
+
         return s3Client.getUrl(bucketName, newFileName);
+    }
+
+    @Override
+    public void deletePostPhotos(List<String> photosUrls) {
+        photosUrls.forEach(photoUrl -> Try.run(() -> listObjectsWithPrefix("posts/" + photoUrl)
+                        .forEach(s3ObjectSummary -> s3Client.deleteObject(bucketName, s3ObjectSummary.getKey())))
+                .onFailure(ex -> log.error("Error deleting photo url: " + photoUrl +" "+ ex.getMessage()))
+                .onSuccess(aVoid -> log.info("Profile photo url successfully.")));
+    }
+
+    private List<S3ObjectSummary> listObjectsWithPrefix(String prefix) {
+        ListObjectsV2Request request = new ListObjectsV2Request()
+                .withBucketName(bucketName)
+                .withPrefix(prefix);
+
+        ListObjectsV2Result result = s3Client.listObjectsV2(request);
+        return result.getObjectSummaries();
     }
 }

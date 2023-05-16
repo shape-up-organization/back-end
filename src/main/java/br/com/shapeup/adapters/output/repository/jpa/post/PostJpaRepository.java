@@ -20,4 +20,6 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
     Page<PostEntity> findPostFriends(@Param("userReceiver") UUID userReceiver, Pageable pageable);
 
     boolean existsByUserEntity(UserEntity userToUserEntity);
+
+    boolean existsByUserEntityAndId(UserEntity userEntity, UUID postIdUUID);
 }

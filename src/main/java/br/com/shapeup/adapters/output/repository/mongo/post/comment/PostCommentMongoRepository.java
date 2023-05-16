@@ -12,4 +12,6 @@ public interface PostCommentMongoRepository extends MongoRepository<CommentEntit
     boolean existsByUserIdAndId(String userId, UUID commentId);
 
     Page<CommentEntity> findAllByIdPostOrderByCreatedAt(String postId, PageRequest pageRequest);
+
+    void deleteAllByIdPost(String postId);
 }
