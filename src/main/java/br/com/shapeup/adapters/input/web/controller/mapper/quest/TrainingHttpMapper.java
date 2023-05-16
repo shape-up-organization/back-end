@@ -9,5 +9,4 @@ public interface TrainingHttpMapper {
     List<TrainingResponse> toTrainingResponse(List<Training> trainings);
 
     List<TrainingUserWithStatus> toTrainingUserResponse(List<Training> trainings);
-//    TrainingUserResponse toTrainingUserResponse(Training training, String status, TrainingDayResponse trainingDayResponse);
 }

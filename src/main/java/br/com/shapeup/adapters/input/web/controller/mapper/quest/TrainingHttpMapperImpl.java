@@ -41,18 +41,4 @@ public class TrainingHttpMapperImpl implements TrainingHttpMapper {
         return null;
     }
 
-//    @Override
-//    public TrainingUserResponse toTrainingUserResponse(
-//            Training training,
-//            String status,
-//            TrainingDayResponse trainingDayResponse
-//    ) {
-//        return new TrainingUserResponse(
-//                training.getId().getValue().toString(),
-//                training.getCategory().name(),
-//                status,
-//                trainingDayResponse,
-//                exerciseHttpMapper.toExerciseResponse(training.getExercises())
-//        );
-//    }
 }
