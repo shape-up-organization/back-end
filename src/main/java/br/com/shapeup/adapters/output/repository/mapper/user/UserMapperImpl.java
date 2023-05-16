@@ -1,21 +1,26 @@
 package br.com.shapeup.adapters.output.repository.mapper.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
+import br.com.shapeup.adapters.output.repository.mapper.quest.TrainingMapper;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendsEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.domain.user.Birth;
 import br.com.shapeup.core.domain.user.CellPhone;
 import br.com.shapeup.core.domain.user.Email;
+import br.com.shapeup.core.domain.user.FullName;
 import br.com.shapeup.core.domain.user.Password;
 import br.com.shapeup.core.domain.user.User;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class UserMapperImpl implements UserMapper {
+
+    private final TrainingMapper trainingMapper;
 
     @Override
     public User userEntitytoUser(UserEntity userEntity) {
@@ -41,10 +46,18 @@ public class UserMapperImpl implements UserMapper {
                 .name(user.getFullName().getName())
                 .lastName(user.getFullName().getLastName())
                 .username(user.getUsername())
+                .fullName(
+                        FullName.create(
+                                user.getFullName().getName(),
+                                user.getFullName().getLastName()
+                        ).get()
+                )
                 .email(user.getEmail().getValue())
                 .cellPhone(user.getCellPhone().getValue())
                 .password(user.getPassword().getValue())
                 .birth(user.getBirth().getValue())
+                .xp(user.getXp())
+                .trainings(trainingMapper.toEntity(user.getTrainings()))
                 .build();
     }
 
@@ -73,6 +86,13 @@ public class UserMapperImpl implements UserMapper {
     public List<User> userEntityListToUserList(List<UserEntity> userEntityList) {
         return List.of(
                 userEntityList.stream().map(this::userEntitytoUser).toArray(User[]::new)
+        );
+    }
+
+    @Override
+    public List<UserEntity> userListToUserEntityList(List<User> users) {
+        return List.of(
+                users.stream().map(this::userToUserEntity).toArray(UserEntity[]::new)
         );
     }
 }

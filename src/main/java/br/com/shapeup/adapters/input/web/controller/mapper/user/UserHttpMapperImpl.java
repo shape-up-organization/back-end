@@ -3,10 +3,9 @@ package br.com.shapeup.adapters.input.web.controller.mapper.user;
 import br.com.shapeup.adapters.input.web.controller.response.user.UserResponse;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.core.domain.user.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
