@@ -10,6 +10,7 @@ import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.core.ports.input.post.PostInput;
 import br.com.shapeup.core.ports.output.post.PostS3Output;
 import br.com.shapeup.core.ports.output.post.PostOutput;
+import br.com.shapeup.core.ports.output.post.PostTxtOutput;
 import br.com.shapeup.core.ports.output.post.commment.CommentOutput;
 import br.com.shapeup.core.ports.output.post.like.PostLikeOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
@@ -22,15 +23,17 @@ public class  PostUsecase implements PostInput {
     private final PostLikeOutput postLikeOutput;
     private final PostS3Output postS3Output;
     private final CommentOutput commentOutput;
+    private final PostTxtOutput postTxtOutput;
 
     public PostUsecase(PostOutput postOutput, PostLikeOutput postLikeOutput,
                        FindUserOutput findUserOutput, PostS3Output postS3Output,
-                       CommentOutput commentOutput) {
+                       CommentOutput commentOutput, PostTxtOutput postTxtOutput) {
         this.postOutput = postOutput;
         this.postLikeOutput = postLikeOutput;
         this.findUserOutput = findUserOutput;
         this.postS3Output = postS3Output;
         this.commentOutput = commentOutput;
+        this.postTxtOutput = postTxtOutput;
     }
 
     @Override
@@ -136,5 +139,21 @@ public class  PostUsecase implements PostInput {
             filesQueue.insert(file);
         }
         return filesQueue;
+    }
+
+    @Override
+    public Object generateTxt(String postId, String email) {
+        User user = findUserOutput.findByEmail(email);
+
+        PostResponse post = postOutput.getPostById(user, postId);
+
+        return postTxtOutput.generatePostTxt(post);
+    }
+
+    @Override
+    public void readTxt(Object file, String email) {
+        User user = findUserOutput.findByEmail(email);
+
+        postTxtOutput.readTxtAndPush(file, user);
     }
 }
