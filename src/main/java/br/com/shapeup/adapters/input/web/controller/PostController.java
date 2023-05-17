@@ -12,9 +12,11 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,9 +49,22 @@ public class PostController {
 
         List<Map<String, URL>> postUrlResponse = postUrls.stream()
                 .map(postUrl -> Collections.singletonMap("urlPost", postUrl))
-                .collect(Collectors.toList());
+                .toList();
 
-        return  ResponseEntity.status(200).body(postUrlResponse);
+        return  ResponseEntity.ok(postUrlResponse);
+    }
+
+    @PostMapping("/async")
+    public ResponseEntity<Void> createPostAsync(@Valid PostRequest request,
+                                                             @RequestParam("file") MultipartFile[] files,
+                                                             HttpServletRequest jwtToken
+    ){
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        postPersistenceInput.createPostAsync(files, email, request);
+
+        return  ResponseEntity.ok().build();
     }
 
     @GetMapping("/username/{username}")
@@ -67,7 +82,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(200).body(posts);
+        return ResponseEntity.ok().body(posts);
     }
 
     @GetMapping("/{postId}")
@@ -79,7 +94,7 @@ public class PostController {
 
         PostResponse post = postPersistenceInput.getPostsById(email, postId);
 
-        return ResponseEntity.status(200).body(post);
+        return ResponseEntity.ok(post);
     }
 
     @GetMapping
@@ -96,7 +111,7 @@ public class PostController {
             return  ResponseEntity.noContent().build();
         }
 
-        return  ResponseEntity.status(200).body(posts);
+        return  ResponseEntity.ok(posts);
     }
 
     @PostMapping("/{postId}/like")
@@ -108,7 +123,7 @@ public class PostController {
 
         postPersistenceInput.likePost(postId, email);
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/without-photo")
@@ -132,6 +147,36 @@ public class PostController {
 
         postPersistenceInput.deletePostById(email, postId);
 
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/generate-txt/{postId}")
+    public ResponseEntity<ByteArrayResource> generateTxt(HttpServletRequest jwtToken,
+                                                         @PathVariable String postId
+    ){
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        Object postTxt = postPersistenceInput.generateTxt(postId, email);
+
+        ByteArrayResource postByteArray = new ByteArrayResource((byte[]) postTxt);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=post.txt")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(postByteArray.contentLength())
+                .body(postByteArray);
+    }
+
+    @PostMapping("/read-txt")
+    public ResponseEntity<ByteArrayResource> generateTxt(HttpServletRequest jwtToken,
+                                                         @RequestParam("file") MultipartFile file
+    ){
+        String token = TokenUtils.getToken(jwtToken);
+        String email = JwtService.extractEmailFromToken(token);
+
+        postPersistenceInput.readTxt(file, email);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -8,4 +8,6 @@ public interface RankOutput {
     List<RankResponse> getRank(User user, int page, int size);
 
     List<RankResponse> getGlobalRank(int page, int size);
+
+    List<RankResponse> getGlobalRankPilha();
 }

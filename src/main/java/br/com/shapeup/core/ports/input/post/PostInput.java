@@ -20,4 +20,10 @@ public interface PostInput {
     void createPostWithoutPhoto(String email, PostWithouPhotoRequest request);
 
     void deletePostById(String email, String postId);
+
+    void createPostAsync(Object[] files, String email, PostRequest request);
+
+    Object generateTxt(String postId, String email);
+
+    void readTxt(Object file, String email);
 }

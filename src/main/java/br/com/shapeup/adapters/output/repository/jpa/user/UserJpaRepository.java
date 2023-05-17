@@ -38,4 +38,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
     Page<UserEntity> getUserRank(@Param("userReceiver") UUID userReceiver, Pageable pageable);
 
     Page<UserEntity> findAllByOrderByXpDesc(Pageable pageable);
+
+    List<UserEntity> findTop10ByOrderByBirth();
 }

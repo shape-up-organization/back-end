@@ -28,4 +28,9 @@ public class RankUsecase implements RankInput {
     public List<RankResponse> getGlobalRank(int page, int size) {
         return rankOutput.getGlobalRank(page, size);
     }
+
+    @Override
+    public List<RankResponse> getGlobalRankPilha() {
+        return rankOutput.getGlobalRankPilha();
+    }
 }

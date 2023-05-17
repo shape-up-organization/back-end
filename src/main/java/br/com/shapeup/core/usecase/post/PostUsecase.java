@@ -4,11 +4,13 @@ import br.com.shapeup.adapters.input.web.controller.request.post.PostRequest;
 import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.common.exceptions.post.PostIsNotYoursException;
+import br.com.shapeup.common.utils.QueueObj;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.core.ports.input.post.PostInput;
 import br.com.shapeup.core.ports.output.post.PostS3Output;
 import br.com.shapeup.core.ports.output.post.PostOutput;
+import br.com.shapeup.core.ports.output.post.PostTxtOutput;
 import br.com.shapeup.core.ports.output.post.commment.CommentOutput;
 import br.com.shapeup.core.ports.output.post.like.PostLikeOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
@@ -21,15 +23,17 @@ public class  PostUsecase implements PostInput {
     private final PostLikeOutput postLikeOutput;
     private final PostS3Output postS3Output;
     private final CommentOutput commentOutput;
+    private final PostTxtOutput postTxtOutput;
 
     public PostUsecase(PostOutput postOutput, PostLikeOutput postLikeOutput,
                        FindUserOutput findUserOutput, PostS3Output postS3Output,
-                       CommentOutput commentOutput) {
+                       CommentOutput commentOutput, PostTxtOutput postTxtOutput) {
         this.postOutput = postOutput;
         this.postLikeOutput = postLikeOutput;
         this.findUserOutput = findUserOutput;
         this.postS3Output = postS3Output;
         this.commentOutput = commentOutput;
+        this.postTxtOutput = postTxtOutput;
     }
 
     @Override
@@ -117,5 +121,39 @@ public class  PostUsecase implements PostInput {
         postS3Output.deletePostPhotos(user, postId);
         commentOutput.deleteCommentsByPostId(postId);
         postOutput.deletePostById(user, postId);
+    }
+
+    @Override
+    public void createPostAsync(Object[] files, String email, PostRequest request) {
+        User user = findUserOutput.findByEmail(email);
+
+        QueueObj<Object> filesQueue = createQueueObj(files);
+
+        postS3Output.createPostAsync(filesQueue, user, request);
+    }
+
+    private static QueueObj<Object> createQueueObj(Object[] files) {
+        QueueObj<Object> filesQueue = new QueueObj<>(files.length);
+
+        for (Object file : files) {
+            filesQueue.insert(file);
+        }
+        return filesQueue;
+    }
+
+    @Override
+    public Object generateTxt(String postId, String email) {
+        User user = findUserOutput.findByEmail(email);
+
+        PostResponse post = postOutput.getPostById(user, postId);
+
+        return postTxtOutput.generatePostTxt(post);
+    }
+
+    @Override
+    public void readTxt(Object file, String email) {
+        User user = findUserOutput.findByEmail(email);
+
+        postTxtOutput.readTxtAndPush(file, user);
     }
 }
