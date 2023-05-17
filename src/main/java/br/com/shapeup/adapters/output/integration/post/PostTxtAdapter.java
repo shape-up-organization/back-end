@@ -7,6 +7,7 @@ import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostPhotoEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoRepository;
+import br.com.shapeup.common.exceptions.post.ErrorReadingTxtException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.PostTxtOutput;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +89,7 @@ public class PostTxtAdapter implements PostTxtOutput {
         catch (Exception e) {
             log.error("Error reading txt file: " + e.getMessage());
 
-            // TODO: throw exception
+            throw new ErrorReadingTxtException();
         }
 
         UUID postId = UUID.randomUUID();
