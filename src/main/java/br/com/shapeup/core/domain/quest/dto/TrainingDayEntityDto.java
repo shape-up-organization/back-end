@@ -7,5 +7,6 @@ public record TrainingDayEntityDto(
         String category,
         TrainingDayResponse trainingDay,
         String exercises,
+        Long xp,
         String status
 ){}

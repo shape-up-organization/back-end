@@ -7,6 +7,7 @@ public record TrainingOfUserResponse(
         String description,
         Integer duration,
         String classification,
+        Long xp,
         Long unlockXp,
         String exercises,
         String status

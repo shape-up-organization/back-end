@@ -33,6 +33,8 @@ public class TrainingHttpMapperImpl implements TrainingHttpMapper {
                     training.getDescription(),
                     training.getDuration(),
                     training.getClassification().name(),
+                    training.getXp(),
+                    training.getUnlockXp(),
                     training.getExercises()
             );
 
@@ -79,6 +81,7 @@ public class TrainingHttpMapperImpl implements TrainingHttpMapper {
                 training.getDescription(),
                 training.getDuration(),
                 training.getClassification().name(),
+                training.getXp(),
                 training.getUnlockXp(),
                 training.getExercises(),
                 trainingDay.getStatus()

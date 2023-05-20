@@ -103,6 +103,7 @@ public class QuestController {
                 training.getCategory().name(),
                 trainingDayResponse,
                 training.getExercises(),
+                training.getXp(),
                 "PENDING"
         );
 
