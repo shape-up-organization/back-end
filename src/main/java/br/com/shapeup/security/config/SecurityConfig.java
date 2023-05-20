@@ -33,7 +33,8 @@ public class SecurityConfig {
             "/friends/**",
             "/profiles/**",
             "/posts/**",
-            "/comments/**"
+            "/comments/**",
+            "/quests/**"
     };
 
     private static final String[] PERMIT_ALL = {
