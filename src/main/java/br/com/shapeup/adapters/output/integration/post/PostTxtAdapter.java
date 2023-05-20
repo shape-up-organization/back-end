@@ -10,11 +10,6 @@ import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoReposi
 import br.com.shapeup.common.exceptions.post.ErrorReadingTxtException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.post.PostTxtOutput;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
@@ -22,6 +17,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
