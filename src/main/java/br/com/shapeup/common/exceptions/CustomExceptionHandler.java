@@ -14,6 +14,7 @@ import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundExceptio
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.common.exceptions.profile.ProfilePictureNotFoundException;
+import br.com.shapeup.common.exceptions.quest.InsufficientXPException;
 import br.com.shapeup.common.exceptions.server.InternalServerErrorException;
 import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserExistsByCellPhoneException;
@@ -126,7 +127,8 @@ public class CustomExceptionHandler {
             NotFriendException.class,
             DeleteYourselfAsAFriendException.class,
             AddYourselfAsAFriendException.class,
-            CommentIsNotYours.class
+            CommentIsNotYours.class,
+            InsufficientXPException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
