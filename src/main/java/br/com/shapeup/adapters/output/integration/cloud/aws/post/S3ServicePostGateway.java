@@ -1,13 +1,13 @@
 package br.com.shapeup.adapters.output.integration.cloud.aws.post;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface S3ServicePostGateway {
     URI uploadPostPictureFile(MultipartFile file, UserEntity user, UUID postId, int count) throws URISyntaxException;

@@ -2,6 +2,7 @@ package br.com.shapeup.core.usecase.quest;
 
 import br.com.shapeup.adapters.input.web.controller.request.quest.TrainingUserRequest;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
+import br.com.shapeup.common.exceptions.quest.InsufficientXPException;
 import br.com.shapeup.core.domain.quest.training.Training;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.quest.QuestInputPort;
@@ -54,6 +55,13 @@ public class QuestUsecase implements QuestInputPort {
     public Training addTrainingToUser(String username, TrainingUserRequest trainingUserRequest) {
         User user = findUserOutput.findByUsername(username);
         Training training = findTrainingOutputPort.findById(trainingUserRequest.trainingId());
+
+        var userXp = user.getXp();
+        var trainingUnlockXp = training.getUnlockXp();
+
+        if(userXp < trainingUnlockXp) {
+            throw new InsufficientXPException("User does not have enough xp to unlock this training");
+        }
 
         user.getTrainings().add(training);
         userPersistanceOutput.save(user);

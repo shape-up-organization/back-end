@@ -15,8 +15,7 @@ public class ExerciseMapperImpl implements ExerciseMapper{
     public Exercise toDomain(ExerciseEntity exerciseEntity) {
         return Exercise.create(
                 ExerciseId.from(exerciseEntity.getId()),
-                exerciseEntity.getExercise(),
-                exerciseEntity.getDuration()
+                exerciseEntity.getExercise()
         );
     }
 
@@ -36,7 +35,6 @@ public class ExerciseMapperImpl implements ExerciseMapper{
         return ExerciseEntity.builder()
                              .id(exerciseById.getId().getValue())
                              .exercise(exerciseById.getExercise())
-                             .duration(exerciseById.getDuration())
                              .build();
     }
 

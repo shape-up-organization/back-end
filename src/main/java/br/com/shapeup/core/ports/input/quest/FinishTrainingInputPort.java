@@ -1,7 +1,7 @@
 package br.com.shapeup.core.ports.input.quest;
 
-import br.com.shapeup.core.domain.quest.dto.TrainingUserWithStatus;
+import br.com.shapeup.core.domain.quest.dto.TrainingDayEntityDto;
 
 public interface FinishTrainingInputPort {
-    TrainingUserWithStatus execute(String username, String trainingId, String dayOfWeek, String period);
+    TrainingDayEntityDto execute(String username, String trainingId, String dayOfWeek, String period);
 }
