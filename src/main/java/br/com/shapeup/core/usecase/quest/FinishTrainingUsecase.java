@@ -1,7 +1,7 @@
 package br.com.shapeup.core.usecase.quest;
 
 import br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity;
-import br.com.shapeup.core.domain.quest.dto.TrainingUserWithStatus;
+import br.com.shapeup.core.domain.quest.dto.TrainingDayEntityDto;
 import br.com.shapeup.core.domain.quest.training.Training;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.quest.FinishTrainingInputPort;
@@ -35,7 +35,7 @@ public class FinishTrainingUsecase implements FinishTrainingInputPort {
     }
 
     @Override
-    public TrainingUserWithStatus execute(String username, String trainingId, String dayOfWeek, String period) {
+    public TrainingDayEntityDto execute(String username, String trainingId, String dayOfWeek, String period) {
 
 
         User user = findUserOutput.findByUsername(username);

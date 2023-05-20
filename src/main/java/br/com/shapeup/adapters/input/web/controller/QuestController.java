@@ -2,21 +2,21 @@ package br.com.shapeup.adapters.input.web.controller;
 
 import br.com.shapeup.adapters.input.web.controller.mapper.quest.TrainingHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.quest.TrainingUserRequest;
-import br.com.shapeup.adapters.input.web.controller.response.quest.ExerciseResponse;
+import br.com.shapeup.adapters.input.web.controller.response.quest.FindTrainingsOfUserResponse;
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingDayResponse;
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingResponse;
+import br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
 import br.com.shapeup.common.utils.TokenUtils;
-import br.com.shapeup.core.domain.quest.dto.TrainingUserWithStatus;
+import br.com.shapeup.core.domain.quest.dto.TrainingDayEntityDto;
 import br.com.shapeup.core.domain.quest.training.Training;
+import br.com.shapeup.core.ports.input.quest.FindTrainingDaysFromUserInputPort;
 import br.com.shapeup.core.ports.input.quest.FinishTrainingInputPort;
 import br.com.shapeup.core.ports.input.quest.PeriodicUpdateUncompletedUserTrainingInputPort;
 import br.com.shapeup.core.ports.input.quest.QuestInputPort;
 import br.com.shapeup.core.ports.input.quest.RemoveTrainingFromUserInputPort;
-import br.com.shapeup.core.ports.input.quest.TrainingsUserWithFullStatusInputPort;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestController {
 
     private final QuestInputPort questInputPort;
-    private final TrainingsUserWithFullStatusInputPort trainingsUserWithFullStatusInputPort;
+    private final FindTrainingDaysFromUserInputPort findTrainingDaysFromUserInputPort;
     private final TrainingHttpMapper trainingHttpMapper;
     private final RemoveTrainingFromUserInputPort removeTrainingFromUserInputPort;
     private final FinishTrainingInputPort finishTrainingInputPort;
@@ -71,18 +71,20 @@ public class QuestController {
     }
 
     @GetMapping("/user/trainings")
-    public ResponseEntity<List<TrainingUserWithStatus>> searchTrainingByUserId(HttpServletRequest request) {
+    public ResponseEntity<List<FindTrainingsOfUserResponse>> searchTrainingByUserId(HttpServletRequest request) {
         String token = TokenUtils.getToken(request);
         String userId = JwtService.extractIdFromToken(token);
 
-        List<TrainingUserWithStatus> trainingUserWithStatus = trainingsUserWithFullStatusInputPort
-                .getTrainingsUserWithFullStatus(UUID.fromString(userId));
+        List<TrainingDayEntity> trainingsDaysUser = findTrainingDaysFromUserInputPort
+                .execute(UUID.fromString(userId));
 
-        return ResponseEntity.status(HttpStatus.OK.value()).body(trainingUserWithStatus);
+        List<FindTrainingsOfUserResponse> trainingsOfUserResponses = trainingHttpMapper.toFindTrainingsOfUserResponse(trainingsDaysUser);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(trainingsOfUserResponses);
     }
 
     @PostMapping("/user/add-training")
-    public ResponseEntity<TrainingUserWithStatus> addTrainingToUser(
+    public ResponseEntity<TrainingDayEntityDto> addTrainingToUser(
             HttpServletRequest request,
             @RequestBody TrainingUserRequest trainingUserRequest
     ) {
@@ -96,23 +98,11 @@ public class QuestController {
                 trainingUserRequest.period()
         );
 
-        List<ExerciseResponse> exercisesResponse = new ArrayList<>();
-
-        training.getExercises().forEach(exercise -> {
-            ExerciseResponse exerciseResponse = new ExerciseResponse(
-                    exercise.getId().getValue().toString(),
-                    exercise.getExercise(),
-                    exercise.getDuration()
-            );
-
-            exercisesResponse.add(exerciseResponse);
-        });
-
-        TrainingUserWithStatus trainingUserResponse = new TrainingUserWithStatus(
+        TrainingDayEntityDto trainingUserResponse = new TrainingDayEntityDto(
                 training.getId().getValue().toString(),
                 training.getCategory().name(),
                 trainingDayResponse,
-                exercisesResponse,
+                training.getExercises(),
                 "PENDING"
         );
 
@@ -138,23 +128,23 @@ public class QuestController {
     }
 
     @PutMapping("/user/finish-training")
-    public ResponseEntity<TrainingUserWithStatus> finishTraining(
+    public ResponseEntity<TrainingDayEntityDto> finishTraining(
             HttpServletRequest request,
             @RequestBody TrainingUserRequest trainingUserRequest
     ) {
         String token = TokenUtils.getToken(request);
         String username = JwtService.extractAccountNameFromToken(token);
 
-        TrainingUserWithStatus trainingUserWithStatus = finishTrainingInputPort.execute(
+        TrainingDayEntityDto trainingDayEntityDto = finishTrainingInputPort.execute(
                 username,
                 trainingUserRequest.trainingId(),
                 trainingUserRequest.dayOfWeek(),
                 trainingUserRequest.period()
         );
 
-        if(trainingUserWithStatus == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if(trainingDayEntityDto == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(trainingUserWithStatus);
+        return ResponseEntity.status(HttpStatus.OK).body(trainingDayEntityDto);
     }
 
     @Scheduled(cron = "0 0 * * 7 *")

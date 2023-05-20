@@ -3,9 +3,7 @@ package br.com.shapeup.core.domain.quest.training;
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
 import br.com.shapeup.common.domain.enums.ClassificationEnum;
-import br.com.shapeup.core.domain.quest.exercise.Exercise;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
-import java.util.List;
 
 public class Training extends Entity<TrainingId> {
 
@@ -15,7 +13,8 @@ public class Training extends Entity<TrainingId> {
     private String description;
     private Long xp;
     private ClassificationEnum classification;
-    List<Exercise> exercises;
+    private Long unlockXp;
+    String exercises;
 
     Training(
             TrainingId id,
@@ -25,7 +24,8 @@ public class Training extends Entity<TrainingId> {
             String description,
             Long xp,
             ClassificationEnum classification,
-            List<Exercise> exercises
+            Long unlockXp,
+            String exercises
     ) {
         super(id);
         this.name = name;
@@ -34,6 +34,7 @@ public class Training extends Entity<TrainingId> {
         this.description = description;
         this.xp = xp;
         this.classification = classification;
+        this.unlockXp = unlockXp;
         this.exercises = exercises;
     }
 
@@ -50,9 +51,10 @@ public class Training extends Entity<TrainingId> {
             String description,
             Long xp,
             ClassificationEnum classification,
-            List<Exercise> exercises
+            Long unlockXp,
+            String exercises
     ) {
-        return new Training(id, name, category, duration, description, xp, classification, exercises);
+        return new Training(id, name, category, duration, description, xp, classification, unlockXp, exercises);
     }
 
     public String getName() {
@@ -75,11 +77,15 @@ public class Training extends Entity<TrainingId> {
         return classification;
     }
 
-    public List<Exercise> getExercises() {
+    public String getExercises() {
         return exercises;
     }
 
     public Integer getDuration() {
         return duration;
+    }
+
+    public Long getUnlockXp() {
+        return unlockXp;
     }
 }

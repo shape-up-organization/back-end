@@ -4,7 +4,6 @@ import br.com.shapeup.adapters.output.repository.model.quest.TrainingEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.domain.quest.training.Training;
 import java.util.List;
-import java.util.Set;
 import org.springframework.stereotype.Component;
 
 @Component

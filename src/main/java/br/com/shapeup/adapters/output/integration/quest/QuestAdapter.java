@@ -1,9 +1,7 @@
 package br.com.shapeup.adapters.output.integration.quest;
 
-import br.com.shapeup.adapters.input.web.controller.mapper.quest.ExerciseHttpMapper;
 import br.com.shapeup.adapters.output.repository.jpa.quest.TrainingDayJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.quest.TrainingJpaRepository;
-import br.com.shapeup.adapters.output.repository.mapper.quest.ExerciseMapper;
 import br.com.shapeup.adapters.output.repository.mapper.quest.TrainingMapper;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
 import br.com.shapeup.core.domain.quest.training.Training;
@@ -23,8 +21,6 @@ public class QuestAdapter implements QuestOutputPort {
     private final TrainingJpaRepository trainingJpaRepository;
     private final TrainingMapper trainingMapper;
     private final TrainingDayJpaRepository trainingDayJpaRepository;
-    private final ExerciseHttpMapper exerciseHttpMapper;
-    private final ExerciseMapper exerciseMapper;
 
     @Override
     public List<Training> searchTrainingByName(String name) {

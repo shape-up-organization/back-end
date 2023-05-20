@@ -10,11 +10,11 @@ import br.com.shapeup.adapters.output.integration.quest.UpdateStatusTrainingDayA
 import br.com.shapeup.adapters.output.integration.user.FindUserAdapter;
 import br.com.shapeup.adapters.output.integration.user.UserPersistenceAdapter;
 import br.com.shapeup.adapters.output.integration.xp.XpAdapter;
+import br.com.shapeup.core.usecase.quest.FindTrainingDaysFromUserUsecase;
 import br.com.shapeup.core.usecase.quest.FinishTrainingUsecase;
 import br.com.shapeup.core.usecase.quest.PeriodicUpdateUncompletedUserTrainingUsecase;
 import br.com.shapeup.core.usecase.quest.QuestUsecase;
 import br.com.shapeup.core.usecase.quest.RemoveTrainingFromUserUsecase;
-import br.com.shapeup.core.usecase.quest.TrainingsUserWithFullStatusUsecase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,8 +39,8 @@ public class QuestConfig {
     }
 
     @Bean
-    public TrainingsUserWithFullStatusUsecase trainingsUserWithFullStatusUsecase(FindTrainingDayAdapter findTrainingDayAdapter) {
-        return new TrainingsUserWithFullStatusUsecase(findTrainingDayAdapter);
+    public FindTrainingDaysFromUserUsecase findTrainingDaysFromUserUsecase(FindTrainingDayAdapter findTrainingDayAdapter) {
+        return new FindTrainingDaysFromUserUsecase(findTrainingDayAdapter);
     }
 
     @Bean

@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TrainingMapperImpl implements TrainingMapper {
 
-    private final ExerciseMapper exerciseMapper;
-
     @Override
     public Training toDomain(TrainingEntity trainingEntity) {
         return Training.create(
@@ -27,7 +25,8 @@ public class TrainingMapperImpl implements TrainingMapper {
                 trainingEntity.getDescription(),
                 trainingEntity.getXp(),
                 trainingEntity.getClassification(),
-                exerciseMapper.toDomain(trainingEntity.getExercises())
+                trainingEntity.getUnlockXp(),
+                trainingEntity.getExercises()
         );
     }
     @Override
@@ -53,7 +52,6 @@ public class TrainingMapperImpl implements TrainingMapper {
                 .xp(training.getXp())
                 .classification(training.getClassification())
                 .users(userEntities)
-                .exercises(exerciseMapper.toEntity(training.getExercises()))
                 .build();
     }
 
