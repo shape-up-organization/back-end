@@ -6,16 +6,13 @@ import br.com.shapeup.core.domain.validation.ValidationHandler;
 public class Exercise extends Entity<ExerciseId> {
 
     private String exercise;
-    private Integer duration;
 
     Exercise(
             ExerciseId exerciseId,
-            String exercise,
-            Integer duration
+            String exercise
     ) {
         super(exerciseId);
         this.exercise = exercise;
-        this.duration = duration;
     }
 
     @Override
@@ -25,21 +22,15 @@ public class Exercise extends Entity<ExerciseId> {
 
     public static Exercise create(
             ExerciseId exerciseId,
-            String exercise,
-            Integer duration
+            String exercise
     ) {
         return new ExerciseBuilder()
                 .setExerciseId(exerciseId)
                 .setExercise(exercise)
-                .setDuration(duration)
                 .create();
     }
 
     public String getExercise() {
         return exercise;
-    }
-
-    public Integer getDuration() {
-        return duration;
     }
 }

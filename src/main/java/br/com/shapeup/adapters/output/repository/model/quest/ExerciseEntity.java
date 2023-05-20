@@ -28,8 +28,6 @@ public class ExerciseEntity {
     private UUID id;
     @Column(nullable = false)
     private String exercise;
-    @Column(nullable = false)
-    private Integer duration;
     @ManyToOne
     private TrainingEntity training;
 }
