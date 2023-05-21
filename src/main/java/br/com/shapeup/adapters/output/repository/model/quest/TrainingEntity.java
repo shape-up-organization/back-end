@@ -51,6 +51,4 @@ public class TrainingEntity {
             fetch = FetchType.EAGER
     )
     private List<ExerciseEntity> exercises;
-
-//    private String exercises;
 }
