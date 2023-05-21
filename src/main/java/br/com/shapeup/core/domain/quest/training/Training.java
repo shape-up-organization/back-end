@@ -4,6 +4,7 @@ import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
 import br.com.shapeup.common.domain.enums.ClassificationEnum;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
+import java.util.List;
 
 public class Training extends Entity<TrainingId> {
 
@@ -14,7 +15,7 @@ public class Training extends Entity<TrainingId> {
     private Long xp;
     private ClassificationEnum classification;
     private Long unlockXp;
-    String exercises;
+    List<String> exercises;
 
     Training(
             TrainingId id,
@@ -25,7 +26,7 @@ public class Training extends Entity<TrainingId> {
             Long xp,
             ClassificationEnum classification,
             Long unlockXp,
-            String exercises
+            List<String> exercises
     ) {
         super(id);
         this.name = name;
@@ -52,7 +53,7 @@ public class Training extends Entity<TrainingId> {
             Long xp,
             ClassificationEnum classification,
             Long unlockXp,
-            String exercises
+            List<String> exercises
     ) {
         return new Training(id, name, category, duration, description, xp, classification, unlockXp, exercises);
     }
@@ -77,7 +78,7 @@ public class Training extends Entity<TrainingId> {
         return classification;
     }
 
-    public String getExercises() {
+    public List<String> getExercises() {
         return exercises;
     }
 

@@ -4,6 +4,7 @@ import br.com.shapeup.adapters.input.web.controller.response.quest.FindTrainings
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingOfUserResponse;
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingPerPeriodResponse;
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingResponse;
+import br.com.shapeup.adapters.output.repository.model.quest.ExerciseEntity;
 import br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity;
 import br.com.shapeup.adapters.output.repository.model.quest.TrainingEntity;
 import br.com.shapeup.core.domain.quest.dto.TrainingDayEntityDto;
@@ -83,7 +84,10 @@ public class TrainingHttpMapperImpl implements TrainingHttpMapper {
                 training.getClassification().name(),
                 training.getXp(),
                 training.getUnlockXp(),
-                training.getExercises(),
+                training.getExercises()
+                        .stream()
+                        .map(ExerciseEntity::getExercise)
+                        .toList(),
                 trainingDay.getStatus()
         );
 

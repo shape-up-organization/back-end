@@ -7,9 +7,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import java.util.UUID;
@@ -44,11 +46,9 @@ public class TrainingEntity {
     @ManyToMany(mappedBy = "trainings")
     private List<UserEntity> users;
 
-//    @OneToMany(
-//            mappedBy = "training",
-//            fetch = FetchType.EAGER
-//    )
-//    private List<ExerciseEntity> exercises;
-
-    private String exercises;
+    @OneToMany(
+            mappedBy = "training",
+            fetch = FetchType.EAGER
+    )
+    private List<ExerciseEntity> exercises;
 }

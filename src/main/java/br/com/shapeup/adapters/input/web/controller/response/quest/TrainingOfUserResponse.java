@@ -1,5 +1,7 @@
 package br.com.shapeup.adapters.input.web.controller.response.quest;
 
+import java.util.List;
+
 public record TrainingOfUserResponse(
         String id,
         String name,
@@ -9,7 +11,7 @@ public record TrainingOfUserResponse(
         String classification,
         Long xp,
         Long unlockXp,
-        String exercises,
+        List<String> exercises,
         String status
 ) {
 }
