@@ -30,6 +30,5 @@ public class ExerciseEntity {
     @Column(nullable = false)
     private String exercise;
     @ManyToOne
-    @JoinColumn(name = "training_id", nullable = false)
     private TrainingEntity training;
 }
