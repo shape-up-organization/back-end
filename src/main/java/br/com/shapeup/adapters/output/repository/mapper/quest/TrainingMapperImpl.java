@@ -1,5 +1,6 @@
 package br.com.shapeup.adapters.output.repository.mapper.quest;
 
+import br.com.shapeup.adapters.output.repository.model.quest.ExerciseEntity;
 import br.com.shapeup.adapters.output.repository.model.quest.TrainingEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.domain.quest.training.Training;
@@ -27,6 +28,9 @@ public class TrainingMapperImpl implements TrainingMapper {
                 trainingEntity.getClassification(),
                 trainingEntity.getUnlockXp(),
                 trainingEntity.getExercises()
+                        .stream()
+                        .map(ExerciseEntity::getExercise)
+                        .toList()
         );
     }
     @Override
