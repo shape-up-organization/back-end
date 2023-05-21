@@ -29,5 +29,6 @@ public class ExerciseEntity {
     @Column(nullable = false)
     private String exercise;
     @ManyToOne
+    @Column(nullable = false)
     private TrainingEntity training;
 }
