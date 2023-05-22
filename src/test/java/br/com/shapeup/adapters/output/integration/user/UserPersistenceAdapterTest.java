@@ -1,10 +1,14 @@
 //package br.com.shapeup.adapters.output.integration.user;
 //
-//import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+//import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
+//import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
+//import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 //import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 //import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 //import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
 //import br.com.shapeup.core.domain.user.User;
+//import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
+//import br.com.shapeup.core.ports.output.user.FindUserOutput;
 //import br.com.shapeup.factories.UserEntityFactory;
 //import br.com.shapeup.factories.UserFactory;
 //import org.junit.jupiter.api.Assertions;
@@ -24,16 +28,30 @@
 //@MockitoSettings(strictness = Strictness.LENIENT)
 //@ExtendWith(MockitoExtension.class)
 //class UserPersistenceAdapterTest {
-//    @Mock
-//    private UserRepositoryJpa userRepositoryJpa;
-//    private UserMapper userMapper;
+//
 //    @InjectMocks
 //    private UserPersistenceAdapter userPersistenceAdapter;
+//    @Mock
+//    private UserJpaRepository UserJpaRepository;
+//    @Mock
+//    private FindFriendshipOutput findFriendshipOutput;
+//    @Mock
+//    private FindUserOutput findUserOutput;
+//    @Mock
+//    private FriendshipJpaRepository friendshipJpaRepository;
+//    @Mock
+//    private FriendshipMongoRepository friendshipMongoRepository;
+//    private UserMapper userMapper;
+//
 //
 //    @BeforeEach
 //    void setUp() {
-//        userMapper = UserMapper.INSTANCE;
-//        userPersistenceAdapter = new UserPersistenceAdapter(userRepositoryJpa, userMapper);
+//        userPersistenceAdapter = new UserPersistenceAdapter(UserJpaRepository,
+//                userMapper,
+//                findFriendshipOutput,
+//                findUserOutput,
+//                friendshipJpaRepository,
+//                friendshipMongoRepository);
 //        MockitoAnnotations.openMocks(this);
 //    }
 //
@@ -42,10 +60,10 @@
 //    void saveWithSuccess() {
 //        User userMock = UserFactory.getInstance().create();
 //
-//        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(false);
+//        Mockito.when(UserJpaRepository.existsByEmail(userMock.getEmail().getValue())).thenReturn(false);
 //        userPersistenceAdapter.save(userMock);
 //
-//        Mockito.verify(userRepositoryJpa, Mockito.times(1)).save(Mockito.any(UserEntity.class));
+//        Mockito.verify(UserJpaRepository, Mockito.times(1)).save(Mockito.any(UserEntity.class));
 //    }
 //
 //    @Test
@@ -54,12 +72,12 @@
 //        User userMock = UserFactory.getInstance().create();
 //        UserEntity userEntityMock = UserEntityFactory.getInstance().create();
 //
-//        Mockito.when(userRepositoryJpa.existsByEmail(userMock.getEmail().getValue())).thenReturn(true);
+//        Mockito.when(UserJpaRepository.existsByEmail(userMock.getEmail().getValue())).thenReturn(true);
 //
 //        UserExistsByEmailException exception = Assertions.assertThrows(UserExistsByEmailException.class,
 //                () -> userPersistenceAdapter.save(userMock));
 //        Assertions.assertTrue(exception.getMessage().contains(userMock.getEmail().getValue()));
 //
-//        Mockito.verify(userRepositoryJpa, Mockito.never()).save(userEntityMock);
+//        Mockito.verify(UserJpaRepository, Mockito.never()).save(userEntityMock);
 //    }
 //}

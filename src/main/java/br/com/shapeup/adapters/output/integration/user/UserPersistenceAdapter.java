@@ -1,69 +1,53 @@
 package br.com.shapeup.adapters.output.integration.user;
 
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
-import br.com.shapeup.adapters.output.integration.cloud.aws.S3ServiceAdapter;
-import br.com.shapeup.adapters.output.repository.jpa.user.UserRepositoryJpa;
+import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
-import br.com.shapeup.adapters.output.repository.model.user.PictureProfile;
+import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import br.com.shapeup.common.exceptions.user.UserExistsByEmailException;
+import br.com.shapeup.common.exceptions.ShapeUpBaseException;
+import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
-import br.com.shapeup.core.domain.user.Birth;
-import br.com.shapeup.core.domain.user.CellPhone;
-import br.com.shapeup.core.domain.user.Password;
+import br.com.shapeup.common.utils.ObjectUtils;
 import br.com.shapeup.core.domain.user.User;
-import br.com.shapeup.core.ports.output.UserPersistanceOutput;
-import br.com.shapeup.security.service.JwtService;
-import jakarta.transaction.Transactional;
-import java.net.URL;
+import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
+import br.com.shapeup.core.ports.output.user.FindUserOutput;
+import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
+import io.vavr.control.Try;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class UserPersistenceAdapter implements UserPersistanceOutput {
 
-    private final UserRepositoryJpa userRepositoryJpa;
+    private final UserJpaRepository userJpaRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final S3ServiceAdapter s3Service;
+    private final FindFriendshipOutput findFriendshipOutput;
+    private final FindUserOutput findUserOutput;
+    private final FriendshipJpaRepository friendshipJpaRepository;
 
     @Override
     @Transactional
     public void deleteByEmail(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
+        UserEntity userEntity = userJpaRepository.findByEmail(email).orElseThrow(() -> {
             throw new UserNotFoundException(email);
         });
 
         userEntity.setActive(false);
 
-        userRepositoryJpa.save(userEntity);
-    }
-
-    @Override
-    public URL uploadPicture(Object file, String tokenJwt) {
-
-        String userEmail = JwtService.extractEmailFromToken(tokenJwt);
-        UserEntity user = userRepositoryJpa.findByEmail(userEmail).orElseThrow(() -> {
-            throw new UserNotFoundException(userEmail);
-        });
-
-        MultipartFile multipartFile = (MultipartFile) file;
-        PictureProfile pictureProfile = new PictureProfile(multipartFile, user.getId().toString());
-        s3Service.uploadFile(pictureProfile);
-
-        var pictureUrl = s3Service.getPictureUrl(pictureProfile);
-
-        return pictureUrl;
+        userJpaRepository.save(userEntity);
     }
 
     @Override
     public User findUser(String email) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
+        UserEntity userEntity = userJpaRepository.findByEmail(email).orElseThrow(() -> {
             throw new UserNotFoundException(email);
         });
 
@@ -74,45 +58,90 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
     @Override
     public void updateUser(String email, UserRequest userRequest) {
-        UserEntity userEntity = userRepositoryJpa.findByEmail(email).orElseThrow(() -> {
-            throw new UserExistsByEmailException();
+        UserEntity userEntity = userJpaRepository.findByEmail(email).orElseThrow(() -> {
+            throw new InvalidCredentialException();
         });
 
-        if(userRequest.getCellPhone() != null) {
-            CellPhone.validateCellPhone(userRequest.getCellPhone());
-            userEntity.setCellPhone(userRequest.getCellPhone());
+        Try.run(() -> ObjectUtils.copyNonNullProperties(userEntity, userRequest))
+                .onFailure(e -> {
+                    log.error("[USER PERSISTENCE ADAPTER] - Error on copy properties: {}", e.getMessage());
+                    throw new ShapeUpBaseException(e.getMessage(), e.getCause());
+                });
+
+        userJpaRepository.save(userEntity);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+
+        return Try.of(() -> userJpaRepository.findByUsername(username))
+                .onSuccess(userEntity -> log.info("[USER PERSISTENCE ADAPTER] - User found by username: {}", username))
+                .onFailure(throwable -> log.error("[USER PERSISTENCE ADAPTER] - User not found by username: {}", username, throwable))
+                .map(userEntity -> userEntity.orElseThrow(() -> new UserNotFoundException(username)))
+                .map(userMapper::userEntitytoUser)
+                .get();
+    }
+
+    @Override
+    public List<User> findAllUserByFullName(String fullName) {
+        List<UserEntity> userEntities = userJpaRepository.findByFullNameContainsIgnoreCase(fullName);
+
+        return userMapper.userEntityListToUserList(userEntities);
+    }
+
+    @Override
+    public FriendshipStatus getFriendshipStatusForUser(String currentUserEmail, String searchUserUsername) {
+        User currentUser = findUserOutput.findByEmail(currentUserEmail);
+        User searchUser = findUserOutput.findByUsername(searchUserUsername);
+        var usernameSenderAndUsernameReceiver = findFriendshipOutput.findFriendshipRequestByUsername(currentUser, searchUser);
+
+        boolean haveFriendRequest = findFriendshipOutput.hasSentFriendRequest(usernameSenderAndUsernameReceiver.getUsernameSender(), usernameSenderAndUsernameReceiver.getUsernameReceiver());
+        UserEntity currentUserEntity = userMapper.userToUserEntity(currentUser);
+
+        var friends = friendshipJpaRepository.findAllByUserReceiver(currentUserEntity);
+
+        boolean isFriend = friends.stream()
+                .anyMatch(friend -> friend.getUserSender()
+                        .getUsername()
+                        .equals(searchUser.getUsername()));
+
+        return new FriendshipStatus(haveFriendRequest, isFriend, usernameSenderAndUsernameReceiver.getUsernameSender());
+    }
+
+    @Override
+    public List<FriendshipStatus> getFriendshipStatusForUser(String currentUserEmail, List<String> searchUserUsername) {
+        var currentUser = findUserOutput.findByEmail(currentUserEmail);
+        List<FriendshipStatus> friendshipStatuses = new ArrayList<>();
+
+        for (String username : searchUserUsername) {
+            friendshipStatuses.add(getFriendshipStatusForUser(currentUserEmail, username));
         }
 
-        if(userRequest.getBirth() != null) {
-            var birth = Birth.convertBirth(userRequest.getBirth());
+        return friendshipStatuses;
+    }
 
-            Birth.validateBirth(birth);
-            userEntity.setBirth(birth);
-        }
+    @Override
+    public List<User> findAllUserByUsername(String username) {
+        return Try.of(() -> userJpaRepository.findAllByUsernameStartingWithIgnoreCase(username))
+                .map(userMapper::userEntityListToUserList)
+                .onSuccess(users -> log.info("[USER PERSISTENCE ADAPTER] - Users found by username: {}", username))
+                .onFailure(throwable -> {
+                    log.error("[USER PERSISTENCE ADAPTER] - Users not found by username: {}", username);
+                    throw new ShapeUpBaseException(throwable.getMessage(), throwable.getCause());
+                }).get();
+    }
 
-        if(userRequest.getBiography() != null) {
-            userEntity.setBiography(userRequest.getBiography());
-        }
+    @Override
+    public void save(User user) {
+        UserEntity userEntity = userMapper.userToUserEntity(user);
 
-        if(userRequest.getName() != null) {
-            userEntity.setName(userRequest.getName());
-        }
+        userJpaRepository.save(userEntity);
+    }
 
-        if(userRequest.getLastName() != null) {
-            userEntity.setLastName(userRequest.getLastName());
-        }
+    @Override
+    public void saveAll(List<User> users) {
+        List<UserEntity> userEntities = userMapper.userListToUserEntityList(users);
 
-        if(userRequest.getUsername() != null) {
-            userEntity.setUsername(userRequest.getUsername());
-        }
-
-        if(userRequest.getPassword() != null) {
-            Password.validatePassword(userRequest.getPassword());
-
-            String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
-            userEntity.setPassword(encodedPassword);
-        }
-
-        userRepositoryJpa.save(userEntity);
+        userJpaRepository.saveAll(userEntities);
     }
 }

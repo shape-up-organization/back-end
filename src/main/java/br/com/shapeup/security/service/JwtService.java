@@ -11,10 +11,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtService {
 
     private static final String SECRET = Encoders.BASE64.encode("5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437".getBytes());
@@ -28,25 +30,54 @@ public class JwtService {
                 .getBody();
     }
 
-    private String createToken(Map<String, Object> claims, String userName, String name, String id) {
+    private String createToken(
+            Map<String, Object> claims,
+            String id,
+            String name,
+            String lastName,
+            String userName,
+            String accountName,
+            String profilePicture,
+            String xp,
+            String biography
+    ) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(id)
-                .claim("id", id)
                 .setSubject(name)
-                .claim("name", name)
+                .setSubject(lastName)
+                .setSubject(xp)
+                .setSubject(profilePicture)
+                .setSubject(biography)
                 .setSubject(userName)
+                .claim("id", id)
+                .claim("name", name)
+                .claim("lastName", lastName)
+                .claim("username", accountName)
                 .claim("email", userName)
+                .claim("xp", xp)
+                .claim("biography", biography)
+                .claim("profilePicture", profilePicture)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("type", "JWT")
                 .base64UrlEncodeWith(Encoders.BASE64URL)
-                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    public String generateToken(String userName, String name, String id) {
+    public String generateToken(
+            String id,
+            String name,
+            String lastName,
+            String userName,
+            String accountName,
+            String xp,
+            String profilePicture,
+            String biography
+    ) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName, name, id);
+        return createToken(claims, id, name, lastName, userName, accountName, xp, profilePicture, biography);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -58,7 +89,7 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    private Key getSignKey() {
+    public Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -83,5 +114,34 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("email", String.class);
+    }
+
+    public static String extractAccountNameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Decoders.BASE64.decode(SECRET))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("username", String.class);
+    }
+
+    public static String extractIdFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Decoders.BASE64.decode(SECRET))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id", String.class);
+    }
+
+    public String generateTokenFromClaims(Claims claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setHeaderParam("type", "JWT")
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+
     }
 }

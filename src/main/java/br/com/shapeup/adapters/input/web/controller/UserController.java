@@ -1,63 +1,120 @@
 package br.com.shapeup.adapters.input.web.controller;
 
+import br.com.shapeup.adapters.input.web.controller.mapper.user.UserHttpMapper;
 import br.com.shapeup.adapters.input.web.controller.request.user.UserRequest;
-import br.com.shapeup.core.ports.input.UserPersistanceInput;
-import br.com.shapeup.core.ports.output.UserPersistanceOutput;
+import br.com.shapeup.adapters.input.web.controller.response.user.UserFieldsUpdateResponse;
+import br.com.shapeup.adapters.input.web.controller.response.user.UserResponse;
+import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
+import br.com.shapeup.common.utils.TokenUtils;
+import br.com.shapeup.core.domain.user.User;
+import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.net.URL;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@RequestMapping(value = "users")
+@CrossOrigin(origins = "*")
+@RequestMapping(value = "/users")
 public class UserController {
-    private final UserPersistanceInput userPersistanceInput;
 
-    private final UserPersistanceOutput userPersistanceOutput;
+    private final UserPersistanceInput userPersistanceInput;
+    private final UserHttpMapper userHttpMapper;
 
     @DeleteMapping()
-    public ResponseEntity<Void> deleteByEmail(@RequestHeader(value = "Authorization")
-                                              String token) {
-        String jwtToken = token.replace("Bearer ", "");
+    public ResponseEntity<Void> deleteByEmail(HttpServletRequest request) {
+
+        String jwtToken = TokenUtils.getToken(request);
+
         var email = JwtService.extractEmailFromToken(jwtToken);
         userPersistanceInput.deleteByEmail(email);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
-    @PostMapping("/picture")
-    public ResponseEntity<Map<String, URL>> uploadPicture(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-
-        var uploadPictureProfile = userPersistanceInput.uploadPicture(file, token);
-        var urlUserPictureProfileResponse = Map.of("uploadPictureProfile-picture-profile", uploadPictureProfile);
-
-        return ResponseEntity.status(HttpStatus.OK.value()).body(urlUserPictureProfileResponse);
-    }
-
     @PutMapping()
-    public ResponseEntity<Void> updateUserField(@RequestHeader(value = "Authorization") String token,
-                                                @RequestBody UserRequest userRequest) {
-        String jwtToken = token.replace("Bearer ", "");
+    public ResponseEntity<UserFieldsUpdateResponse> updateUserField(
+            HttpServletRequest request,
+            @RequestBody UserRequest userRequest
+    ) {
+        String jwtToken = TokenUtils.getToken(request);
         var email = JwtService.extractEmailFromToken(jwtToken);
 
         userPersistanceInput.updateUser(email, userRequest);
+        String newToken = TokenUtils.updateUserAndGenerateNewToken(jwtToken, userRequest);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+        return ResponseEntity.status(HttpStatus.OK.value()).body(
+                UserFieldsUpdateResponse
+                        .builder()
+                        .token(newToken)
+                        .updatedAt(String.valueOf(LocalDateTime.now()))
+                        .build()
+        );
+    }
+
+    @GetMapping("/search-username/{username}")
+    public ResponseEntity<List<UserResponse>> findAllUserByUsername(
+            @PathVariable String username,
+            HttpServletRequest request
+    ) {
+        String jwtToken = TokenUtils.getToken(request);
+        var email = JwtService.extractEmailFromToken(jwtToken);
+
+        List<User> searchUsers = userPersistanceInput.findAllUserByUsername(username);
+        return getListResponseEntity(email, searchUsers);
+    }
+
+    @GetMapping("/search-fullname")
+    public ResponseEntity<List<UserResponse>> findAllUserByFullName(
+            @RequestParam String fullName,
+            HttpServletRequest request
+    ) {
+        String jwtToken = TokenUtils.getToken(request);
+        var email = JwtService.extractEmailFromToken(jwtToken);
+
+        List<User> searchUsers = userPersistanceInput.findAllUserByFullName(fullName);
+        return getListResponseEntity(email, searchUsers);
+    }
+
+    @GetMapping("/find-username/{username}")
+    public ResponseEntity<UserResponse> findAnUserByUsername(
+            @PathVariable String username,
+            HttpServletRequest request
+    ) {
+        String jwtToken = TokenUtils.getToken(request);
+
+        User user = userPersistanceInput.findUserByUsername(username);
+
+        FriendshipStatus friendshipStatus = userPersistanceInput.getFriendshipStatus(
+                JwtService.extractEmailFromToken(jwtToken),
+                List.of(username)
+        ).get(0);
+
+        Optional<UserResponse> userResponse = Optional.of(userHttpMapper.userToUserResponse(user, friendshipStatus));
+
+        return ResponseEntity.of(userResponse);
+    }
+
+    private ResponseEntity<List<UserResponse>> getListResponseEntity(String email, List<User> searchUsers) {
+        List<String> usernames = userHttpMapper.usersToUsernames(searchUsers);
+        List<FriendshipStatus> friendshipStatus = userPersistanceInput.getFriendshipStatus(email, usernames);
+
+        List<UserResponse> userResponses = userHttpMapper.usersToUserResponses(searchUsers, friendshipStatus);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(userResponses);
     }
 }

@@ -1,7 +1,9 @@
 package br.com.shapeup.security.config;
 
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.security.filter.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,16 +21,38 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthFilter authFilter;
-
     private final UserInfoUserDetailsService uds;
+    private final UserJpaRepository userJpaRepository;
 
-    public SecurityConfig(JwtAuthFilter authFilter, UserInfoUserDetailsService uds) {
-        this.authFilter = authFilter;
-        this.uds = uds;
-    }
+    private static final String[] REQUIRED_AUTHENTICATION = {
+            "/users/**",
+            "/friends/**",
+            "/profiles/**",
+            "/posts/**",
+            "/comments/**",
+            "/quests/**"
+    };
+
+    private static final String[] PERMIT_ALL = {
+            "/auth/**",
+            "/ws/**",
+            "/",
+            "/error/**",
+            "/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/api-docs/**",
+            "/api-docs.yaml",
+            "/webjars/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/security",
+            "/configuration/ui",
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,18 +63,20 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/**").authenticated()
+                        .requestMatchers(REQUIRED_AUTHENTICATION).authenticated()
+                        .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest()
                         .permitAll()
                 ).userDetailsService(uds)
                 .exceptionHandling()
+                .accessDeniedHandler((request, response, accessDeniedException) ->
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
                 .authenticationEntryPoint(
                         ((request, response, authException) ->
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
-
                 )
                 .and()
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -66,7 +92,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserInfoUserDetailsService();
+        return new UserInfoUserDetailsService(userJpaRepository);
     }
 
     @Bean
