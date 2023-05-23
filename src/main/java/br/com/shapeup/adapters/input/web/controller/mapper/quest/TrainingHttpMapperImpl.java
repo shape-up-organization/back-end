@@ -81,7 +81,7 @@ public class TrainingHttpMapperImpl implements TrainingHttpMapper {
                 training.getCategory().name(),
                 training.getDescription(),
                 training.getDuration(),
-                training.getClassification().name(),
+                training.getClassification(),
                 training.getXp(),
                 training.getUnlockXp(),
                 training.getExercises()
