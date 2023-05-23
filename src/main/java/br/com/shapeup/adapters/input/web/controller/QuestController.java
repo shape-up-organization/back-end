@@ -150,7 +150,7 @@ public class QuestController {
         return ResponseEntity.status(HttpStatus.OK).body(trainingDayEntityDto);
     }
 
-    @Scheduled(cron = "0 0 * * 7 *")
+    @Scheduled(cron = "59 23 * * 0")
     @PutMapping("/user/periodic-training-update")
     public ResponseEntity<?> periodicTrainingUpdate() {
         periodicUpdateUncompletedUserTrainingInputPort.execute();
