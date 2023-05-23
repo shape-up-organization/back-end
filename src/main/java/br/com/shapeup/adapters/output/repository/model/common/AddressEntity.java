@@ -36,7 +36,7 @@ public class AddressEntity {
     @Column(length = 100)
     private String state;
 
-    @Column
+    @Column(length = 100)
     private String complement;
 
     @Column(length = 100)
