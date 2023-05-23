@@ -33,14 +33,13 @@ public class TrainingEntity {
     @GeneratedValue(generator = "uuid2")
     @Column(name = "training_id")
     private UUID id;
-    private String name;
+    private java.lang.String name;
     @Enumerated(EnumType.STRING)
     private CategoryEnum category;
     private Long xp;
     private Integer duration;
-    private String description;
-    @Enumerated(EnumType.STRING)
-    private ClassificationEnum classification;
+    private java.lang.String description;
+    private String classification;
     private Long unlockXp;
 
     @ManyToMany(mappedBy = "trainings")

@@ -5,7 +5,7 @@ public enum ClassificationEnum {
     SILVER,
     GOLD;
 
-    public String getClassification(Integer xp) {
+    public java.lang.String getClassification(Integer xp) {
         if (xp <= 80) {
             return BRONZE.name();
         } else if (xp > 80 && xp < 220) {
@@ -35,7 +35,7 @@ public enum ClassificationEnum {
         }
     }
 
-    public static ClassificationEnum toEnum(String classification) {
+    public static ClassificationEnum toEnum(java.lang.String classification) {
         if (classification.equals(BRONZE.name())) {
             return BRONZE;
         } else if (classification.equals(SILVER.name())) {

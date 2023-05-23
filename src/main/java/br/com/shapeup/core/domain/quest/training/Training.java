@@ -8,25 +8,25 @@ import java.util.List;
 
 public class Training extends Entity<TrainingId> {
 
-    private String name;
+    private java.lang.String name;
     private CategoryEnum category;
     private Integer duration;
-    private String description;
+    private java.lang.String description;
     private Long xp;
-    private ClassificationEnum classification;
+    private String classification;
     private Long unlockXp;
-    List<String> exercises;
+    List<java.lang.String> exercises;
 
     Training(
             TrainingId id,
-            String name,
+            java.lang.String name,
             CategoryEnum category,
             Integer duration,
-            String description,
+            java.lang.String description,
             Long xp,
-            ClassificationEnum classification,
+            String classification,
             Long unlockXp,
-            List<String> exercises
+            List<java.lang.String> exercises
     ) {
         super(id);
         this.name = name;
@@ -46,19 +46,19 @@ public class Training extends Entity<TrainingId> {
 
     public static Training create(
             TrainingId id,
-            String name,
+            java.lang.String name,
             CategoryEnum category,
             Integer duration,
-            String description,
+            java.lang.String description,
             Long xp,
-            ClassificationEnum classification,
+            String classification,
             Long unlockXp,
-            List<String> exercises
+            List<java.lang.String> exercises
     ) {
         return new Training(id, name, category, duration, description, xp, classification, unlockXp, exercises);
     }
 
-    public String getName() {
+    public java.lang.String getName() {
         return name;
     }
 
@@ -66,7 +66,7 @@ public class Training extends Entity<TrainingId> {
         return category;
     }
 
-    public String getDescription() {
+    public java.lang.String getDescription() {
         return description;
     }
 
@@ -74,11 +74,11 @@ public class Training extends Entity<TrainingId> {
         return xp;
     }
 
-    public ClassificationEnum getClassification() {
+    public String getClassification() {
         return classification;
     }
 
-    public List<String> getExercises() {
+    public List<java.lang.String> getExercises() {
         return exercises;
     }
 
