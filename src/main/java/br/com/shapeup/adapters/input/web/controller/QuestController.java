@@ -15,6 +15,7 @@ import br.com.shapeup.core.ports.input.quest.FinishTrainingInputPort;
 import br.com.shapeup.core.ports.input.quest.PeriodicUpdateUncompletedUserTrainingInputPort;
 import br.com.shapeup.core.ports.input.quest.QuestInputPort;
 import br.com.shapeup.core.ports.input.quest.RemoveTrainingFromUserInputPort;
+import br.com.shapeup.core.ports.input.quest.SearchAllTrainingsInputPort;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -46,6 +47,7 @@ public class QuestController {
     private final RemoveTrainingFromUserInputPort removeTrainingFromUserInputPort;
     private final FinishTrainingInputPort finishTrainingInputPort;
     private final PeriodicUpdateUncompletedUserTrainingInputPort periodicUpdateUncompletedUserTrainingInputPort;
+    private final SearchAllTrainingsInputPort searchAllTrainingsInputPort;
 
     @GetMapping("/search-training")
     public ResponseEntity<List<TrainingResponse>> searchTrainingByName(
@@ -154,5 +156,13 @@ public class QuestController {
         periodicUpdateUncompletedUserTrainingInputPort.execute();
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/trainings")
+    public ResponseEntity<List<TrainingResponse>> searchAllTrainings() {
+        List<Training> trainings = searchAllTrainingsInputPort.execute();
+        List<TrainingResponse> trainingResponses = trainingHttpMapper.toTrainingResponse(trainings);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(trainingResponses);
     }
 }
