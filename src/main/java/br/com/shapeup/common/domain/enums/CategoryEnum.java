@@ -4,5 +4,7 @@ public enum CategoryEnum {
     AEROBIC,
     ANAEROBIC,
     FLEXIBILITY,
-    STRENGTH
+    STRENGTH,
+    FIGHT,
+    HEALTH
 }
