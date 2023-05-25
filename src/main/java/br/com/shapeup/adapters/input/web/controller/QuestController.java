@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@RequestMapping("/quests")
+@RequestMapping("/shapeup/quests")
 public class QuestController {
 
     private final QuestInputPort questInputPort;

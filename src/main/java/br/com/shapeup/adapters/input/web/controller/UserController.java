@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/shapeup/users")
 public class UserController {
 
     private final UserPersistanceInput userPersistanceInput;

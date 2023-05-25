@@ -2,7 +2,6 @@ package br.com.shapeup.adapters.output.repository.model.quest;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
-import br.com.shapeup.common.domain.enums.ClassificationEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,12 +32,12 @@ public class TrainingEntity {
     @GeneratedValue(generator = "uuid2")
     @Column(name = "training_id")
     private UUID id;
-    private java.lang.String name;
+    private String name;
     @Enumerated(EnumType.STRING)
     private CategoryEnum category;
     private Long xp;
     private Integer duration;
-    private java.lang.String description;
+    private String description;
     private String classification;
     private Long unlockXp;
 

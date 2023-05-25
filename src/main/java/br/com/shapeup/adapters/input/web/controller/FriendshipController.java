@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/friends")
+@RequestMapping("/shapeup/friends")
 public class FriendshipController {
 
     private final FriendshipInput friendshipInput;

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@RequestMapping("/comments")
+@RequestMapping("/shapeup/comments")
 public class CommentController {
     private final CommentInput commentInput;
 

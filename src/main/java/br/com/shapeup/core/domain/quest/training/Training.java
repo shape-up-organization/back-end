@@ -2,7 +2,6 @@ package br.com.shapeup.core.domain.quest.training;
 
 import br.com.shapeup.common.domain.Entity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
-import br.com.shapeup.common.domain.enums.ClassificationEnum;
 import br.com.shapeup.core.domain.validation.ValidationHandler;
 import java.util.List;
 
@@ -11,11 +10,11 @@ public class Training extends Entity<TrainingId> {
     private java.lang.String name;
     private CategoryEnum category;
     private Integer duration;
-    private java.lang.String description;
+    private String description;
     private Long xp;
     private String classification;
     private Long unlockXp;
-    List<java.lang.String> exercises;
+    List<String> exercises;
 
     Training(
             TrainingId id,
