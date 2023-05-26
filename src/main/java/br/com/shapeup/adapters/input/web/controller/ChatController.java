@@ -18,15 +18,15 @@ public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatGateway chatGateway;
 
-    @MessageMapping("/shapeup/message")
-    @SendTo("/shapeup/chatroom/public")
+    @MessageMapping("/message")
+    @SendTo("/chatroom/public")
     public Message receiveMessage(@Payload Message message) {
         return message;
     }
 
-    @MessageMapping("/shapeup/private-message")
+    @MessageMapping("/private-message")
     public Message recMessage(@Payload Message message) {
-        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/shapeup/private",message);
+        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
         chatGateway.saveMessageToDatabase(message);
         return message;
     }
