@@ -1,6 +1,5 @@
 package br.com.shapeup.adapters.output.repository.model.post.comments;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -26,7 +25,6 @@ public class CommentEntity {
 
     private String idPost;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
     public CommentEntity(String commentMessage, String userId, String idPost) {
