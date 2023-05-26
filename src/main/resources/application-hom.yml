@@ -7,9 +7,13 @@ spring:
       ssl:
         enabled: true
       uri: ${MONGO_URI}
+    cache:
+      type: redis
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      ssl: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
