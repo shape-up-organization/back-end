@@ -31,9 +31,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 springdoc:
   api-docs:
-    path: /api-docs
+    path: /shapeup/api-docs
   swagger-ui:
-    path: /swagger-ui
+    path: /shapeup/swagger-ui
 
 logging:
   level:

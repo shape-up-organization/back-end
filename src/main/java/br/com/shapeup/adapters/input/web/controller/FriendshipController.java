@@ -32,7 +32,6 @@ public class FriendshipController {
     private final FriendshipInput friendshipInput;
     private final FriendshipHttpMapper friendshipHttpMapper;
 
-
     @PostMapping("/sent-friendship-request/{newFriendUsername}")
     public ResponseEntity<RequestFriendshipResponse> sentFriendshipRequest(
             HttpServletRequest request,
