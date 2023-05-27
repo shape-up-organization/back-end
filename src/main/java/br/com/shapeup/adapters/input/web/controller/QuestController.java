@@ -7,6 +7,7 @@ import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingDayRe
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingResponse;
 import br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
+import br.com.shapeup.common.utils.DayOfWeekUtils;
 import br.com.shapeup.common.utils.TokenUtils;
 import br.com.shapeup.core.domain.quest.dto.TrainingDayEntityDto;
 import br.com.shapeup.core.domain.quest.training.Training;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -94,20 +96,24 @@ public class QuestController {
     ) {
         String token = TokenUtils.getToken(request);
         String username = JwtService.extractAccountNameFromToken(token);
-        trainingUserRequest.dayOfWeek().toUpperCase();
-
+        String dayOfWeekRequest = trainingUserRequest.dayOfWeek().toUpperCase();
+        var currentDay = LocalDate.now().getDayOfWeek().getValue();
+        String requestTrainingDay = trainingUserRequest.dayOfWeek();
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
 
+
+        Map<String, DayOfWeek> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
+
+
         TrainingDayResponse trainingDayResponse = new TrainingDayResponse(
-                trainingUserRequest.dayOfWeek(),
+                dayOfWeekRequest,
                 trainingUserRequest.period()
         );
 
-        var currentDate = LocalDate.now();
-        DayOfWeek trainingDayOfWeek = DayOfWeek.valueOf(trainingUserRequest.dayOfWeek());
-        DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
+        DayOfWeek dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(requestTrainingDay);
 
-        if (trainingDayOfWeek.getValue() < currentDayOfWeek.getValue()) {
+        if (dayOfWeekFromAbbreviations.getValue() < currentDay) {
+
             TrainingDayEntityDto trainingUserResponse = new TrainingDayEntityDto(
                     training.getId().getValue().toString(),
                     training.getCategory().name(),
