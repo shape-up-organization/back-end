@@ -16,7 +16,7 @@ import reactor.core.publisher.Flux;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@RequestMapping("/presence")
+@RequestMapping("/shapeup/presence")
 public class UserPresenceController {
 
     private final UserPresenceManagerManagerAdapter userPresenceManagerAdapter;

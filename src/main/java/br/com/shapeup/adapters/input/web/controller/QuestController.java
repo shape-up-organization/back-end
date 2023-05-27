@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@RequestMapping("/quests")
+@RequestMapping("/shapeup/quests")
 public class QuestController {
 
     private final QuestInputPort questInputPort;
@@ -150,7 +150,7 @@ public class QuestController {
         return ResponseEntity.status(HttpStatus.OK).body(trainingDayEntityDto);
     }
 
-    @Scheduled(cron = "0 0 * * 7 *")
+    @Scheduled(cron = "59 23 * * 0")
     @PutMapping("/user/periodic-training-update")
     public ResponseEntity<?> periodicTrainingUpdate() {
         periodicUpdateUncompletedUserTrainingInputPort.execute();
