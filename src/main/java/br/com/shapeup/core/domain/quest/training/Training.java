@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Training extends Entity<TrainingId> {
 
-    private java.lang.String name;
+    private String name;
     private CategoryEnum category;
     private Integer duration;
     private String description;
@@ -45,19 +45,19 @@ public class Training extends Entity<TrainingId> {
 
     public static Training create(
             TrainingId id,
-            java.lang.String name,
+            String name,
             CategoryEnum category,
             Integer duration,
             java.lang.String description,
             Long xp,
             String classification,
             Long unlockXp,
-            List<java.lang.String> exercises
+            List<String> exercises
     ) {
         return new Training(id, name, category, duration, description, xp, classification, unlockXp, exercises);
     }
 
-    public java.lang.String getName() {
+    public String getName() {
         return name;
     }
 
@@ -65,7 +65,7 @@ public class Training extends Entity<TrainingId> {
         return category;
     }
 
-    public java.lang.String getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -77,7 +77,7 @@ public class Training extends Entity<TrainingId> {
         return classification;
     }
 
-    public List<java.lang.String> getExercises() {
+    public List<String> getExercises() {
         return exercises;
     }
 
