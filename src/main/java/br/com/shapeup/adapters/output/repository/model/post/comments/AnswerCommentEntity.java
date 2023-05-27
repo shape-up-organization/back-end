@@ -1,22 +1,26 @@
 package br.com.shapeup.adapters.output.repository.model.post.comments;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("tb_answer_comment")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "tb_answer_comments")
 public class AnswerCommentEntity {
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(generator = "uuid2")
+    private UUID id;
 
     private String commentMessage;
 

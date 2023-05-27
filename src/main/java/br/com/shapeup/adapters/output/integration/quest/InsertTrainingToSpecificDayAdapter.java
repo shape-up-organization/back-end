@@ -9,6 +9,8 @@ import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.core.domain.quest.training.Training;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.quest.InsertTrainingToSpecificDayOutputPort;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +26,35 @@ public class InsertTrainingToSpecificDayAdapter implements InsertTrainingToSpeci
     private final UserMapper userMapper;
 
     @Override
-    public void execute(User user, Training training, String day, String period) {
+    public TrainingDayEntity execute(User user, Training training, String day, String period) {
 
         UserEntity userEntity = userMapper.userToUserEntity(user);
         TrainingEntity trainingEntity = trainingMapper.toEntity(training, List.of(userEntity));
 
-        var trainingDayEntity = TrainingDayEntity.builder()
-                .training(trainingEntity)
-                .dayOfWeek(day)
-                .user(userEntity)
-                .period(period)
-                .status("PENDING")
-                .build();
+        var currentDate = LocalDate.now();
+        DayOfWeek trainingDayOfWeek = DayOfWeek.valueOf(day);
+        DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
 
-        trainingDayJpaRepository.save(trainingDayEntity);
+        if (trainingDayOfWeek.getValue() < currentDayOfWeek.getValue()) {
+            var trainingDayEntity = TrainingDayEntity.builder()
+                    .training(trainingEntity)
+                    .dayOfWeek(day)
+                    .user(userEntity)
+                    .period(period)
+                    .status("UNCOMPLETED")
+                    .build();
+
+            return trainingDayJpaRepository.save(trainingDayEntity);
+        }
+
+            var trainingDayEntity = TrainingDayEntity.builder()
+                    .training(trainingEntity)
+                    .dayOfWeek(day)
+                    .user(userEntity)
+                    .period(period)
+                    .status("PENDING")
+                    .build();
+
+            return trainingDayJpaRepository.save(trainingDayEntity);
     }
 }

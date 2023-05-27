@@ -18,6 +18,8 @@ import br.com.shapeup.core.ports.input.quest.RemoveTrainingFromUserInputPort;
 import br.com.shapeup.core.ports.input.quest.SearchAllTrainingsInputPort;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -92,6 +94,7 @@ public class QuestController {
     ) {
         String token = TokenUtils.getToken(request);
         String username = JwtService.extractAccountNameFromToken(token);
+        trainingUserRequest.dayOfWeek().toUpperCase();
 
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
 
@@ -99,6 +102,23 @@ public class QuestController {
                 trainingUserRequest.dayOfWeek(),
                 trainingUserRequest.period()
         );
+
+        var currentDate = LocalDate.now();
+        DayOfWeek trainingDayOfWeek = DayOfWeek.valueOf(trainingUserRequest.dayOfWeek());
+        DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
+
+        if (trainingDayOfWeek.getValue() < currentDayOfWeek.getValue()) {
+            TrainingDayEntityDto trainingUserResponse = new TrainingDayEntityDto(
+                    training.getId().getValue().toString(),
+                    training.getCategory().name(),
+                    trainingDayResponse,
+                    training.getExercises(),
+                    training.getXp(),
+                    "UNCOMPLETED"
+            );
+
+            return ResponseEntity.ok(trainingUserResponse);
+        }
 
         TrainingDayEntityDto trainingUserResponse = new TrainingDayEntityDto(
                 training.getId().getValue().toString(),
