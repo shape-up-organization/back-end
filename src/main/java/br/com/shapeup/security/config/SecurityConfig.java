@@ -33,8 +33,7 @@ public class SecurityConfig {
             "/friends/**",
             "/profiles/**",
             "/posts/**",
-            "/comments/**",
-            "/quests/**"
+            "/comments/**"
     };
 
     private static final String[] PERMIT_ALL = {
@@ -52,6 +51,7 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/configuration/security",
             "/configuration/ui",
+            "/quests/**"
     };
 
     @Bean

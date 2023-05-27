@@ -1,17 +1,18 @@
 package br.com.shapeup.adapters.output.repository.model.post.comments;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("tb_comment")
+@Entity
+@Table(name = "tb_comment")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,8 +27,7 @@ public class CommentEntity {
 
     private String idPost;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public CommentEntity(String commentMessage, String userId, String idPost) {
         this.commentMessage = commentMessage;
