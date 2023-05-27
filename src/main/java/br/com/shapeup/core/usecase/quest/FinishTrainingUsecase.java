@@ -37,7 +37,6 @@ public class FinishTrainingUsecase implements FinishTrainingInputPort {
     @Override
     public TrainingDayEntityDto execute(String username, String trainingId, String dayOfWeek, String period) {
 
-
         User user = findUserOutput.findByUsername(username);
         UUID userId = UUID.fromString(user.getId().getValue());
         Training training = findTrainingOutputPort.findById(trainingId);

@@ -2,7 +2,6 @@ package br.com.shapeup.adapters.output.repository.model.quest;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.common.domain.enums.CategoryEnum;
-import br.com.shapeup.common.domain.enums.ClassificationEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,8 +38,7 @@ public class TrainingEntity {
     private Long xp;
     private Integer duration;
     private String description;
-    @Enumerated(EnumType.STRING)
-    private ClassificationEnum classification;
+    private String classification;
     private Long unlockXp;
 
     @ManyToMany(mappedBy = "trainings")

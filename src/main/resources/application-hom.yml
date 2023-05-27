@@ -7,9 +7,13 @@ spring:
       ssl:
         enabled: true
       uri: ${MONGO_URI}
+    cache:
+      type: redis
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      ssl: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -31,9 +35,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 springdoc:
   api-docs:
-    path: /api-docs
+    path: /shapeup/api-docs
   swagger-ui:
-    path: /swagger-ui
+    path: /shapeup/swagger-ui
 
 logging:
   level:

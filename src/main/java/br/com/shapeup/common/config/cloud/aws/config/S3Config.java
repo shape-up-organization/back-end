@@ -18,17 +18,15 @@ public class S3Config {
     private String region = Dotenv.load().get("AWS_REGION");
 
     public AWSCredentials credentials() {
-        var credentials = new BasicAWSCredentials(awsId, awsKey);
-        return credentials;
+        return new BasicAWSCredentials(awsId, awsKey);
     }
 
     @Bean
     public AmazonS3 s3Client() {
-        AmazonS3 s3Client = AmazonS3ClientBuilder
+        return AmazonS3ClientBuilder
                 .standard()
                 .withRegion(Regions.fromName(region))
                 .withCredentials(new AWSStaticCredentialsProvider(credentials()))
                 .build();
-        return s3Client;
     }
 }

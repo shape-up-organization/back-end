@@ -6,6 +6,7 @@ import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.user.Role;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+import br.com.shapeup.common.domain.enums.UserActionEnum;
 import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsException;
 import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
 import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
@@ -50,7 +51,7 @@ public class AuthAdapter implements AuthGateway {
         validateCellPhoneAlreadyExistsInDatabase(userAuthRegisterRequest.getCellPhone());
 
         UserEntity userEntity = mapUserAuthRegisterToUserEntityWithEncodedPassword(userAuthRegisterRequest);
-        userEntity.setXp(10L);
+        userEntity.setXp(UserActionEnum.CREATEACCOUNT.getXp());
 
         log.info("Starting process to save user on database: {}", userEntity.getUsername());
         UserJpaRepository.save(userEntity);

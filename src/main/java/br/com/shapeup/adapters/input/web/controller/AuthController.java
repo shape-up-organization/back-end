@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@RequestMapping("/auth")
+@RequestMapping("/shapeup/auth")
 public class AuthController {
 
     private final AuthGateway authGateway;

@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/posts")
+@RequestMapping("/shapeup/posts")
 @CrossOrigin(origins = "*")
 public class PostController {
     private final PostInput postPersistenceInput;

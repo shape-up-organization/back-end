@@ -1,17 +1,17 @@
 package br.com.shapeup.common.domain.enums;
 
 public enum UserActionEnum {
-    POST("post", 1),
-    LIKE("like", 1),
-    CREATEACCOUNT("createAccount", 20),
-    ACCEPTFRIENDSHIPREQUEST("acceptfriendshipRequest", 10),
-    SENDFRIENDSHIPREQUEST("sendFriendshipRequest", 10),
+    POST("post", 1L),
+    LIKE("like", 1L),
+    CREATEACCOUNT("createAccount", 20L),
+    ACCEPTFRIENDSHIPREQUEST("acceptfriendshipRequest", 10L),
+    SENDFRIENDSHIPREQUEST("sendFriendshipRequest", 10L),
     COMPLETETRAINING("completeTraining");
 
     private final String action;
-    private int xp;
+    private Long xp;
 
-    UserActionEnum(String action, int xp) {
+        UserActionEnum(String action, Long xp) {
         this.action = action;
         this.xp = xp;
     }
@@ -24,7 +24,7 @@ public enum UserActionEnum {
         return action;
     }
 
-    public int getXP() {
+    public Long getXp() {
         return xp;
     }
 
