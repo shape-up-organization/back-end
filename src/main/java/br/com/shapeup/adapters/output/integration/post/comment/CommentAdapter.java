@@ -2,10 +2,10 @@ package br.com.shapeup.adapters.output.integration.post.comment;
 
 import br.com.shapeup.adapters.input.web.controller.request.post.comment.CommentRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.comments.CommentResponse;
+import br.com.shapeup.adapters.output.repository.jpa.post.comment.PostCommentJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.model.post.comments.CommentEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
-import br.com.shapeup.adapters.output.repository.mongo.post.comment.PostCommentMongoRepository;
 import br.com.shapeup.common.exceptions.comment.CommentNotFoundException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @AllArgsConstructor
 public class CommentAdapter implements CommentOutput {
-    private final PostCommentMongoRepository commentRepository;
+    private final PostCommentJpaRepository commentRepository;
     private final UserJpaRepository userJpaRepository;
 
     @Override

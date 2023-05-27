@@ -24,7 +24,9 @@ public class UpdateStatusTrainingDayAdapter implements UpdateStatusTrainingDayOu
         return new TrainingDayEntityDto(
                 trainingDayEntity.getId().toString(),
                 trainingDayEntity.getTraining().getCategory().name(),
-                new TrainingDayResponse(trainingDayEntity.getDayOfWeek(), trainingDayEntity.getPeriod()),
+                new TrainingDayResponse(
+                trainingDayEntity.getDayOfWeek(),
+                trainingDayEntity.getPeriod()),
                 null,
                 trainingDayEntity.getTraining().getXp(),
                 status

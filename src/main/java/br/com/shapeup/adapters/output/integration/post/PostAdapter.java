@@ -3,6 +3,7 @@ package br.com.shapeup.adapters.output.integration.post;
 import br.com.shapeup.adapters.input.web.controller.request.post.PostWithouPhotoRequest;
 import br.com.shapeup.adapters.input.web.controller.response.post.PostResponse;
 import br.com.shapeup.adapters.output.repository.jpa.post.PostJpaRepository;
+import br.com.shapeup.adapters.output.repository.jpa.post.comment.PostCommentJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
@@ -10,7 +11,6 @@ import br.com.shapeup.adapters.output.repository.model.post.post.PostPhotoEntity
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostLikeMongoRepository;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoRepository;
-import br.com.shapeup.adapters.output.repository.mongo.post.comment.PostCommentMongoRepository;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.DateUtils;
@@ -31,7 +31,7 @@ public class PostAdapter implements PostOutput {
     private final PostJpaRepository postJpaRepository;
     private final PostPhotoMongoRepository postPhotoMongoRepository;
     private final PostLikeMongoRepository postLikeMongoRepository;
-    private final PostCommentMongoRepository postCommentMongoRepository;
+    private final PostCommentJpaRepository postCommentJpaRepository;
     private final UserJpaRepository userJpaRepository;
 
     @Override
@@ -86,7 +86,7 @@ public class PostAdapter implements PostOutput {
                 postEntity.getDescription(),
                 DateUtils.formatDateTime(postEntity.getCreatedAt()),
                 postLikeMongoRepository.countAllByPostId(postId),
-                postCommentMongoRepository.countAllByIdPost(postId),
+                postCommentJpaRepository.countAllByIdPost(postId),
                 photoUrls,
                 isLiked,
                 user.getUsername(),
@@ -142,7 +142,7 @@ public class PostAdapter implements PostOutput {
     public void deletePostById(User user, String postId) {
         UUID postIdUUID = UUID.fromString(postId);
 
-        postCommentMongoRepository.deleteAllByIdPost(postId);
+        postCommentJpaRepository.deleteAllByIdPost(postId);
         postJpaRepository.deleteById(postIdUUID);
     }
 
