@@ -69,7 +69,7 @@ public class QuestUsecase implements QuestInputPort {
         insertTrainingToSpecificDayOutputPort.execute(
                 user,
                 training,
-                trainingUserRequest.dayOfWeek(),
+                trainingUserRequest.dayOfWeek().toUpperCase(),
                 trainingUserRequest.period()
         );
 
