@@ -11,6 +11,7 @@ import br.com.shapeup.adapters.output.repository.model.post.post.PostPhotoEntity
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostLikeMongoRepository;
 import br.com.shapeup.adapters.output.repository.mongo.post.PostPhotoMongoRepository;
+import br.com.shapeup.common.domain.enums.UserActionEnum;
 import br.com.shapeup.common.exceptions.post.PostNotFoundException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.common.utils.DateUtils;
@@ -80,6 +81,9 @@ public class PostAdapter implements PostOutput {
         String userId = currentUser.getId().toString();
 
         boolean isLiked = postLikeMongoRepository.existsByPostIdAndUserId(postId, userId);
+
+        currentUser.setXp(UserActionEnum.POST.getXp());
+        userJpaRepository.save(currentUser);
 
         return new PostResponse(
                 postEntity.getId().toString(),

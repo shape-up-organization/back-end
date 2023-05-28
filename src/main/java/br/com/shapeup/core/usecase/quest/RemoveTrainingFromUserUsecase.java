@@ -42,7 +42,7 @@ public class RemoveTrainingFromUserUsecase implements RemoveTrainingFromUserInpu
         var userId = UUID.fromString(user.getId().getValue());
         var training = findTrainingOutputPort.findById(trainingId);
 
-        removeTrainingDayByTrainingIdAndUserIdOutputPort.execute(training.getId().getValue(), userId, period);
+        removeTrainingDayByTrainingIdAndUserIdOutputPort.execute(training.getId().getValue(), userId, period, dayOfWeek);
         removeTrainingFromAUserOutputPort.execute(training, userId, period);
 
         user.getTrainings().remove(training);
