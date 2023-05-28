@@ -117,4 +117,14 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(userResponses);
     }
+
+    @GetMapping("/user-xp")
+    public ResponseEntity<Long> getUserXp(HttpServletRequest request) {
+        String jwtToken = TokenUtils.getToken(request);
+        var username = JwtService.extractAccountNameFromToken(jwtToken);
+
+        Long xp = userPersistanceInput.getUserXp(username);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(xp);
+    }
 }

@@ -26,4 +26,6 @@ public interface UserPersistanceOutput {
     void save(User user);
 
     void saveAll(List<User> users);
+
+    Long getUserXp(String username);
 }

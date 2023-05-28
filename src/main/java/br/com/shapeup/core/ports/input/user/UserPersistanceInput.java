@@ -18,4 +18,6 @@ public interface UserPersistanceInput {
     List<User> findAllUserByFullName(String fullName);
 
     List<User> findAllUserByUsername(String username);
+
+    Long getUserXp(String username);
 }

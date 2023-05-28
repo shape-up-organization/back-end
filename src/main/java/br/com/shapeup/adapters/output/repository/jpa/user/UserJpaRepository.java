@@ -40,4 +40,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
     Page<UserEntity> findAllByOrderByXpDesc(Pageable pageable);
 
     List<UserEntity> findTop10ByOrderByBirth();
+
+    Long findXpByUsername(String username);
 }
