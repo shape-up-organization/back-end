@@ -41,7 +41,7 @@ public class PostTxtAdapter implements PostTxtOutput {
         String body = "02" + String.format("%-1000.1000s\n", postResponse.getDescription());
 
         for (String url : postResponse.getPhotoUrls()) {
-            body = "03" + String.format("%-200.200s\n", url);
+            body += "03" + String.format("%-200.200s\n", url);
         }
 
         body += postResponse.getUsername() + "\n";
