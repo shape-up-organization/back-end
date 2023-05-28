@@ -53,6 +53,7 @@ public class TrainingMapperImpl implements TrainingMapper {
                 .category(training.getCategory())
                 .duration(training.getDuration())
                 .description(training.getDescription())
+                .unlockXp(training.getUnlockXp())
                 .xp(training.getXp())
                 .classification(training.getClassification())
                 .users(userEntities)

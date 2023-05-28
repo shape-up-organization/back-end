@@ -98,19 +98,14 @@ public class QuestController {
         String username = JwtService.extractAccountNameFromToken(token);
         String dayOfWeekRequest = trainingUserRequest.dayOfWeek().toUpperCase();
         var currentDay = LocalDate.now().getDayOfWeek().getValue();
-        String requestTrainingDay = trainingUserRequest.dayOfWeek();
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
-
-
         Map<String, DayOfWeek> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
-
+        DayOfWeek dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(dayOfWeekRequest);
 
         TrainingDayResponse trainingDayResponse = new TrainingDayResponse(
                 dayOfWeekRequest,
                 trainingUserRequest.period()
         );
-
-        DayOfWeek dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(requestTrainingDay);
 
         if (dayOfWeekFromAbbreviations.getValue() < currentDay) {
 
