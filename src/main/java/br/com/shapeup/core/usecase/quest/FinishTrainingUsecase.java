@@ -10,6 +10,7 @@ import br.com.shapeup.core.ports.output.quest.FindTrainingOutputPort;
 import br.com.shapeup.core.ports.output.quest.UpdateStatusTrainingDayOutputPort;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.xp.XpOutputPort;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class FinishTrainingUsecase implements FinishTrainingInputPort {
@@ -42,8 +43,10 @@ public class FinishTrainingUsecase implements FinishTrainingInputPort {
         Training training = findTrainingOutputPort.findById(trainingId);
         UUID trainingUuid = training.getId().getValue();
 
-        TrainingDayEntity trainingDay = (TrainingDayEntity) findTrainingDayOutputPort
+        TrainingDayEntity trainingDay = findTrainingDayOutputPort
                 .findByUserIdAndTrainingId(userId, trainingUuid);
+
+        trainingDay.setCompletedAt(LocalDateTime.now());
 
         xpOutputPort.addXp(user.getUsername(), training.getXp());
         return updateStatusTrainingDayOutputPort.execute(trainingDay, "FINISHED");

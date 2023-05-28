@@ -25,8 +25,8 @@ public class FindTrainingDayAdapter implements FindTrainingDayOutputPort {
     }
 
     @Override
-    public Object findByUserIdAndTrainingId(UUID userId, UUID trainingId) {
-        return trainingDayJpaRepository.findByUserIdAndTrainingId(userId, trainingId).orElseThrow(() -> new ShapeUpNotFoundException("Training not found"));
+    public TrainingDayEntity findByUserIdAndTrainingId(UUID userId, UUID trainingId) {
+        return trainingDayJpaRepository.findByUserIdAndTrainingId(userId, trainingId).orElseThrow(() -> new ShapeUpNotFoundException("Training day not found"));
     }
 
     @Override

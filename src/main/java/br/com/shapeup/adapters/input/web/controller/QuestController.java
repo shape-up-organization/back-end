@@ -17,6 +17,7 @@ import br.com.shapeup.core.ports.input.quest.PeriodicUpdateUncompletedUserTraini
 import br.com.shapeup.core.ports.input.quest.QuestInputPort;
 import br.com.shapeup.core.ports.input.quest.RemoveTrainingFromUserInputPort;
 import br.com.shapeup.core.ports.input.quest.SearchAllTrainingsInputPort;
+import br.com.shapeup.core.ports.input.quest.UpdateTrainingOfUserInputPort;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.DayOfWeek;
@@ -52,6 +53,7 @@ public class QuestController {
     private final FinishTrainingInputPort finishTrainingInputPort;
     private final PeriodicUpdateUncompletedUserTrainingInputPort periodicUpdateUncompletedUserTrainingInputPort;
     private final SearchAllTrainingsInputPort searchAllTrainingsInputPort;
+    private final UpdateTrainingOfUserInputPort updateTrainingOfUserInputPort;
 
     @GetMapping("/search-training")
     public ResponseEntity<List<TrainingResponse>> searchTrainingByName(
@@ -108,7 +110,6 @@ public class QuestController {
         );
 
         if (dayOfWeekFromAbbreviations.getValue() < currentDay) {
-
             TrainingDayEntityDto trainingUserResponse = new TrainingDayEntityDto(
                     training.getId().getValue().toString(),
                     training.getCategory().name(),
@@ -185,5 +186,17 @@ public class QuestController {
         List<TrainingResponse> trainingResponses = trainingHttpMapper.toTrainingResponse(trainings);
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(trainingResponses);
+    }
+
+    @PutMapping("/user/update-training")
+    public ResponseEntity<TrainingDayEntityDto> updateTraining(
+            @RequestBody TrainingUserRequest trainingUserRequest,
+            HttpServletRequest request
+    ) {
+        String token = TokenUtils.getToken(request);
+        String userId = JwtService.extractIdFromToken(token);
+        TrainingDayEntityDto trainingDayEntityDto = updateTrainingOfUserInputPort.execute(trainingUserRequest, userId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(trainingDayEntityDto);
     }
 }

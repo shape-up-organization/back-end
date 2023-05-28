@@ -2,6 +2,7 @@ package br.com.shapeup.adapters.output.integration.quest;
 
 import br.com.shapeup.adapters.input.web.controller.response.quest.TrainingDayResponse;
 import br.com.shapeup.adapters.output.repository.jpa.quest.TrainingDayJpaRepository;
+import br.com.shapeup.adapters.output.repository.model.quest.ExerciseEntity;
 import br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity;
 import br.com.shapeup.core.domain.quest.dto.TrainingDayEntityDto;
 import br.com.shapeup.core.ports.output.quest.UpdateStatusTrainingDayOutputPort;
@@ -18,7 +19,7 @@ public class UpdateStatusTrainingDayAdapter implements UpdateStatusTrainingDayOu
     private final TrainingDayJpaRepository trainingDayJpaRepository;
 
     @Override
-    public TrainingDayEntityDto execute(br.com.shapeup.adapters.output.repository.model.quest.TrainingDayEntity trainingDayEntity, String status) {
+    public TrainingDayEntityDto execute(TrainingDayEntity trainingDayEntity, String status) {
         trainingDayEntity.setStatus(status);
         trainingDayJpaRepository.save(trainingDayEntity);
 
@@ -28,7 +29,7 @@ public class UpdateStatusTrainingDayAdapter implements UpdateStatusTrainingDayOu
                 new TrainingDayResponse(
                 trainingDayEntity.getDayOfWeek(),
                 trainingDayEntity.getPeriod()),
-                null,
+                trainingDayEntity.getTraining().getExercises().stream().map(ExerciseEntity::getExercise).toList(),
                 trainingDayEntity.getTraining().getXp(),
                 status
         );
