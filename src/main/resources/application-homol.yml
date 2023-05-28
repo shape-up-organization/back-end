@@ -20,7 +20,7 @@ spring:
   config:
     additional-location: file:./variables-local.properties
     activate:
-      on-profile: hom
+      on-profile: homol
   datasource:
     url: ${POSTGRES_URL}
     driver-class-name: org.postgresql.Driver
