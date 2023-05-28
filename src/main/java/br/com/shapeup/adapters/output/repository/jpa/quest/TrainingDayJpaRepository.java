@@ -10,6 +10,8 @@ public interface TrainingDayJpaRepository extends JpaRepository<TrainingDayEntit
     List<TrainingDayEntity> findAllByUserId(UUID userId);
     Optional<TrainingDayEntity> findByUserId(UUID userId);
     Optional<TrainingDayEntity> findByUserIdAndTrainingId(UUID userId, UUID trainingId);
-    void deleteByTrainingIdAndUserId(UUID trainingId, UUID userId);
+    void deleteByTrainingIdAndUserIdAndPeriod(UUID trainingId, UUID userId, String period);
     List<TrainingDayEntity> findAll();
+    List<TrainingDayEntity> findAllByUserIdAndTrainingId(UUID userId, UUID trainingId);
+
 }
