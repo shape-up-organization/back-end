@@ -3,6 +3,7 @@ package br.com.shapeup.adapters.output.repository.jpa.post;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostEntity;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
 import io.lettuce.core.dynamic.annotation.Param;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,8 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, UUID> {
     boolean existsByUserEntity(UserEntity userToUserEntity);
 
     boolean existsByUserEntityAndId(UserEntity userEntity, UUID postIdUUID);
+
+    void deleteAllByUserEntityId(UUID userId);
+
+    List<PostEntity> findAllByUserEntityId(UUID userId);
 }

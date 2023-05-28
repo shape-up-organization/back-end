@@ -109,4 +109,10 @@ public class CommentAdapter implements CommentOutput {
     public void deleteCommentsByPostId(String postId) {
         commentRepository.deleteAllByIdPost(postId);
     }
+
+    @Override
+    @Transactional
+    public void deleteAllCommentByUserId(String userId) {
+        commentRepository.deleteAllByUserId(userId);
+    }
 }

@@ -12,4 +12,6 @@ public interface PostS3Output {
     void deletePostPhotos(User user, String postId);
 
     void createPostAsync(QueueObj<Object> files, User user, PostRequest request);
+
+    void deletePostPhotosByUserId(String value);
 }

@@ -5,19 +5,55 @@ import br.com.shapeup.adapters.output.repository.model.friend.FriendshipStatus;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
+import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
+import br.com.shapeup.core.ports.output.post.PostOutput;
+import br.com.shapeup.core.ports.output.post.PostS3Output;
+import br.com.shapeup.core.ports.output.post.commment.CommentOutput;
+import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import java.util.List;
 
 public class UserPersistanceUsecase implements UserPersistanceInput {
     private final UserPersistanceOutput userPersistanceOutput;
 
-    public UserPersistanceUsecase(UserPersistanceOutput userPersistanceOutput) {
+    private final CommentOutput commentOutput;
+
+    private final PostOutput postOutput;
+
+    private final FriendshipOutput friendshipOutput;
+
+    private final FindUserOutput findUserOutput;
+
+    private final PostS3Output postS3Output;
+
+    public UserPersistanceUsecase(UserPersistanceOutput userPersistanceOutput,
+                                  CommentOutput commentOutput,
+                                  PostOutput postOutput,
+                                  FriendshipOutput friendshipOutput,
+                                  FindUserOutput findUserOutput,
+                                  PostS3Output postS3Output
+    ) {
         this.userPersistanceOutput = userPersistanceOutput;
+        this.commentOutput = commentOutput;
+        this.postOutput = postOutput;
+        this.friendshipOutput = friendshipOutput;
+        this.findUserOutput = findUserOutput;
+        this.postS3Output = postS3Output;
     }
 
     @Override
     public void deleteByEmail(String email) {
-        userPersistanceOutput.deleteByEmail(email);
+        User user = findUserOutput.findByEmail(email);
+
+        commentOutput.deleteAllCommentByUserId(user.getId().getValue());
+
+        postOutput.deleteAllPostsByUserId(user.getId().getValue());
+
+        friendshipOutput.deleteAllFriendshipByUserId(user);
+
+        postS3Output.deletePostPhotosByUserId(user.getId().getValue());
+
+        userPersistanceOutput.deleteById(user);
     }
 
     @Override
