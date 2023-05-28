@@ -1,6 +1,5 @@
 package br.com.shapeup.adapters.output.integration.post.like;
 
-import br.com.shapeup.adapters.output.integration.xp.XpAdapter;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.post.post.PostLikeEntity;
@@ -34,7 +33,7 @@ public class PostLikeAdapter implements PostLikeOutput {
                     ));
         UserEntity userEntity = userMapper.userToUserEntity(user);
 
-        userEntity.setXp(UserActionEnum.LIKE.getXp());
+        userEntity.setXp(userEntity.getXp() + UserActionEnum.LIKE.getXp());
         userJpaRepository.save(userEntity);
     }
 

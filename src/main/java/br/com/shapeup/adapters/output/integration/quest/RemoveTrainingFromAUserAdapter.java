@@ -11,7 +11,6 @@ import br.com.shapeup.core.domain.quest.training.Training;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.quest.RemoveTrainingFromAUserOutputPort;
 import jakarta.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

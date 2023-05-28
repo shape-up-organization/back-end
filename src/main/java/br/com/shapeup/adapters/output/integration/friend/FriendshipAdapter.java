@@ -42,7 +42,7 @@ public class FriendshipAdapter implements FriendshipOutput {
 
         saveFriendRequestToMongo(friendRequestEntity);
 
-        currentUserEntity.setXp(UserActionEnum.SENDFRIENDSHIPREQUEST.getXp());
+        currentUserEntity.setXp(currentUser.getXp() + UserActionEnum.SENDFRIENDSHIPREQUEST.getXp());
         userJpaRepository.save(currentUserEntity);
 
         return createFriendshipRequestFromEntity(friendRequestEntity);
@@ -72,7 +72,7 @@ public class FriendshipAdapter implements FriendshipOutput {
 
         saveFriendshipRequest(friendshipRequestDocument, friendEntityUpdated);
 
-        newFriendEntity.setXp(UserActionEnum.ACCEPTFRIENDSHIPREQUEST.getXp());
+        newFriendEntity.setXp(newFriendEntity.getXp() + UserActionEnum.ACCEPTFRIENDSHIPREQUEST.getXp());
         userJpaRepository.save(newFriendEntity);
 
         return friendshipRequestResponse;
