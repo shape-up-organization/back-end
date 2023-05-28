@@ -39,8 +39,6 @@ public class FinishTrainingUsecase implements FinishTrainingInputPort {
     @Override
     public TrainingDayEntityDto execute(String username, String trainingId, String dayOfWeek, String period) {
 
-        // TODO 2 treinos iguais no mesmo dia nn da pra dar check
-
         User user = findUserOutput.findByUsername(username);
         UUID userId = UUID.fromString(user.getId().getValue());
         Training training = findTrainingOutputPort.findById(trainingId);
@@ -52,7 +50,7 @@ public class FinishTrainingUsecase implements FinishTrainingInputPort {
         for(TrainingDayEntity trainingDay : trainingsDay) {
             if(trainingDay.getDayOfWeek().equalsIgnoreCase(dayOfWeek) && trainingDay.getPeriod().equalsIgnoreCase(period)) {
                 trainingDay.setCompletedAt(LocalDateTime.now());
-                xpOutputPort.addXp(user.getUsername(), training.getXp());
+                xpOutputPort.addXp(user, training.getXp());
                 return updateStatusTrainingDayOutputPort.execute(trainingDay, "FINISHED");
             }
         }

@@ -2,10 +2,12 @@ package br.com.shapeup.adapters.output.integration.friend;
 
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.friend.FriendshipMongoRepository;
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendsEntity;
 import br.com.shapeup.adapters.output.repository.model.friend.FriendshipRequestDocument;
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+import br.com.shapeup.common.domain.enums.UserActionEnum;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.domain.friend.FriendshipRequestId;
 import br.com.shapeup.core.domain.user.User;
@@ -26,6 +28,7 @@ public class FriendshipAdapter implements FriendshipOutput {
     private final FriendshipMongoRepository friendsMongoRepository;
     private final FriendshipJpaRepository friendshipJpaRepository;
     private final UserMapper userMapper;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
     public FriendshipRequest sendFriendRequest(User currentUser, User newFriend) {
@@ -38,6 +41,9 @@ public class FriendshipAdapter implements FriendshipOutput {
         );
 
         saveFriendRequestToMongo(friendRequestEntity);
+
+        currentUserEntity.setXp(UserActionEnum.SENDFRIENDSHIPREQUEST.getXp());
+        userJpaRepository.save(currentUserEntity);
 
         return createFriendshipRequestFromEntity(friendRequestEntity);
     }
@@ -65,6 +71,9 @@ public class FriendshipAdapter implements FriendshipOutput {
         );
 
         saveFriendshipRequest(friendshipRequestDocument, friendEntityUpdated);
+
+        newFriendEntity.setXp(UserActionEnum.ACCEPTFRIENDSHIPREQUEST.getXp());
+        userJpaRepository.save(newFriendEntity);
 
         return friendshipRequestResponse;
     }

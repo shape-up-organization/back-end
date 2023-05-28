@@ -1,7 +1,7 @@
 package br.com.shapeup.common.domain.enums;
 
 public enum UserActionEnum {
-    POST("post", 1L),
+    POST("post", 2L),
     LIKE("like", 1L),
     CREATEACCOUNT("createAccount", 20L),
     ACCEPTFRIENDSHIPREQUEST("acceptfriendshipRequest", 10L),
