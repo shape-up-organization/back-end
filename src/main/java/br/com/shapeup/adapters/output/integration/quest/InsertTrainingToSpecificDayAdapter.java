@@ -29,7 +29,7 @@ public class InsertTrainingToSpecificDayAdapter implements InsertTrainingToSpeci
 
     @Override
     public TrainingDayEntity execute(User user, Training training, String day, String period) {
-
+        day.toUpperCase();
         Map<String, DayOfWeek> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
         UserEntity userEntity = userMapper.userToUserEntity(user);
         TrainingEntity trainingEntity = trainingMapper.toEntity(training, List.of(userEntity));
