@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface RemoveTrainingDayByTrainingIdAndUserIdOutputPort {
 
-    void execute(UUID trainingId, UUID userId);
+    void execute(UUID trainingId, UUID userId, String period);
 }
