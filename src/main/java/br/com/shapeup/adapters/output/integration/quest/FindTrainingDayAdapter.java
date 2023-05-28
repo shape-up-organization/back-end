@@ -30,6 +30,11 @@ public class FindTrainingDayAdapter implements FindTrainingDayOutputPort {
     }
 
     @Override
+    public List<TrainingDayEntity> findAllByUserIdAndTrainingId(UUID userId, UUID trainingId) {
+        return trainingDayJpaRepository.findAllByUserIdAndTrainingId(userId, trainingId);
+    }
+
+    @Override
     public List<TrainingDayEntity> findAllUsersTrainings() {
         return trainingDayJpaRepository.findAll();
     }

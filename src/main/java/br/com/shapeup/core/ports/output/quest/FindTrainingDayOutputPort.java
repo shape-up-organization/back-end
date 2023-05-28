@@ -8,4 +8,6 @@ public interface FindTrainingDayOutputPort {
     List<TrainingDayEntity> findByUserId(UUID userId);
     TrainingDayEntity findByUserIdAndTrainingId(UUID userId, UUID trainingId);
     List<TrainingDayEntity> findAllUsersTrainings();
+
+    List<TrainingDayEntity> findAllByUserIdAndTrainingId(UUID userId, UUID trainingId);
 }
