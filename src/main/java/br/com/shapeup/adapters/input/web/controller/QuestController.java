@@ -168,8 +168,8 @@ public class QuestController {
         TrainingDayEntityDto trainingDayEntityDto = finishTrainingInputPort.execute(
                 username,
                 trainingUserRequest.trainingId(),
-                trainingUserRequest.dayOfWeek(),
-                trainingUserRequest.period()
+                trainingUserRequest.dayOfWeek().toUpperCase(),
+                trainingUserRequest.period().toUpperCase()
         );
 
         if(trainingDayEntityDto == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
