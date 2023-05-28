@@ -41,5 +41,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
 
     List<UserEntity> findTop10ByOrderByBirth();
 
+    @Query("SELECT u.xp FROM UserEntity u WHERE u.username = :username")
     Long findXpByUsername(String username);
 }
