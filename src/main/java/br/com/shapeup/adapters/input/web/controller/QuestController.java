@@ -20,7 +20,6 @@ import br.com.shapeup.core.ports.input.quest.SearchAllTrainingsInputPort;
 import br.com.shapeup.core.ports.input.quest.UpdateTrainingOfUserInputPort;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;

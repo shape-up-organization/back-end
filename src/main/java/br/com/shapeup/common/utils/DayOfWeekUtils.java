@@ -1,6 +1,5 @@
 package br.com.shapeup.common.utils;
 
-import java.time.DayOfWeek;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
