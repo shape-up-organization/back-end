@@ -22,7 +22,9 @@ import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -99,17 +101,20 @@ public class QuestController {
         String token = TokenUtils.getToken(request);
         String username = JwtService.extractAccountNameFromToken(token);
         String dayOfWeekRequest = trainingUserRequest.dayOfWeek().toUpperCase();
-        var currentDay = LocalDate.now().getDayOfWeek().getValue();
+
+        String currentDayName = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
+        Integer currentDayValue = DayOfWeekUtils.abbreviations().get(currentDayName);
+
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
-        Map<String, DayOfWeek> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
-        DayOfWeek dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(dayOfWeekRequest);
+        Map<String, Integer> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
+        int dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(dayOfWeekRequest);
 
         TrainingDayResponse trainingDayResponse = new TrainingDayResponse(
                 dayOfWeekRequest,
                 trainingUserRequest.period()
         );
 
-        if (dayOfWeekFromAbbreviations.getValue() < currentDay) {
+        if (dayOfWeekFromAbbreviations < currentDayValue) {
             TrainingDayEntityDto trainingUserResponse = new TrainingDayEntityDto(
                     training.getId().getValue().toString(),
                     training.getCategory().name(),
