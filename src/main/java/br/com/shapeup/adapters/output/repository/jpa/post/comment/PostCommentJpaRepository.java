@@ -14,4 +14,6 @@ public interface PostCommentJpaRepository extends JpaRepository<CommentEntity, U
     Page<CommentEntity> findAllByIdPostOrderByCreatedAt(String postId, PageRequest pageRequest);
 
     void deleteAllByIdPost(String postId);
+
+    void deleteAllByUserId(String userId);
 }

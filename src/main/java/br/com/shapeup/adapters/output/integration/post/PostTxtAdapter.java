@@ -38,10 +38,12 @@ public class PostTxtAdapter implements PostTxtOutput {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))+
                 "01\n";
 
-        String body = "02" + String.format("%-1000.1000s\n", postResponse.getDescription());
+        String replaceDescription = postResponse.getDescription().replace("\n", "%$$#%");
+
+        String body = "02" + String.format("%-1000.1000s\n", replaceDescription);
 
         for (String url : postResponse.getPhotoUrls()) {
-            body = "03" + String.format("%-200.200s\n", url);
+            body += "03" + String.format("%-200.200s\n", url);
         }
 
         body += postResponse.getUsername() + "\n";
@@ -82,6 +84,7 @@ public class PostTxtAdapter implements PostTxtOutput {
                 if(line.startsWith("02")) {
                     String[] lineSplit = line.split("02");
                     description = lineSplit[1].trim();
+                    description = description.replace("%$$#%", "\n");
                 }
             }
         }

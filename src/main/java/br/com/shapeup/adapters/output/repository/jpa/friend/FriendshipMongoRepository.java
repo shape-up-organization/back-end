@@ -20,4 +20,6 @@ public interface FriendshipMongoRepository extends MongoRepository<FriendshipReq
 
     @Query("{'$or':[ {'usernameSender':?0}, {'usernameReceiver':?0} ]}")
     List<FriendshipRequestDocument> findAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(String username);
+
+    void deleteAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(String usernameSender, String usernameReceiver);
 }

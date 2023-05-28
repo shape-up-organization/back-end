@@ -19,4 +19,6 @@ public interface CommentOutput {
     CommentResponse getCommentById(String commentId);
 
     void deleteCommentsByPostId(String postId);
+
+    void deleteAllCommentByUserId(String value);
 }
