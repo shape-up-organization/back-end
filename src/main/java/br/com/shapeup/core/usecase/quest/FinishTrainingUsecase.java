@@ -11,6 +11,7 @@ import br.com.shapeup.core.ports.output.quest.UpdateStatusTrainingDayOutputPort;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.xp.XpOutputPort;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class FinishTrainingUsecase implements FinishTrainingInputPort {
@@ -38,17 +39,24 @@ public class FinishTrainingUsecase implements FinishTrainingInputPort {
     @Override
     public TrainingDayEntityDto execute(String username, String trainingId, String dayOfWeek, String period) {
 
+        // TODO 2 treinos iguais no mesmo dia nn da pra dar check
+
         User user = findUserOutput.findByUsername(username);
         UUID userId = UUID.fromString(user.getId().getValue());
         Training training = findTrainingOutputPort.findById(trainingId);
         UUID trainingUuid = training.getId().getValue();
 
-        TrainingDayEntity trainingDay = findTrainingDayOutputPort
-                .findByUserIdAndTrainingId(userId, trainingUuid);
+        List<TrainingDayEntity> trainingsDay = findTrainingDayOutputPort
+                .findAllByUserIdAndTrainingId(userId, trainingUuid);
 
-        trainingDay.setCompletedAt(LocalDateTime.now());
+        for(TrainingDayEntity trainingDay : trainingsDay) {
+            if(trainingDay.getDayOfWeek().equalsIgnoreCase(dayOfWeek) && trainingDay.getPeriod().equalsIgnoreCase(period)) {
+                trainingDay.setCompletedAt(LocalDateTime.now());
+                xpOutputPort.addXp(user.getUsername(), training.getXp());
+                return updateStatusTrainingDayOutputPort.execute(trainingDay, "FINISHED");
+            }
+        }
 
-        xpOutputPort.addXp(user.getUsername(), training.getXp());
-        return updateStatusTrainingDayOutputPort.execute(trainingDay, "FINISHED");
+        return null;
     }
 }
