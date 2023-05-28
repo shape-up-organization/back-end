@@ -10,7 +10,6 @@ import br.com.shapeup.common.utils.DayOfWeekUtils;
 import br.com.shapeup.core.domain.quest.training.Training;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.output.quest.InsertTrainingToSpecificDayOutputPort;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
