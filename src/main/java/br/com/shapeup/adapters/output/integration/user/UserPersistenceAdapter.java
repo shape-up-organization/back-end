@@ -137,4 +137,9 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
 
         userJpaRepository.saveAll(userEntities);
     }
+
+    @Override
+    public Long getUserXp(String username) {
+        return userJpaRepository.findXpByUsername(username);
+    }
 }
