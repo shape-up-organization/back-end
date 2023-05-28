@@ -39,8 +39,8 @@ public class UserController {
     public ResponseEntity<Void> deleteByEmail(HttpServletRequest request) {
 
         String jwtToken = TokenUtils.getToken(request);
+        String email = JwtService.extractEmailFromToken(jwtToken);
 
-        var email = JwtService.extractEmailFromToken(jwtToken);
         userPersistanceInput.deleteByEmail(email);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();

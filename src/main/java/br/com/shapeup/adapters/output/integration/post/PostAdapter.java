@@ -153,4 +153,11 @@ public class PostAdapter implements PostOutput {
 
         postJpaRepository.save(postEntity);
     }
+
+    @Override
+    @Transactional
+    public void deleteAllPostsByUserId(String userId) {
+        postJpaRepository.deleteAllByUserEntityId(UUID.fromString(userId));
+        postLikeMongoRepository.deleteAllByUserId(userId);
+    }
 }

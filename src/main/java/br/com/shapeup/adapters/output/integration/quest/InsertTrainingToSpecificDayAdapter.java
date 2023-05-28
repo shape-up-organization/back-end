@@ -36,7 +36,6 @@ public class InsertTrainingToSpecificDayAdapter implements InsertTrainingToSpeci
         var currentDayValue = LocalDate.now().getDayOfWeek().getValue();
         int trainingDayValue = dayOfWeekAbbreviations.get(day).getValue();
 
-
         if(trainingDayValue < currentDayValue) {
             var trainingDayEntity = TrainingDayEntity.builder()
                     .training(trainingEntity)

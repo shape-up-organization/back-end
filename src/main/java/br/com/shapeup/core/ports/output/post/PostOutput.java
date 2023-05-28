@@ -22,4 +22,6 @@ public interface PostOutput {
     void deletePostById(User user, String postId);
 
     void createPostWithoutPhoto(User user, PostWithouPhotoRequest request);
+
+    void deleteAllPostsByUserId(String userId);
 }

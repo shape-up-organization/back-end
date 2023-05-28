@@ -17,10 +17,10 @@ import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import io.vavr.control.Try;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -34,15 +34,8 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     private final FriendshipJpaRepository friendshipJpaRepository;
 
     @Override
-    @Transactional
-    public void deleteByEmail(String email) {
-        UserEntity userEntity = userJpaRepository.findByEmail(email).orElseThrow(() -> {
-            throw new UserNotFoundException(email);
-        });
-
-        userEntity.setActive(false);
-
-        userJpaRepository.save(userEntity);
+    public void deleteById(User user) {
+        userJpaRepository.deleteById(UUID.fromString(user.getId().getValue()));
     }
 
     @Override

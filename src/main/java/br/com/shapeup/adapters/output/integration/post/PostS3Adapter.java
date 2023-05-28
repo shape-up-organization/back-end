@@ -149,4 +149,22 @@ public class PostS3Adapter implements PostS3Output {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Override
+    @Transactional
+    public void deletePostPhotosByUserId(String userId) {
+        List<PostEntity> posts = postJpaRepository.findAllByUserEntityId(UUID.fromString(userId));
+
+        List<String> photoUrls = posts.stream()
+                .map(post -> postPhotoMongoRepository.findAllByIdPost(post.getId().toString()))
+                .flatMap(List::stream)
+                .map(PostPhotoEntity::getPhotoUrl)
+                .toList();
+
+        posts.forEach(post -> postPhotoMongoRepository.deleteAllByIdPost(post.getId().toString()));
+
+        photoUrls = splitPhostUrl(photoUrls);
+
+        s3Service.deletePostPhotos(photoUrls);
+    }
 }

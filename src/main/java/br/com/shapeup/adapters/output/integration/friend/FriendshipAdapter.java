@@ -13,6 +13,7 @@ import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -194,6 +195,17 @@ public class FriendshipAdapter implements FriendshipOutput {
         friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(
                 newFriendEntity.getId(),
                 currentUserEntity.getId()
+        );
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllFriendshipByUserId(User user) {
+        friendsMongoRepository.deleteAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(user.getUsername(), user.getUsername());
+
+        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(
+                UUID.fromString(user.getId().getValue()),
+                UUID.fromString(user.getId().getValue())
         );
     }
 }

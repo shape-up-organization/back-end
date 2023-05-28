@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserPersistanceOutput {
 
-    void deleteByEmail(String email);
+    void deleteById(User user);
 
     User findUser(String email);
 

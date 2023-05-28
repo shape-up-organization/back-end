@@ -14,4 +14,6 @@ public interface FriendshipOutput {
     void deleteFriendshipRequest(String friendshipRequestId);
 
     void deleteFriend(User user, User newFriend);
+
+    void deleteAllFriendshipByUserId(User user);
 }
