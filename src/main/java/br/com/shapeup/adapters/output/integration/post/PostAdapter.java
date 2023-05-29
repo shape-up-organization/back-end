@@ -82,7 +82,7 @@ public class PostAdapter implements PostOutput {
 
         boolean isLiked = postLikeMongoRepository.existsByPostIdAndUserId(postId, userId);
 
-        currentUser.setXp(UserActionEnum.POST.getXp());
+        currentUser.setXp(currentUser.getXp() + UserActionEnum.POST.getXp());
         userJpaRepository.save(currentUser);
 
         return new PostResponse(

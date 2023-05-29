@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,11 +30,13 @@ public class InsertTrainingToSpecificDayAdapter implements InsertTrainingToSpeci
     @Override
     public TrainingDayEntity execute(User user, Training training, String day, String period) {
         day.toUpperCase();
-        Map<String, Integer> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
         UserEntity userEntity = userMapper.userToUserEntity(user);
         TrainingEntity trainingEntity = trainingMapper.toEntity(training, List.of(userEntity));
 
-        String currentDayName = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
+        String currentDayName = LocalDate.of(2023, 5, 28)
+                .getDayOfWeek()
+                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                .toUpperCase();
         Integer currentDayValue = DayOfWeekUtils.abbreviations().get(currentDayName);
         Integer trainingDayValue = DayOfWeekUtils.abbreviations().get(day);
 

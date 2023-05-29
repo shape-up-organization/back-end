@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @CrossOrigin(origins = "*")
 @RequestMapping("/shapeup/quests")
 public class QuestController {
@@ -101,7 +103,7 @@ public class QuestController {
         String username = JwtService.extractAccountNameFromToken(token);
         String dayOfWeekRequest = trainingUserRequest.dayOfWeek().toUpperCase();
 
-        String currentDayName = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
+        String currentDayName = LocalDate.of(2023, 5, 28).getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
         Integer currentDayValue = DayOfWeekUtils.abbreviations().get(currentDayName);
 
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
@@ -176,10 +178,12 @@ public class QuestController {
         return ResponseEntity.status(HttpStatus.OK).body(trainingDayEntityDto);
     }
 
-    @Scheduled(cron = "59 23 * * 0")
+    @Scheduled(cron = "* 59 23 * * 0", zone = "America/Sao_Paulo")
     @PutMapping("/user/periodic-training-update")
     public ResponseEntity<?> periodicTrainingUpdate() {
+        log.info("Periodic training update started");
         periodicUpdateUncompletedUserTrainingInputPort.execute();
+        log.info("Periodic training update finished");
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
