@@ -12,4 +12,5 @@ public interface TrainingMapper {
     List<Training> toDomain(List<TrainingEntity> trainingEntityList);
     TrainingEntity toEntity(Training trainingById, List<UserEntity> userEntities);
     List<TrainingEntity> toEntity(List<Training> trainingList);
+    TrainingEntity toEntity(Training training);
 }

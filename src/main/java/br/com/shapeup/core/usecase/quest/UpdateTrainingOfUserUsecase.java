@@ -37,9 +37,9 @@ public class UpdateTrainingOfUserUsecase implements UpdateTrainingOfUserInputPor
         UUID userUuid = UUID.fromString(userId);
         Training training = findTrainingOutputPort.findById(trainingId);
         User user = findUserOutput.findById(userUuid);
-        var trainingDay = findTrainingDayOutputPort.findByUserIdAndTrainingId(
+        var trainingDay = findTrainingDayOutputPort.findByUserIdAndPeriod(
                 userUuid,
-                UUID.fromString(trainingId)
+                trainingUserRequest.period()
         );
 
         String status = setTrainingStatus(trainingDay);
@@ -47,7 +47,7 @@ public class UpdateTrainingOfUserUsecase implements UpdateTrainingOfUserInputPor
         trainingDay.setDayOfWeek(trainingUserRequest.dayOfWeek());
         trainingDay.setStatus(status);
 
-        updateTrainingDayOutputPort.execute(trainingDay, user);
+        updateTrainingDayOutputPort.execute(trainingDay, user, training);
 
         return new TrainingDayEntityDto(
                 trainingDay.getId().toString(),
@@ -70,7 +70,7 @@ public class UpdateTrainingOfUserUsecase implements UpdateTrainingOfUserInputPor
                 .isEqual(currentDate.toLocalDate())
         ) {
             return "PENDING";
-        } else if (trainingDay.getCompletedAt().isBefore(currentDate)) {
+        } else if (trainingDay.getCompletedAt() != null && trainingDay.getCompletedAt().isBefore(currentDate)) {
             return "UNFINISHED";
         } else {
             return trainingDay.getStatus();

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface FindTrainingDayOutputPort {
     List<TrainingDayEntity> findByUserId(UUID userId);
-    TrainingDayEntity findByUserIdAndTrainingId(UUID userId, UUID trainingId);
+    TrainingDayEntity findByUserIdAndPeriod(UUID userId, String period);
     List<TrainingDayEntity> findAllUsersTrainings();
 
     List<TrainingDayEntity> findAllByUserIdAndTrainingId(UUID userId, UUID trainingId);
