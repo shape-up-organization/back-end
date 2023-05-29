@@ -17,7 +17,7 @@ import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import java.net.URL;
 import java.util.List;
 
-public class  PostUsecase implements PostInput {
+public class PostUsecase implements PostInput {
     private final PostOutput postOutput;
     private final FindUserOutput findUserOutput;
     private final PostLikeOutput postLikeOutput;
