@@ -86,7 +86,6 @@ public class FriendshipAdapter implements FriendshipOutput {
         List<UserEntity> friends = getSenderUsersFromFriendEntities(friendsEntityList);
 
         return userMapper.userEntityListToUserList(friends);
-
     }
 
     private static FriendshipRequest createFriendshipRequestFromEntity(FriendshipRequestDocument friendRequestEntity) {

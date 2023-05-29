@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TrainingDayJpaRepository extends JpaRepository<TrainingDayEntity, UUID> {
     List<TrainingDayEntity> findAllByUserId(UUID userId);
     Optional<TrainingDayEntity> findByUserId(UUID userId);
-    Optional<TrainingDayEntity> findByUserIdAndTrainingId(UUID userId, UUID trainingId);
+    Optional<TrainingDayEntity> findByUserIdAndPeriod(UUID userId, String period);
     void deleteByTrainingIdAndUserIdAndPeriodAndDayOfWeekIgnoreCase(UUID trainingId, UUID userId, String period, String dayOfWeek);
     List<TrainingDayEntity> findAll();
     List<TrainingDayEntity> findAllByUserIdAndTrainingId(UUID userId, UUID trainingId);

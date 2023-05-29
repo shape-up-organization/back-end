@@ -103,7 +103,7 @@ public class QuestController {
         String username = JwtService.extractAccountNameFromToken(token);
         String dayOfWeekRequest = trainingUserRequest.dayOfWeek().toUpperCase();
 
-        String currentDayName = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
+        String currentDayName = LocalDate.of(2023, 5, 28).getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
         Integer currentDayValue = DayOfWeekUtils.abbreviations().get(currentDayName);
 
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
@@ -177,7 +177,7 @@ public class QuestController {
 
         return ResponseEntity.status(HttpStatus.OK).body(trainingDayEntityDto);
     }
-//59 23 * * 0
+
     @Scheduled(cron = "* 59 23 * * 0", zone = "America/Sao_Paulo")
     @PutMapping("/user/periodic-training-update")
     public ResponseEntity<?> periodicTrainingUpdate() {

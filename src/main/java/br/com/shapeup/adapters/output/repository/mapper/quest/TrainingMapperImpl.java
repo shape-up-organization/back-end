@@ -71,4 +71,18 @@ public class TrainingMapperImpl implements TrainingMapper {
 
         return trainingEntityList;
     }
+
+    @Override
+    public TrainingEntity toEntity(Training training) {
+        return TrainingEntity.builder()
+                .id(training.getId().getValue())
+                .name(training.getName())
+                .category(training.getCategory())
+                .duration(training.getDuration())
+                .description(training.getDescription())
+                .unlockXp(training.getUnlockXp())
+                .xp(training.getXp())
+                .classification(training.getClassification())
+                .build();
+    }
 }
