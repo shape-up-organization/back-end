@@ -33,7 +33,7 @@ public class InsertTrainingToSpecificDayAdapter implements InsertTrainingToSpeci
         UserEntity userEntity = userMapper.userToUserEntity(user);
         TrainingEntity trainingEntity = trainingMapper.toEntity(training, List.of(userEntity));
 
-        String currentDayName = LocalDate.of(2023, 5, 28)
+        String currentDayName = LocalDate.now()
                 .getDayOfWeek()
                 .getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
                 .toUpperCase();
