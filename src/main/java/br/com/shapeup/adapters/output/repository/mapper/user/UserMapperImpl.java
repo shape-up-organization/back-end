@@ -52,6 +52,7 @@ public class UserMapperImpl implements UserMapper {
                                 user.getFullName().getLastName()
                         ).get()
                 )
+                .profilePicture(user.getProfilePicture())
                 .email(user.getEmail().getValue())
                 .cellPhone(user.getCellPhone().getValue())
                 .password(user.getPassword().getValue())
