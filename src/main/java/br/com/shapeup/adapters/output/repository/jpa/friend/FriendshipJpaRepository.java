@@ -15,4 +15,6 @@ public interface FriendshipJpaRepository extends JpaRepository<FriendsEntity, UU
     void deleteByUserReceiverIdAndUserSenderId(UUID userReceiverId, UUID userSenderId);
 
     Boolean existsByUserSenderAndUserReceiverAndAcceptedIsTrue(UserEntity currentUserEntity, UserEntity newFriendEntity);
+
+    void deleteAllByUserReceiverIdOrUserSenderId(UUID userReceiverId, UUID userSenderId);
 }
