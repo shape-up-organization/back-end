@@ -1,4 +1,6 @@
 spring:
+  jackson:
+    time-zone: America/Sao_Paulo
   main:
     allow-bean-definition-overriding: true
   data:
