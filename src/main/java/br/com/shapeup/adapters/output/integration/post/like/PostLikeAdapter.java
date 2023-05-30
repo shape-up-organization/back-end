@@ -30,8 +30,9 @@ public class PostLikeAdapter implements PostLikeOutput {
     @Override
     public boolean postIsAlreadyLiked(User user, String postId) {
         return postLikeMongoRepository.existsByPostIdAndUserId(
-                user.getId().getValue(),
-                postId);
+                postId,
+                user.getId().getValue()
+        );
     }
 
     @Override

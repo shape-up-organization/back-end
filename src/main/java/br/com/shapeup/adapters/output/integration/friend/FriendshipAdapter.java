@@ -211,7 +211,7 @@ public class FriendshipAdapter implements FriendshipOutput {
     public void deleteAllFriendshipByUserId(User user) {
         friendsMongoRepository.deleteAllByUsernameSenderOrUsernameReceiverEqualsIgnoreCase(user.getUsername(), user.getUsername());
 
-        friendshipJpaRepository.deleteByUserReceiverIdAndUserSenderId(
+        friendshipJpaRepository.deleteAllByUserReceiverIdOrUserSenderId(
                 UUID.fromString(user.getId().getValue()),
                 UUID.fromString(user.getId().getValue())
         );
