@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableMongoRepositories
 @EnableScheduling
 public class ShapeUpApplication {
-
     public static void main(String[] args) {
         TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
         SpringApplication.run(ShapeUpApplication.class, args);
