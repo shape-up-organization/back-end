@@ -11,22 +11,33 @@ import br.com.shapeup.common.exceptions.friend.FriendshipRequestNotFoundExceptio
 import br.com.shapeup.common.exceptions.friend.NotFriendException;
 import br.com.shapeup.core.domain.friend.FriendshipRequest;
 import br.com.shapeup.core.domain.user.User;
+import br.com.shapeup.core.messages.FriendshipRequestMessage;
 import br.com.shapeup.core.ports.input.friend.FriendshipInput;
 import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
+import br.com.shapeup.core.ports.output.friend.FriendshipRequestPublisherOutputPort;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import io.vavr.control.Try;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class FriendshipUsecase implements FriendshipInput {
     private final FriendshipOutput friendsOutput;
     private final FindUserOutput findUserOutput;
     private final FindFriendshipOutput findFriendshipOutput;
+    private final FriendshipRequestPublisherOutputPort friendshipRequestPublisherOutputPOrt;
 
-    public FriendshipUsecase(FriendshipOutput friendsOutput, FindUserOutput findUserOutput, FindFriendshipOutput findFriendshipOutput) {
+    public FriendshipUsecase(
+            FriendshipOutput friendsOutput,
+            FindUserOutput findUserOutput,
+            FindFriendshipOutput findFriendshipOutput,
+            FriendshipRequestPublisherOutputPort friendshipRequestPublisherOutputPOrt
+    ) {
         this.friendsOutput = friendsOutput;
         this.findUserOutput = findUserOutput;
         this.findFriendshipOutput = findFriendshipOutput;
+        this.friendshipRequestPublisherOutputPOrt = friendshipRequestPublisherOutputPOrt;
     }
 
     @Override
@@ -40,9 +51,24 @@ public class FriendshipUsecase implements FriendshipInput {
 
         findFriendshipOutput.hasNotSentFriendRequestYet(user.getUsername(), newFriend.getUsername());
 
-        //event sendFriendRequest
+        Try<FriendshipRequest> result = Try.of(() -> friendsOutput.sendFriendRequest(user, newFriend))
+                .andThen(response -> friendshipRequestPublisherOutputPOrt.send(
+                        FriendshipRequestMessage.builder()
+                                .id(UUID.randomUUID().toString())
+                                .userSenderId(user.getId().getValue())
+                                .userReceiverId(newFriend.getId().getValue())
+                                .usernameSender(user.getUsername())
+                                .usernameReceiver(newFriend.getUsername())
+                                .createdAt(LocalDateTime.now())
+                                .build()
+                ))
+                .onFailure(e -> System.err.println("Error when trying send friendship request: " + e.getCause()));
 
-        return friendsOutput.sendFriendRequest(user, newFriend);
+        if(result.isSuccess()) {
+            return result.get();
+        }
+
+        throw new RuntimeException("Error when trying send friendship request");
     }
 
     @Override
