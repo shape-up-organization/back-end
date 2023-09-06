@@ -98,13 +98,13 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
 
     private void validateIfCodeVerificationIsSameInDatabase(String code, ResetPasswordVerification verification) {
         if (!verification.getCode().equals(code)) {
-            throw new InvalidCodeException("Invalid e-mail verification code");
+            throw new InvalidCodeException("Invalid reset password verification code");
         }
     }
 
     private void validateIfTheCodeHasExpired(ResetPasswordVerification verification) {
         if (verification.getExpiresIn().isBefore(LocalDateTime.now())) {
-            throw new InvalidCodeException("Expired e-mail verification code");
+            throw new InvalidCodeException("Expired reset password verification code");
         }
     }
 }
