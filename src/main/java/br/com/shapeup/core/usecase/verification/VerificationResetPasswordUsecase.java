@@ -66,7 +66,6 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
 
         validateIfTheCodeHasExpired(verification);
         validateIfCodeVerificationIsSameInDatabase(code, verification);
-        validateIfCodeAlreadyVerified(verification);
 
         resetPasswordVerificationOutputPort.makeAuthorized(email);
     }
@@ -90,11 +89,6 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
         sendCodeVerificationPublisherOutputPort.sendResetPasswordVerification(message);
     }
 
-    private void validateIfCodeAlreadyVerified(ResetPasswordVerification verification) {
-        if (verification.getVerified()) {
-            throw new InvalidCodeException("E-mail already verified");
-        }
-    }
 
     private void validateIfCodeVerificationIsSameInDatabase(String code, ResetPasswordVerification verification) {
         if (!verification.getCode().equals(code)) {
