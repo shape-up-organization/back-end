@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class FriendshipRequestPublisherOutputPortAdapter implements FriendshipRequestPublisherOutputPort {
+public class FriendshipRequestPublisherAdapter implements FriendshipRequestPublisherOutputPort {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
