@@ -44,7 +44,7 @@ public class FriendShipHttpMapperImpl implements FriendshipHttpMapper {
         return users.stream()
                 .map(user -> ListFriendshipResponse.builder()
                         .id(user.getId().getValue())
-                        .firstName(user.getFullName().getName())
+                        .firstName(user.getFullName().getFirstName())
                         .lastName(user.getFullName().getLastName())
                         .fullName(user.getFullName().get())
                         .username(user.getUsername())

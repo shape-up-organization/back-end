@@ -39,7 +39,7 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> authenticateAndGetToken(@Valid @RequestBody UserAuthLoginRequest userAuthLoginRequest) {
         User user = userPersistanceOutput.findUser(userAuthLoginRequest.getEmail());
         userAuthLoginRequest.setId(user.getId().getValue());
-        userAuthLoginRequest.setName(user.getFullName().getName());
+        userAuthLoginRequest.setName(user.getFullName().getFirstName());
 
         Map<String, Object> jwtTokenResponse = authGateway.login(userAuthLoginRequest);
 

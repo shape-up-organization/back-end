@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserResponse {
     @NotBlank
-    private String name;
+    private String firstName;
 
     @NotBlank
     private String lastName;

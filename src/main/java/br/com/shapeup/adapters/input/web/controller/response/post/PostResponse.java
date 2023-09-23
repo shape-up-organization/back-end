@@ -31,7 +31,7 @@ public class PostResponse {
 
     private String profilePicture;
 
-    private String name;
+    private String firstName;
 
     private String lastName;
 

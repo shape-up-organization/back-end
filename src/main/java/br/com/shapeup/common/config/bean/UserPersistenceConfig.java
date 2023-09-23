@@ -21,6 +21,11 @@ public class UserPersistenceConfig {
                                                          FindUserAdapter findUserAdapter,
                                                          PostS3Adapter postS3Adapter) {
 
-        return new UserPersistanceUsecase(userPersistenceAdapter, commentAdapter, postAdapter, friendshipAdapter, findUserAdapter, postS3Adapter);
+        return new UserPersistanceUsecase(userPersistenceAdapter,
+                commentAdapter,
+                postAdapter,
+                friendshipAdapter,
+                findUserAdapter,
+                postS3Adapter);
     }
 }

@@ -25,6 +25,7 @@ import br.com.shapeup.common.exceptions.user.UserInvalidLastName;
 import br.com.shapeup.common.exceptions.user.UserInvalidNameException;
 import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.core.domain.verification.exception.InvalidCodeException;
 import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -128,7 +129,8 @@ public class CustomExceptionHandler {
             DeleteYourselfAsAFriendException.class,
             AddYourselfAsAFriendException.class,
             CommentIsNotYours.class,
-            InsufficientXPException.class
+            InsufficientXPException.class,
+            InvalidCodeException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
