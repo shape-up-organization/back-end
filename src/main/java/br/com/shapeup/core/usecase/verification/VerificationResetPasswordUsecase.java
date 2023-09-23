@@ -82,7 +82,7 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
                 .id(UUID.randomUUID().toString())
                 .email(user.getEmail().getValue())
                 .code(codeGenerated)
-                .userName(user.getFullName().getName() + " " + user.getFullName().getLastName())
+                .userName(user.getFullName().getFirstName() + " " + user.getFullName().getLastName())
                 .createdAt(OffsetDateTime.now(ZoneId.of("UTC")))
                 .build();
 

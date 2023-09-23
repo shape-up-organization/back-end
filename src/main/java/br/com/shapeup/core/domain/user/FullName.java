@@ -6,11 +6,11 @@ import br.com.shapeup.common.exceptions.user.UserInvalidNameException;
 import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 
 public class FullName extends ValueObject {
-    private String name;
+    private String firstName;
     private String lastName;
 
-    private FullName(String name, String lastName) {
-        this.name = name;
+    private FullName(String firstName, String lastName) {
+        this.firstName = firstName;
         this.lastName = lastName;
     }
 
@@ -23,7 +23,7 @@ public class FullName extends ValueObject {
     }
 
     private void checkNameConstraints() {
-        final var name = this.getName();
+        final var name = this.getFirstName();
         if (name == null) {
             throw new UserInvalidNameException("name should not be null");
         }
@@ -58,8 +58,8 @@ public class FullName extends ValueObject {
         }
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getLastName() {
@@ -67,6 +67,6 @@ public class FullName extends ValueObject {
     }
 
     public String get() {
-        return String.format("%s %s", name, lastName);
+        return String.format("%s %s", firstName, lastName);
     }
 }

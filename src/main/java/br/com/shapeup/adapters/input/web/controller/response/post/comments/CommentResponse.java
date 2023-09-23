@@ -22,7 +22,7 @@ public class CommentResponse {
 
     private String profilePicture;
 
-    private String name;
+    private String firstName;
 
     private String lastName;
 

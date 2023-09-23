@@ -47,6 +47,7 @@ public class SendCodeVerificationPublisherAdapter implements SendCodeVerificatio
     }
 
     @Override
+    @KafkaListener(topics = "tp-send-reset-password-code-verification", groupId = "gp-send-reset-password-code-verification")
     public void sendResetPasswordVerification(SendCodeVerificationMessage message) {
         var messageJson = gson.toJson(message);
         var topic = RESET_PASSWORD_TOPIC.getName();

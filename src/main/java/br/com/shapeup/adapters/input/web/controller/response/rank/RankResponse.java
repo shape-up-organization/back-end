@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RankResponse {
-    private String name;
+    private String firstName;
 
     private String lastName;
 

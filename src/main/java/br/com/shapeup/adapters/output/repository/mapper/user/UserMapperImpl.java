@@ -43,12 +43,12 @@ public class UserMapperImpl implements UserMapper {
     public UserEntity userToUserEntity(User user) {
         return UserEntity.builder()
                 .id(UUID.fromString(user.getId().getValue()))
-                .name(user.getFullName().getName())
+                .name(user.getFullName().getFirstName())
                 .lastName(user.getFullName().getLastName())
                 .username(user.getUsername())
                 .fullName(
                         FullName.create(
-                                user.getFullName().getName(),
+                                user.getFullName().getFirstName(),
                                 user.getFullName().getLastName()
                         ).get()
                 )
