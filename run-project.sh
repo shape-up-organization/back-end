@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034
 
 SUBDIR="./target"
-IMAGE_NAME="notification-service-notificiationapp"
+IMAGE_NAME="back-end-shapeupbackendapp"
 CONTAINER_APP="shapeup-notification-app"
 DEFAULT_SLEEP_TIME=2
 

@@ -24,8 +24,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class EmailVerificationEntity {
     @Id
     UUID id;
-    @Column(name = "user_id")
-    String userId;
     String code;
     Boolean verified;
     String email;
