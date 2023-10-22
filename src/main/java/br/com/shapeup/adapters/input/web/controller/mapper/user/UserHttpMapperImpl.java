@@ -14,7 +14,7 @@ public class UserHttpMapperImpl implements UserHttpMapper {
     @Override
     public UserResponse userToUserResponse(User userSearch, FriendshipStatus friendshipStatus) {
         return UserResponse.builder()
-                .name(userSearch.getFullName().getName())
+                .firstName(userSearch.getFullName().getFirstName())
                 .lastName(userSearch.getFullName().getLastName())
                 .username(userSearch.getUsername())
                 .profilePicture(userSearch.getProfilePicture())

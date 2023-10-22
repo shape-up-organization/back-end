@@ -47,7 +47,7 @@ public class PostTxtAdapter implements PostTxtOutput {
         }
 
         body += postResponse.getUsername() + "\n";
-        body += postResponse.getName() + "\n";
+        body += postResponse.getFirstName() + "\n";
         body += postResponse.getLastName() + "\n";
         body += postResponse.getXp() + "\n";
         body += postResponse.getCountLike() + "\n";

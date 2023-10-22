@@ -15,7 +15,8 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
-      ssl: true
+      ssl:
+        enabled: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -29,17 +30,24 @@ spring:
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: false
     open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
 springdoc:
   api-docs:
     path: /shapeup/api-docs
   swagger-ui:
     path: /shapeup/swagger-ui
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*."
 
 logging:
   level:
