@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,10 +32,10 @@ public class EmailVerificationEntity {
     String username;
     @CreatedDate
     @Column(name = "created_at")
-    OffsetDateTime createdAt;
+    LocalDateTime createdAt;
     @Column(name = "expires_in")
-    OffsetDateTime expiresIn;
+    LocalDateTime expiresIn;
     @LastModifiedDate
     @Column(name = "updated_at")
-    OffsetDateTime updatedAt;
+    LocalDateTime updatedAt;
 }

@@ -44,7 +44,7 @@ public class VerificationEmailUsecase implements VerificationEmailInput {
                 SendCodeVerificationMessage.builder()
                         .email(email)
                         .code(code)
-                        .createdAt(OffsetDateTime.now())
+                        .createdAt(LocalDateTime.now())
                         .build()
         );
     }
@@ -54,16 +54,19 @@ public class VerificationEmailUsecase implements VerificationEmailInput {
 
         String codeGenerated = VerificationCodeGenerator.generate();
         EmailVerification verification = verificationEmailOutputPort.findByEmail(email);
-        boolean isExpired = verification.getExpiresIn().isBefore(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(5));
         var user = findUserOutput.findByEmail(email);
 
-        if (isExpired) {
-            verification.setCode(codeGenerated);
-            verification.setExpiresIn(LocalDateTime.now().plusMinutes(5));
+        if(verification != null) {
+            boolean isExpired = verification.getExpiresIn().isBefore(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(5));
 
-            verificationEmailOutputPort.save(verification);
-            sendMessage(user, codeGenerated);
-            return;
+            if (isExpired) {
+                verification.setCode(codeGenerated);
+                verification.setExpiresIn(LocalDateTime.now().plusMinutes(5));
+
+                verificationEmailOutputPort.save(verification);
+                sendMessage(user, codeGenerated);
+                return;
+            }
         }
 
         var newVerification = new EmailVerification(
@@ -94,7 +97,6 @@ public class VerificationEmailUsecase implements VerificationEmailInput {
                         .email(user.getEmail().getValue())
                         .code(codeGenerated)
                         .userName(user.getFullName().getFirstName() + " " + user.getFullName().getLastName())
-                        .createdAt(OffsetDateTime.now(ZoneId.of("UTC")))
                         .build()
         );
     }

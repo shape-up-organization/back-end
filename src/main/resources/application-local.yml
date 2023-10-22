@@ -42,6 +42,12 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /shapeup/swagger-ui
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: loggers
 
 logging:
   level:

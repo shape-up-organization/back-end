@@ -18,8 +18,8 @@ public class VerificationEmailMapper {
                 emailVerificationEntity.getVerified(),
                 emailVerificationEntity.getEmail(),
                 emailVerificationEntity.getUsername(),
-                emailVerificationEntity.getCreatedAt().toLocalDateTime(),
-                emailVerificationEntity.getExpiresIn().toLocalDateTime()
+                emailVerificationEntity.getCreatedAt(),
+                emailVerificationEntity.getExpiresIn()
         );
     }
 
@@ -30,8 +30,8 @@ public class VerificationEmailMapper {
                 .verified(emailVerification.getVerified())
                 .email(emailVerification.getEmail())
                 .username(emailVerification.getUsername())
-                .createdAt(OffsetDateTime.from(emailVerification.getCreatedAt()))
-                .expiresIn(OffsetDateTime.from(emailVerification.getExpiresIn()))
+                .createdAt(emailVerification.getCreatedAt())
+                .expiresIn(emailVerification.getExpiresIn())
                 .build();
     }
 }

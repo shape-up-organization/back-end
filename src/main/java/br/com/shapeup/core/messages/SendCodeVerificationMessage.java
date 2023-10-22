@@ -1,5 +1,6 @@
 package br.com.shapeup.core.messages;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import lombok.Builder;
 
@@ -9,6 +10,6 @@ public record SendCodeVerificationMessage(
         String email,
         String code,
         String userName,
-        OffsetDateTime createdAt
+        LocalDateTime createdAt
 ) {
 }

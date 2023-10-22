@@ -25,7 +25,7 @@ public class VerificationEmailAdapter implements VerificationEmailOutputPort {
                 .ifPresentOrElse(
                         emailVerification -> {
                             emailVerification.setVerified(true);
-                            emailVerification.setUpdatedAt(OffsetDateTime.from(LocalDateTime.now()));
+                            emailVerification.setUpdatedAt(LocalDateTime.now());
                             repository.save(emailVerification);
                         },
                         () -> log.error("Code {} not found for user {}", email)
