@@ -1,7 +1,6 @@
 CREATE TABLE tb_email_verification
 (
     id         UUID PRIMARY KEY                    NOT NULL,
-    user_id    VARCHAR(100)                        NOT NULL,
     code       VARCHAR(6)                          NOT NULL,
     verified   BOOLEAN   DEFAULT true              NOT NULL,
     email      VARCHAR(200)                        NOT NULL,
@@ -13,6 +12,5 @@ CREATE TABLE tb_email_verification
     CONSTRAINT unique_email UNIQUE (email)
 );
 
-CREATE INDEX idx_email_verification_user_id ON tb_email_verification (user_id);
 CREATE INDEX idx_email_verification_username ON tb_email_verification (username);
 CREATE INDEX idx_email_verification_email ON tb_email_verification (email);
