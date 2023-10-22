@@ -14,52 +14,52 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - pg-db-network
-      - mongo-network
-      - redis-network
+      - general-network
     restart: always
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "dev@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "dev"
-      TZ: "America/Sao_Paulo"
-    ports:
-      - "6543:80"
-    depends_on:
-      - postgres-db
-    networks:
-      - pg-db-network
-    restart: always
-
-  mongo-db:
-    container_name: mongo-db
+  mongodb:
+    container_name: mongodb
     image: mongo
     restart: always
     volumes:
       - ./volumes/database/mongo-dev:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     environment:
-      MONGO_INITDB_USERNAME: dev
-      MONGO_INITDB_PASSWORD: dev
-      MONGO_INITDB_DATABASE: shapeupdev
-      TZ: "America/Sao_Paulo"
+      - MONGO_INITDB_USERNAME:dev
+      - MONGO_INITDB_PASSWORD:dev
+      - MONGO_INITDB_DATABASE:shapeupdev
+      - TZ:America/Sao_Paulo
     ports:
       - "27017:27017"
     networks:
-      - mongo-network
+      - general-network
 
   redis:
     image: redis:latest
     ports:
-      - 6379:6379
+      - "6379:6379"
     restart: always
     networks:
-      - redis-network
+      - general-network
+
+  shapeupbackendapp:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    container_name: shapeup-backend-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - MONGO_PORT=27017
+      - MONGO_HOST=mongodb
+      - MONGO_DATABASE=shapeupdev
+    depends_on:
+      - postgres-db
+      - mongodb
+      - redis
+    ports:
+      - "7000:7000"
+    networks:
+      - general-network
 
 networks:
-  pg-db-network: { }
-  mongo-network: { }
-  redis-network: { }
+  general-network: { }
