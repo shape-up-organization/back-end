@@ -37,18 +37,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
 springdoc:
   api-docs:
     path: /shapeup/api-docs
   swagger-ui:
     path: /shapeup/swagger-ui
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-        exclude: loggers
 
 logging:
   level:

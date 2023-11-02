@@ -54,7 +54,7 @@ public class AuthController {
         userAuthLoginRequest.setId(user.getId().getValue());
         userAuthLoginRequest.setName(user.getFullName().getFirstName());
 
-        Map<String, Object> jwtTokenResponse = authGateway.login(userAuthLoginRequest);
+        Map<String, Object> jwtTokenResponse = authGateway.login(user);
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(jwtTokenResponse);
     }
