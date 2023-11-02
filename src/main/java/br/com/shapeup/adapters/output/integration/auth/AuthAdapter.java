@@ -1,6 +1,5 @@
 package br.com.shapeup.adapters.output.integration.auth;
 
-import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthLoginRequest;
 import br.com.shapeup.adapters.input.web.controller.request.auth.UserAuthRegisterRequest;
 import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.user.UserMapper;
@@ -11,8 +10,8 @@ import br.com.shapeup.common.exceptions.auth.register.CellPhoneAlreadyExistsExce
 import br.com.shapeup.common.exceptions.auth.register.UsernameInUseException;
 import br.com.shapeup.common.exceptions.user.InvalidCredentialException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.common.exceptions.user.UserNotVerifiedException;
 import br.com.shapeup.core.domain.user.User;
-import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.security.service.JwtService;
 import java.util.Map;
 import java.util.Set;
@@ -34,15 +33,19 @@ public class AuthAdapter implements AuthGateway {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final FindUserOutput findUserOutput;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
-    public Map<String, Object> login(UserAuthLoginRequest userAuthLoginRequest) {
-        validateUserDoesNotExistByEmail(userAuthLoginRequest);
+    public Map<String, Object> login(User user) {
+        String email = user.getEmail().getValue();
+        var userEntity = userJpaRepository.findByEmail(email).orElseThrow();
+        validateUserDoesNotExistByEmail(email);
 
-        Authentication authentication = authenticateUser(userAuthLoginRequest);
+        validateUserIsActivated(userEntity);
 
-        return generateJwtToken(userAuthLoginRequest, authentication);
+        Authentication authentication = authenticateUser(email, userEntity.getPassword());
+
+        return generateJwtToken(userEntity, authentication);
     }
 
     @Override
@@ -81,45 +84,44 @@ public class AuthAdapter implements AuthGateway {
         }
     }
 
-    private void validateUserDoesNotExistByEmail(UserAuthLoginRequest userAuthLoginRequest) {
-        Boolean userExists = UserJpaRepository.existsByEmail(userAuthLoginRequest.getEmail());
+    private void validateUserDoesNotExistByEmail(String email) {
+        Boolean userExists = UserJpaRepository.existsByEmail(email);
 
         if (!userExists) {
-            throw new UserNotFoundException(userAuthLoginRequest.getEmail());
+            throw new UserNotFoundException(email);
         }
     }
 
 
     private Map<String, Object> generateJwtToken(
-            UserAuthLoginRequest userAuthLoginRequest,
+            UserEntity userEntity,
             Authentication authentication
     ) {
-        User user = findUserOutput.findByEmail(userAuthLoginRequest.getEmail());
 
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
-                    user.getId().getValue(),
-                    user.getFullName().getFirstName(),
-                    user.getFullName().getLastName(),
-                    user.getEmail().getValue(),
-                    user.getUsername(),
-                    user.getProfilePicture(),
-                    user.getXp().toString(),
-                    user.getBiography()
+                    userEntity.getId().toString(),
+                    userEntity.getFullName(),
+                    userEntity.getFullName(),
+                    userEntity.getEmail(),
+                    userEntity.getUsername(),
+                    userEntity.getProfilePicture(),
+                    userEntity.getXp().toString(),
+                    userEntity.getBiography()
             );
-            log.info("User {} authenticated", userAuthLoginRequest.getEmail());
+            log.info("User {} authenticated", userEntity.getEmail());
             return Map.of("jwt-token", tokenGenerated);
         } else {
-            throw new UserNotFoundException(userAuthLoginRequest.getEmail());
+            throw new UserNotFoundException(userEntity.getEmail());
         }
     }
 
-    private Authentication authenticateUser(UserAuthLoginRequest userAuthLoginRequest) {
+    private Authentication authenticateUser(String email, String password) {
 
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        userAuthLoginRequest.getEmail(),
-                        userAuthLoginRequest.getPassword())
+                        email,
+                        password)
         );
     }
 
@@ -133,6 +135,12 @@ public class AuthAdapter implements AuthGateway {
         Boolean userNameIsAlreadyInUse = UserJpaRepository.existsByUsername(username);
         if (userNameIsAlreadyInUse) {
             throw new UsernameInUseException("Username is not available");
+        }
+    }
+
+    private void validateUserIsActivated(UserEntity userEntity) {
+        if (!userEntity.isActive()) {
+            throw new UserNotVerifiedException("User is not verified");
         }
     }
 }

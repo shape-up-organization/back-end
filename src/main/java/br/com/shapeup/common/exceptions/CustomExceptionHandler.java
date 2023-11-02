@@ -25,6 +25,7 @@ import br.com.shapeup.common.exceptions.user.UserInvalidLastName;
 import br.com.shapeup.common.exceptions.user.UserInvalidNameException;
 import br.com.shapeup.common.exceptions.user.UserInvalidPasswordException;
 import br.com.shapeup.common.exceptions.user.UserNotFoundException;
+import br.com.shapeup.common.exceptions.user.UserNotVerifiedException;
 import br.com.shapeup.core.domain.verification.exception.InvalidCodeException;
 import com.amazonaws.services.elasticache.model.UserAlreadyExistsException;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -50,10 +51,7 @@ public class CustomExceptionHandler {
         List<String> errors = new ArrayList<>();
         ex.getBindingResult()
                 .getFieldErrors()
-                .forEach(error -> {
-                    errors.add(error.getDefaultMessage()
-                    );
-                });
+                .forEach(error -> errors.add(error.getDefaultMessage()));
         var apiErrorMessage = new ApiErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST, request.getRequestURI(),
@@ -98,8 +96,7 @@ public class CustomExceptionHandler {
     })
     public ResponseEntity<Object> handleConflictException(
             Exception exception,
-            HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(
                 HttpServletResponse.SC_CONFLICT,
@@ -130,13 +127,13 @@ public class CustomExceptionHandler {
             AddYourselfAsAFriendException.class,
             CommentIsNotYours.class,
             InsufficientXPException.class,
-            InvalidCodeException.class
+            InvalidCodeException.class,
+            UserNotVerifiedException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(
             Exception exception,
-            HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(
                 HttpServletResponse.SC_BAD_REQUEST,
@@ -155,8 +152,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(
             DataIntegrityViolationException exception,
-            HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletRequest request
     ) {
         String message = String.format("Data integrity error: %s", exception.getMessage());
         HttpStatus status = HttpStatus.CONFLICT;
@@ -181,8 +177,7 @@ public class CustomExceptionHandler {
     })
     public ResponseEntity<Object> handleInternalServerError(
             Exception exception,
-            HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
@@ -205,8 +200,7 @@ public class CustomExceptionHandler {
     })
     public ResponseEntity<Object> handleConflictRequestException(
             Exception exception,
-            HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletRequest request
     ) {
         var apiErrorMessage = new ApiErrorMessage(
                 HttpServletResponse.SC_CONFLICT,
