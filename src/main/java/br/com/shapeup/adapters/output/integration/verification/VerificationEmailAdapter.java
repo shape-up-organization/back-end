@@ -1,12 +1,12 @@
 package br.com.shapeup.adapters.output.integration.verification;
 
+import br.com.shapeup.adapters.output.repository.jpa.user.UserJpaRepository;
 import br.com.shapeup.adapters.output.repository.jpa.verification.EmailVerificationJpaRepository;
 import br.com.shapeup.adapters.output.repository.mapper.verification.VerificationEmailMapper;
 import br.com.shapeup.core.domain.verification.email.EmailVerification;
 import br.com.shapeup.core.ports.output.verification.VerificationEmailOutputPort;
 import io.vavr.control.Try;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,19 +17,22 @@ import org.springframework.stereotype.Service;
 public class VerificationEmailAdapter implements VerificationEmailOutputPort {
 
     private final EmailVerificationJpaRepository repository;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
     public void makeAuthorized(String email) {
         log.info("Verifying username for user {}", email);
-        repository.findByEmail(email)
-                .ifPresentOrElse(
-                        emailVerification -> {
-                            emailVerification.setVerified(true);
-                            emailVerification.setUpdatedAt(LocalDateTime.now());
-                            repository.save(emailVerification);
-                        },
-                        () -> log.error("Code {} not found for user {}", email)
-                );
+        var emailVerification = repository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Code not found for user " + email));
+
+        emailVerification.setVerified(true);
+        emailVerification.setUpdatedAt(LocalDateTime.now());
+        repository.save(emailVerification);
+
+        var user = userJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for email " + email));
+        user.setActive(true);
+        userJpaRepository.save(user);
     }
 
     @Override

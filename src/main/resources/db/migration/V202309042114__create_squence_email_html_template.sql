@@ -1,0 +1,1 @@
+CREATE SEQUENCE email_html_template_id_seq;
