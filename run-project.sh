@@ -6,6 +6,17 @@ SUBDIR="./target"
 IMAGE_NAME="back-end-shapeupbackendapp"
 CONTAINER_APP="shapeup-notification-app"
 DEFAULT_SLEEP_TIME=2
+NETWORK_NAME="shapeup-network"
+
+if docker network ls | grep -q "$NETWORK_NAME"; then
+    echo "A rede '$NETWORK_NAME' já existe."
+else
+    echo "A rede '$NETWORK_NAME' não existe. Criando..."
+    echo ""
+    docker network create "$NETWORK_NAME"
+    sleep $DEFAULT_SLEEP_TIME
+    clear
+fi
 
 clear
 echo "Iniciando script..."

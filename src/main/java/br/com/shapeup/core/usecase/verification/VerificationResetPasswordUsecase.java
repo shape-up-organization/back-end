@@ -1,31 +1,33 @@
 package br.com.shapeup.core.usecase.verification;
 
+import br.com.shapeup.adapters.output.integration.email.EmailService;
+import br.com.shapeup.adapters.output.repository.jpa.template.EmailTemplateRepository;
+import br.com.shapeup.adapters.output.repository.model.template.HtmlTemplateType;
 import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.domain.verification.exception.InvalidCodeException;
 import br.com.shapeup.core.domain.verification.password.ResetPasswordVerification;
-import br.com.shapeup.core.messages.SendCodeVerificationMessage;
 import br.com.shapeup.core.ports.input.verification.VerificationResetPasswordInput;
-import br.com.shapeup.core.ports.output.verification.ResetPasswordVerificationOutputPort;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
-import br.com.shapeup.core.ports.output.verification.SendCodeVerificationPublisherOutputPort;
+import br.com.shapeup.core.ports.output.verification.ResetPasswordVerificationOutputPort;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.UUID;
 
 public class VerificationResetPasswordUsecase implements VerificationResetPasswordInput {
 
     private final FindUserOutput findUserOutput;
-    private final SendCodeVerificationPublisherOutputPort sendCodeVerificationPublisherOutputPort;
     private final ResetPasswordVerificationOutputPort resetPasswordVerificationOutputPort;
+    private final EmailTemplateRepository emailTemplateRepository;
+    private final EmailService emailService;
 
     public VerificationResetPasswordUsecase(
             FindUserOutput findUserOutput,
-            SendCodeVerificationPublisherOutputPort sendCodeVerificationPublisherOutputPort,
-            ResetPasswordVerificationOutputPort resetPasswordVerificationOutputPort) {
+            ResetPasswordVerificationOutputPort resetPasswordVerificationOutputPort,
+            EmailTemplateRepository emailTemplateRepository,
+            EmailService emailService) {
         this.findUserOutput = findUserOutput;
-        this.sendCodeVerificationPublisherOutputPort = sendCodeVerificationPublisherOutputPort;
         this.resetPasswordVerificationOutputPort = resetPasswordVerificationOutputPort;
+        this.emailTemplateRepository = emailTemplateRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -41,7 +43,14 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
             resetPasswordVerification.setExpiresIn(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(5));
 
             resetPasswordVerificationOutputPort.save(resetPasswordVerification);
-            sendMessage(user, codeGenerated);
+            var template = emailTemplateRepository.findByType(HtmlTemplateType.CONFIRM_EMAIL_CODE_VERIFICATION.getValue())
+                    .orElseThrow()
+                    .getContent();
+
+            template = template.replace("{{code}}", codeGenerated);
+            template = template.replace("{{user_name}}", user.getFullName().get());
+
+            emailService.sendHtmlEmail(user.getEmail().getValue(), "Shape Up - Código de verificação", template );
             return;
         }
 
@@ -56,7 +65,14 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
                 LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(5)
         );
         resetPasswordVerificationOutputPort.save(newVerification);
-        sendMessage(user, codeGenerated);
+        var template = emailTemplateRepository.findByType(HtmlTemplateType.CONFIRM_EMAIL_CODE_VERIFICATION.getValue())
+                .orElseThrow()
+                .getContent();
+
+        template.replace("{{code}}", codeGenerated);
+        template.replace("{{user_name}}", user.getFullName().get());
+
+        emailService.sendHtmlEmail(user.getEmail().getValue(), "Shape Up - Código de verificação", template );
     }
 
     @Override
@@ -76,18 +92,6 @@ public class VerificationResetPasswordUsecase implements VerificationResetPasswo
         ResetPasswordVerification verification = resetPasswordVerificationOutputPort.findByUserEmail(email, user);
         return verification.getVerified();
     }
-
-    private void sendMessage(User user, String codeGenerated) {
-        var message = SendCodeVerificationMessage.builder()
-                .id(UUID.randomUUID().toString())
-                .email(user.getEmail().getValue())
-                .code(codeGenerated)
-                .userName(user.getFullName().getFirstName() + " " + user.getFullName().getLastName())
-                .build();
-
-        sendCodeVerificationPublisherOutputPort.sendResetPasswordVerification(message);
-    }
-
 
     private void validateIfCodeVerificationIsSameInDatabase(String code, ResetPasswordVerification verification) {
         if (!verification.getCode().equals(code)) {
