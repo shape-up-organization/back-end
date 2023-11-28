@@ -19,11 +19,12 @@ public class User extends Entity<UserId> {
     private String biography;
     private Long xp;
     private String profilePicture;
+    private String originalPassword;
     private List<User> friends = new ArrayList<>();
     private List<Training> trainings = new ArrayList<>();
 
     public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-            Birth birth, String biography, Long xp, String profilePicture) {
+            Birth birth, String biography, Long xp, String profilePicture, String originalPassword) {
         super(id);
         this.fullName = FullName.create(name, lastName);
         this.username = username;
@@ -34,12 +35,13 @@ public class User extends Entity<UserId> {
         this.biography = biography;
         this.xp = xp;
         this.profilePicture = profilePicture;
+        this.originalPassword = originalPassword;
     }
 
     public static User newUser(UUID anId, String name, String lastName, String username, Email email, CellPhone cellPhone,
-            Password password, Birth birth, String biography, Long xp, String profilePicture) {
+            Password password, Birth birth, String biography, Long xp, String profilePicture, String originalPassword) {
         var id = UserId.from(anId);
-        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography, xp, profilePicture);
+        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography, xp, profilePicture, originalPassword);
     }
 
     private void updateXp(Long xp) {
@@ -141,6 +143,14 @@ public class User extends Entity<UserId> {
 
     public void setTrainings(List<Training> trainings) {
         this.trainings = trainings;
+    }
+
+    public String getOriginalPassword() {
+        return originalPassword;
+    }
+
+    public void setOriginalPassword(String originalPassword) {
+        this.originalPassword = originalPassword;
     }
 
     @Override

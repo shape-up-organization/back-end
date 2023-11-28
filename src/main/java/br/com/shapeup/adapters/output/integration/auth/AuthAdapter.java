@@ -43,7 +43,7 @@ public class AuthAdapter implements AuthGateway {
 
         validateUserIsActivated(userEntity);
 
-        Authentication authentication = authenticateUser(email, userEntity.getPassword());
+        Authentication authentication = authenticateUser(email, userEntity.getOriginalPassword());
 
         return generateJwtToken(userEntity, authentication);
     }
@@ -64,6 +64,7 @@ public class AuthAdapter implements AuthGateway {
         UserEntity userEntity = userMapper.userRegisterRequestToUserEntity(userAuthRegisterRequest);
         String encodedPassword = passwordEncoder.encode(userAuthRegisterRequest.getPassword());
         userEntity.setPassword(encodedPassword);
+        userEntity.setOriginalPassword(userAuthRegisterRequest.getPassword());
         userEntity.setRoles(Set.of(new Role("ROLE_USER")));
         return userEntity;
     }

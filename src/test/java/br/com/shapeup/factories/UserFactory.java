@@ -33,7 +33,8 @@ public class UserFactory {
                 Birth.create(localDate),
                 "Iara é uma pessoa muito legal",
                 0L,
-                "https://i.pinimg.com/originals/7c/0d/1d/7c0d1d1b1f1f1b1f1f1b1f1f1b1f1f1f.jpg"
+                "https://i.pinimg.com/originals/7c/0d/1d/7c0d1d1b1f1f1b1f1f1b1f1f1b1f1f1f.jpg",
+                "iara123"
         );
     }
 }

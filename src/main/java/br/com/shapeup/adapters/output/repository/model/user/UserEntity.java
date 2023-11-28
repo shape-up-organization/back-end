@@ -76,6 +76,9 @@ public class UserEntity implements Serializable {
     @Column
     private String profilePicture;
 
+    @Column(name = "original_password")
+    private String originalPassword;
+
     @Column(columnDefinition = "int8 default 0")
     private Long xp;
 

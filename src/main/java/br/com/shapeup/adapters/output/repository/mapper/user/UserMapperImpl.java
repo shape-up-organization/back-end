@@ -35,7 +35,8 @@ public class UserMapperImpl implements UserMapper {
                 Birth.create(userEntity.getBirth()),
                 userEntity.getBiography(),
                 userEntity.getXp(),
-                userEntity.getProfilePicture()
+                userEntity.getProfilePicture(),
+                userEntity.getOriginalPassword()
         );
     }
 
