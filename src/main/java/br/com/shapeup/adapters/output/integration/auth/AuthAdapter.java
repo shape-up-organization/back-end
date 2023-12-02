@@ -102,8 +102,8 @@ public class AuthAdapter implements AuthGateway {
         if (authentication.isAuthenticated()) {
             String tokenGenerated = jwtService.generateToken(
                     userEntity.getId().toString(),
-                    userEntity.getFullName(),
-                    userEntity.getFullName(),
+                    userEntity.getName(),
+                    userEntity.getLastName(),
                     userEntity.getEmail(),
                     userEntity.getUsername(),
                     userEntity.getProfilePicture(),
