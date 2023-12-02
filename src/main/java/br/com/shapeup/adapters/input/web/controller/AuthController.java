@@ -12,6 +12,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,10 @@ public class AuthController {
         User user = userPersistanceOutput.findUser(userAuthLoginRequest.getEmail());
         userAuthLoginRequest.setId(user.getId().getValue());
         userAuthLoginRequest.setName(user.getFullName().getFirstName());
+
+        if (!user.getOriginalPassword().equals(userAuthLoginRequest.getPassword())) {
+            throw new BadCredentialsException("invalid credentials for email: " + userAuthLoginRequest.getEmail());
+        }
 
         Map<String, Object> jwtTokenResponse = authGateway.login(user);
 
