@@ -64,6 +64,7 @@ public class UserMapperImpl implements UserMapper {
                 .originalPassword(user.getOriginalPassword())
                 .isActive(true)
                 .biography(user.getBiography())
+                .profilePicture(user.getProfilePicture())
                 .build();
     }
 
