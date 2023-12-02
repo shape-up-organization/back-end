@@ -8,6 +8,8 @@ CONTAINER_APP="shapeup-notification-app"
 DEFAULT_SLEEP_TIME=2
 NETWORK_NAME="shapeup-network"
 
+docker compose down
+
 if docker network ls | grep -q "$NETWORK_NAME"; then
     echo "A rede '$NETWORK_NAME' já existe."
 else
