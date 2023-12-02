@@ -59,6 +59,7 @@ public class UserMapperImpl implements UserMapper {
                 .birth(user.getBirth().getValue())
                 .xp(user.getXp())
                 .trainings(trainingMapper.toEntity(user.getTrainings()))
+                .isActive(true)
                 .build();
     }
 
