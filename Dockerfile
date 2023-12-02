@@ -8,6 +8,10 @@ ENV POSTGRES_PASSWORD=dev
 ENV MONGO_HOST=localhost
 ENV MONGO_DATABASE=shapeupdev
 ENV MONGO_PORT=27017
+ENV MAIL_HOST=smtp.gmail.com
+ENV MAIL_PORT=587
+ENV MAIL_USERNAME=shapeupnotification@gmail.com
+ENV MAIL_PASSWORD=csnetdtfzniapnje
 
 COPY target/shape-up-0.0.1.jar app.jar
 EXPOSE 7000
