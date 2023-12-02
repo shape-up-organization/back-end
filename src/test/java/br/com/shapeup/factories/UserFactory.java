@@ -34,7 +34,8 @@ public class UserFactory {
                 "Iara é uma pessoa muito legal",
                 0L,
                 "https://i.pinimg.com/originals/7c/0d/1d/7c0d1d1b1f1f1b1f1f1b1f1f1b1f1f1f.jpg",
-                "iara123"
+                "iara123",
+                true
         );
     }
 }

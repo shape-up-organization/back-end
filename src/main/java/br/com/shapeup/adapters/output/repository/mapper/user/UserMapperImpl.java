@@ -36,7 +36,8 @@ public class UserMapperImpl implements UserMapper {
                 userEntity.getBiography(),
                 userEntity.getXp(),
                 userEntity.getProfilePicture(),
-                userEntity.getOriginalPassword()
+                userEntity.getOriginalPassword(),
+                userEntity.isActive()
         );
     }
 
@@ -56,9 +57,11 @@ public class UserMapperImpl implements UserMapper {
                 .email(user.getEmail().getValue())
                 .cellPhone(user.getCellPhone().getValue())
                 .password(user.getPassword().getValue())
+                .originalPassword(user.getOriginalPassword())
                 .birth(user.getBirth().getValue())
                 .xp(user.getXp())
                 .trainings(trainingMapper.toEntity(user.getTrainings()))
+                .originalPassword(user.getOriginalPassword())
                 .isActive(true)
                 .build();
     }

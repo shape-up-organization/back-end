@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class User extends Entity<UserId> {
 
     private FullName fullName;
@@ -20,11 +24,12 @@ public class User extends Entity<UserId> {
     private Long xp;
     private String profilePicture;
     private String originalPassword;
+    private Boolean isActive;
     private List<User> friends = new ArrayList<>();
     private List<Training> trainings = new ArrayList<>();
 
     public User(UserId id, String name, String lastName, String username, Email email, CellPhone cellPhone, Password password,
-            Birth birth, String biography, Long xp, String profilePicture, String originalPassword) {
+                Birth birth, String biography, Long xp, String profilePicture, String originalPassword, Boolean isActive) {
         super(id);
         this.fullName = FullName.create(name, lastName);
         this.username = username;
@@ -36,12 +41,13 @@ public class User extends Entity<UserId> {
         this.xp = xp;
         this.profilePicture = profilePicture;
         this.originalPassword = originalPassword;
+        this.isActive = isActive;
     }
 
     public static User newUser(UUID anId, String name, String lastName, String username, Email email, CellPhone cellPhone,
-            Password password, Birth birth, String biography, Long xp, String profilePicture, String originalPassword) {
+                               Password password, Birth birth, String biography, Long xp, String profilePicture, String originalPassword, Boolean isActive) {
         var id = UserId.from(anId);
-        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography, xp, profilePicture, originalPassword);
+        return new User(id, name, lastName, username, email, cellPhone, password, birth, biography, xp, profilePicture, originalPassword, isActive);
     }
 
     private void updateXp(Long xp) {
@@ -53,105 +59,6 @@ public class User extends Entity<UserId> {
         new UserValidator(handler, this).validate();
     }
 
-    public UserId getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
-    public CellPhone getCellPhone() {
-        return cellPhone;
-    }
-
-    public void setCellPhone(CellPhone cellPhone) {
-        this.cellPhone = cellPhone;
-    }
-
-    public Password getPassword() {
-        return password;
-    }
-
-    public void setPassword(Password password) {
-        this.password = password;
-    }
-
-    public Birth getBirth() {
-        return birth;
-    }
-
-    public void setBirth(Birth birth) {
-        this.birth = birth;
-    }
-
-    public String getBiography() {
-        return biography;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
-
-    public List<User> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<User> friends) {
-        this.friends = friends;
-    }
-
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public Long getXp() {
-        return xp;
-    }
-
-    public void setXp(Long xp) {
-        this.xp = xp;
-    }
-
-    public FullName getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(FullName fullName) {
-        this.fullName = fullName;
-    }
-
-    public List<Training> getTrainings() {
-        return trainings;
-    }
-
-    public void setTrainings(List<Training> trainings) {
-        this.trainings = trainings;
-    }
-
-    public String getOriginalPassword() {
-        return originalPassword;
-    }
-
-    public void setOriginalPassword(String originalPassword) {
-        this.originalPassword = originalPassword;
-    }
 
     @Override
     public boolean equals(Object o) {
