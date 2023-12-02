@@ -78,7 +78,7 @@ public class AuthAdapter implements AuthGateway {
     }
 
     private void validateCellPhoneAlreadyExistsInDatabase(String cellphone) {
-        Boolean cellphoneAlreadyExistsInDatabase = UserJpaRepository.existsByCellPhoneContains(cellphone);
+        Boolean cellphoneAlreadyExistsInDatabase = UserJpaRepository.existsByCellPhoneLike(cellphone);
 
         if (cellphoneAlreadyExistsInDatabase) {
             throw new CellPhoneAlreadyExistsException();

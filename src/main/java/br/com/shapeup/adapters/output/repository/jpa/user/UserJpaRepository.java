@@ -22,7 +22,8 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findById(UUID uuid);
 
-    Boolean existsByCellPhoneContains(@NonNull String cellPhone);
+//    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM UserEntity c WHERE c.cellPhone LIKE %:cellPhone%")
+    Boolean existsByCellPhoneLike(@Param("cellPhone") @NonNull String cellPhone);
 
     Optional<UserEntity> findByUsername(String username);
 
