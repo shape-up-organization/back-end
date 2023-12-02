@@ -63,6 +63,7 @@ public class UserMapperImpl implements UserMapper {
                 .trainings(trainingMapper.toEntity(user.getTrainings()))
                 .originalPassword(user.getOriginalPassword())
                 .isActive(true)
+                .biography(user.getBiography())
                 .build();
     }
 
