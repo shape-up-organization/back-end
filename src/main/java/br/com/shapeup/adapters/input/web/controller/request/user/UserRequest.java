@@ -34,7 +34,7 @@ public class UserRequest {
 
     @NotBlank
     @Past
-    private LocalDate birth;
+    private String birth;
 
     @NotBlank
     private String biography;

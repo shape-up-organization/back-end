@@ -11,6 +11,7 @@ import br.com.shapeup.core.ports.output.post.PostS3Output;
 import br.com.shapeup.core.ports.output.post.commment.CommentOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
+import br.com.shapeup.core.ports.output.verification.VerificationEmailOutputPort;
 import java.util.List;
 
 public class UserPersistanceUsecase implements UserPersistanceInput {
@@ -25,13 +26,15 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
     private final FindUserOutput findUserOutput;
 
     private final PostS3Output postS3Output;
+    private final VerificationEmailOutputPort verificationEmailOutputPort;
 
     public UserPersistanceUsecase(UserPersistanceOutput userPersistanceOutput,
                                   CommentOutput commentOutput,
                                   PostOutput postOutput,
                                   FriendshipOutput friendshipOutput,
                                   FindUserOutput findUserOutput,
-                                  PostS3Output postS3Output
+                                  PostS3Output postS3Output,
+                                  VerificationEmailOutputPort verificationEmailOutputPort
     ) {
         this.userPersistanceOutput = userPersistanceOutput;
         this.commentOutput = commentOutput;
@@ -39,6 +42,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         this.friendshipOutput = friendshipOutput;
         this.findUserOutput = findUserOutput;
         this.postS3Output = postS3Output;
+        this.verificationEmailOutputPort = verificationEmailOutputPort;
     }
 
     @Override
@@ -52,6 +56,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         friendshipOutput.deleteAllFriendshipByUserId(user);
 
         postS3Output.deletePostPhotosByUserId(user.getId().getValue());
+        verificationEmailOutputPort.deleteByEmail(user.getEmail().getValue());
 
         userPersistanceOutput.deleteById(user);
     }

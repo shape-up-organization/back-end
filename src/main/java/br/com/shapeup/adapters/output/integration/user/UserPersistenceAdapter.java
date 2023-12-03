@@ -15,11 +15,13 @@ import br.com.shapeup.core.ports.output.friend.FindFriendshipOutput;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import io.vavr.control.Try;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +34,7 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
     private final FindFriendshipOutput findFriendshipOutput;
     private final FindUserOutput findUserOutput;
     private final FriendshipJpaRepository friendshipJpaRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void deleteById(User user) {
@@ -60,6 +63,16 @@ public class UserPersistenceAdapter implements UserPersistanceOutput {
                     log.error("[USER PERSISTENCE ADAPTER] - Error on copy properties: {}", e.getMessage());
                     throw new ShapeUpBaseException(e.getMessage(), e.getCause());
                 });
+
+        if (userRequest.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
+            userEntity.setOriginalPassword(userRequest.getPassword());
+            userEntity.setPassword(encodedPassword);
+        }
+
+        if(userRequest.getBirth() != null) {
+            userEntity.setBirth(LocalDate.parse(userRequest.getBirth()));
+        }
 
         userJpaRepository.save(userEntity);
     }

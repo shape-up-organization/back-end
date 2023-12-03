@@ -48,6 +48,14 @@ public class VerificationEmailAdapter implements VerificationEmailOutputPort {
     }
 
     @Override
+    public void deleteByEmail(String email) {
+        log.info("Deleting verification code for user {}", email);
+        var emailVerification = repository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Code not found for user " + email));
+        repository.delete(emailVerification);
+    }
+
+    @Override
     public EmailVerification findByEmail(String email) {
         log.info("Finding verification code for user {}", email);
         return repository.findByEmail(email)

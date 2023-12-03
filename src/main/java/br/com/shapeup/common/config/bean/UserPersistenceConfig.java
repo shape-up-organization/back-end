@@ -6,6 +6,7 @@ import br.com.shapeup.adapters.output.integration.post.PostS3Adapter;
 import br.com.shapeup.adapters.output.integration.post.comment.CommentAdapter;
 import br.com.shapeup.adapters.output.integration.user.FindUserAdapter;
 import br.com.shapeup.adapters.output.integration.user.UserPersistenceAdapter;
+import br.com.shapeup.adapters.output.integration.verification.VerificationEmailAdapter;
 import br.com.shapeup.core.usecase.user.UserPersistanceUsecase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,13 +20,15 @@ public class UserPersistenceConfig {
                                                          PostAdapter postAdapter,
                                                          FriendshipAdapter friendshipAdapter,
                                                          FindUserAdapter findUserAdapter,
-                                                         PostS3Adapter postS3Adapter) {
+                                                         PostS3Adapter postS3Adapter,
+                                                         VerificationEmailAdapter verificationEmailAdapter) {
 
         return new UserPersistanceUsecase(userPersistenceAdapter,
                 commentAdapter,
                 postAdapter,
                 friendshipAdapter,
                 findUserAdapter,
-                postS3Adapter);
+                postS3Adapter,
+                verificationEmailAdapter);
     }
 }

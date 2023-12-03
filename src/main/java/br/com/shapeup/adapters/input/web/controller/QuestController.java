@@ -108,7 +108,7 @@ public class QuestController {
 
         Training training = questInputPort.addTrainingToUser(username, trainingUserRequest);
         Map<String, Integer> dayOfWeekAbbreviations = DayOfWeekUtils.abbreviations();
-        int dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(dayOfWeekRequest);
+        int dayOfWeekFromAbbreviations = dayOfWeekAbbreviations.get(dayOfWeekRequest.substring(0, 3));
 
         TrainingDayResponse trainingDayResponse = new TrainingDayResponse(
                 dayOfWeekRequest,

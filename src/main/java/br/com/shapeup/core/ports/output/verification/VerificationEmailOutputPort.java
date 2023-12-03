@@ -8,4 +8,5 @@ public interface VerificationEmailOutputPort {
     EmailVerification save(EmailVerification emailVerification);
     Boolean isVerified(String email);
     void delete(EmailVerification verification);
+    void deleteByEmail(String email);
 }

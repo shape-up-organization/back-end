@@ -10,6 +10,7 @@ import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,11 @@ public class UserController {
     ) {
         String jwtToken = TokenUtils.getToken(request);
         var email = JwtService.extractEmailFromToken(jwtToken);
+
+        if(userRequest.getBirth() != null) {
+            var formatedBirthDate = userRequest.getBirth().toString().replace("/", "-");
+            userRequest.setBirth(formatedBirthDate);
+        }
 
         userPersistanceInput.updateUser(email, userRequest);
         String newToken = TokenUtils.updateUserAndGenerateNewToken(jwtToken, userRequest);
