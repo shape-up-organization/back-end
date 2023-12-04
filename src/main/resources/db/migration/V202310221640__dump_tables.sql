@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS tb_user
     username        varchar(255) NULL,
     CONSTRAINT tb_user_pkey PRIMARY KEY (user_id)
 );
-CREATE INDEX idx_username ON public.tb_user USING btree (username);
+CREATE INDEX idx_username ON tb_user USING btree (username);
 
 
 -- public.tb_exercise definition
