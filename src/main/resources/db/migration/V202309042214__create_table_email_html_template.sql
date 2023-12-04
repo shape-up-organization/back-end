@@ -1,6 +1,6 @@
 CREATE TABLE tb_email_html_template
 (
-    id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    id         UUID PRIMARY KEY,
     content    TEXT NOT NULL,
     type       VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
