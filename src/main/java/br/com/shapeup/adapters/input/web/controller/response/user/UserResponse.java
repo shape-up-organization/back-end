@@ -33,4 +33,6 @@ public class UserResponse {
 
     @NotNull
     private FriendshipStatus friendshipStatus;
+    @NotNull
+    private String cellPhone;
 }

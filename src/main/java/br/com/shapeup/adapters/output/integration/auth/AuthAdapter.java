@@ -108,7 +108,8 @@ public class AuthAdapter implements AuthGateway {
                     userEntity.getUsername(),
                     userEntity.getProfilePicture(),
                     userEntity.getXp().toString(),
-                    userEntity.getBiography()
+                    userEntity.getBiography(),
+                    userEntity.getCellPhone()
             );
             log.info("User {} authenticated", userEntity.getEmail());
             return Map.of("jwt-token", tokenGenerated);

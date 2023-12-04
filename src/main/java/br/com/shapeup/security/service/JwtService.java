@@ -39,7 +39,8 @@ public class JwtService {
             String accountName,
             String profilePicture,
             String xp,
-            String biography
+            String biography,
+            String cellPhone
     ) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -49,6 +50,7 @@ public class JwtService {
                 .setSubject(xp)
                 .setSubject(profilePicture)
                 .setSubject(biography)
+                .setSubject(cellPhone)
                 .setSubject(userName)
                 .claim("id", id)
                 .claim("name", name)
@@ -57,6 +59,7 @@ public class JwtService {
                 .claim("email", userName)
                 .claim("xp", xp)
                 .claim("biography", biography)
+                .claim("cellPhone", cellPhone)
                 .claim("profilePicture", profilePicture)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
@@ -74,10 +77,11 @@ public class JwtService {
             String accountName,
             String xp,
             String profilePicture,
-            String biography
+            String biography,
+            String cellPhone
     ) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, id, name, lastName, userName, accountName, xp, profilePicture, biography);
+        return createToken(claims, id, name, lastName, userName, accountName, xp, profilePicture, biography, cellPhone);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

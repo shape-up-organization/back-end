@@ -21,6 +21,7 @@ public class UserHttpMapperImpl implements UserHttpMapper {
                 .xp(userSearch.getXp())
                 .biography(userSearch.getBiography())
                 .friendshipStatus(friendshipStatus)
+                .cellPhone(userSearch.getCellPhone().getValue())
                 .build();
     }
 

@@ -94,6 +94,11 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         return userPersistanceOutput.getUserXp(username);
     }
 
+    @Override
+    public String getCellphoneByUsername(String username) {
+        return userPersistanceOutput.findUserByUsername(username).getCellPhone().getValue();
+    }
+
     private void validateSearchUser(User searchUser, String username) {
         if (searchUser == null) {
             throw new UserNotFoundException(username);

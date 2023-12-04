@@ -20,4 +20,6 @@ public interface UserPersistanceInput {
     List<User> findAllUserByUsername(String username);
 
     Long getUserXp(String username);
+
+    String getCellphoneByUsername(String username);
 }

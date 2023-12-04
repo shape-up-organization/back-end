@@ -10,7 +10,6 @@ import br.com.shapeup.core.domain.user.User;
 import br.com.shapeup.core.ports.input.user.UserPersistanceInput;
 import br.com.shapeup.security.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class UserController {
     private final UserPersistanceInput userPersistanceInput;
     private final UserHttpMapper userHttpMapper;
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<Void> deleteByEmail(HttpServletRequest request) {
 
         String jwtToken = TokenUtils.getToken(request);
@@ -47,7 +46,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<UserFieldsUpdateResponse> updateUserField(
             HttpServletRequest request,
             @RequestBody UserRequest userRequest
@@ -56,7 +55,7 @@ public class UserController {
         var email = JwtService.extractEmailFromToken(jwtToken);
 
         if(userRequest.getBirth() != null) {
-            var formatedBirthDate = userRequest.getBirth().toString().replace("/", "-");
+            var formatedBirthDate = userRequest.getBirth().replace("/", "-");
             userRequest.setBirth(formatedBirthDate);
         }
 
@@ -132,5 +131,12 @@ public class UserController {
         Long xp = userPersistanceInput.getUserXp(username);
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(xp);
+    }
+
+    @GetMapping("/cellphone/{username}")
+    public ResponseEntity<String> getCellphoneByUsername(@PathVariable String username) {
+        String cellphone = userPersistanceInput.getCellphoneByUsername(username);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cellphone);
     }
 }

@@ -76,9 +76,7 @@ public class PostUsecase implements PostInput {
 
         if (isLiked) {
             postLikeOutput.unlikePost(user, postId);
-        }
-
-        if(!isLiked) {
+        } else {
             postLikeOutput.likePost(user, postId);
         }
     }
