@@ -1,5 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TABLE tb_email_html_template
 (
     id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
