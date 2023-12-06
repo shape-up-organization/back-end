@@ -57,7 +57,6 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         commentOutput.deleteAllCommentByUserId(user.getId().getValue());
         postOutput.deleteAllPostsByUserId(user.getId().getValue());
         friendshipOutput.deleteAllFriendshipByUserId(user);
-//        removeTrainingDayByTrainingIdAndUserIdOutputPort.deleteByUserId(UUID.fromString(user.getId().getValue()));
         postS3Output.deletePostPhotosByUserId(user.getId().getValue());
         verificationEmailOutputPort.deleteByEmail(user.getEmail().getValue());
 
