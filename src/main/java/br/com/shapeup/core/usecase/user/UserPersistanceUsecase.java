@@ -59,7 +59,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         friendshipOutput.deleteAllFriendshipByUserId(user);
         removeTrainingDayByTrainingIdAndUserIdOutputPort.deleteByUserId(UUID.fromString(user.getId().getValue()));
         postS3Output.deletePostPhotosByUserId(user.getId().getValue());
-        verificationEmailOutputPort.deleteByEmail(user.getEmail().getValue());
+//        verificationEmailOutputPort.deleteByEmail(user.getEmail().getValue());
 
         userPersistanceOutput.deleteById(user);
     }
