@@ -30,11 +30,6 @@ public class SecurityConfig {
     private final UserJpaRepository userJpaRepository;
 
     private static final String[] REQUIRED_AUTHENTICATION = {
-            "/shapeup/users/**",
-            "/shapeup/friends/**",
-            "/shapeup/profiles/**",
-            "/shapeup/posts/**",
-            "/shapeup/comments/**"
     };
 
     private static final String[] PERMIT_ALL = {
@@ -52,7 +47,12 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/configuration/security",
             "/configuration/ui",
-            "/shapeup/quests/**"
+            "/shapeup/quests/**",
+            "/shapeup/users/**",
+            "/shapeup/friends/**",
+            "/shapeup/profiles/**",
+            "/shapeup/posts/**",
+            "/shapeup/comments/**"
     };
 
     @Bean
