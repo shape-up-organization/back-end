@@ -93,10 +93,10 @@ public class UserEntity implements Serializable {
     )
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "userSender")
+    @OneToMany(mappedBy = "userSender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendsEntity> friendsSender = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userReceiver")
+    @OneToMany(mappedBy = "userReceiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendsEntity> friendsReceiver = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)

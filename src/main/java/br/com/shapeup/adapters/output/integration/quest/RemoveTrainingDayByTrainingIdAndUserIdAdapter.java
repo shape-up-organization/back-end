@@ -20,4 +20,9 @@ public class RemoveTrainingDayByTrainingIdAndUserIdAdapter implements RemoveTrai
     public void execute(UUID trainingId, UUID userId, String period, String dayOfWeek) {
         trainingDayJpaRepository.deleteByTrainingIdAndUserIdAndPeriodAndDayOfWeekIgnoreCase(trainingId, userId, period, dayOfWeek);
     }
+
+    @Override
+    public void deleteByUserId(UUID userId) {
+        trainingDayJpaRepository.deleteByUserId(userId);
+    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface TrainingDayJpaRepository extends JpaRepository<TrainingDayEntity, UUID> {
     List<TrainingDayEntity> findAllByUserId(UUID userId);
@@ -13,5 +14,6 @@ public interface TrainingDayJpaRepository extends JpaRepository<TrainingDayEntit
     void deleteByTrainingIdAndUserIdAndPeriodAndDayOfWeekIgnoreCase(UUID trainingId, UUID userId, String period, String dayOfWeek);
     List<TrainingDayEntity> findAll();
     List<TrainingDayEntity> findAllByUserIdAndTrainingId(UUID userId, UUID trainingId);
-
+    @Query(value = "DELETE FROM tb_training_days WHERE user_id = ?1", nativeQuery = true)
+    void deleteByUserId(UUID userId);
 }

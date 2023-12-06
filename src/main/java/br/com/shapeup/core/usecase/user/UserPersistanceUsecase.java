@@ -9,10 +9,12 @@ import br.com.shapeup.core.ports.output.friend.FriendshipOutput;
 import br.com.shapeup.core.ports.output.post.PostOutput;
 import br.com.shapeup.core.ports.output.post.PostS3Output;
 import br.com.shapeup.core.ports.output.post.commment.CommentOutput;
+import br.com.shapeup.core.ports.output.quest.RemoveTrainingDayByTrainingIdAndUserIdOutputPort;
 import br.com.shapeup.core.ports.output.user.FindUserOutput;
 import br.com.shapeup.core.ports.output.user.UserPersistanceOutput;
 import br.com.shapeup.core.ports.output.verification.VerificationEmailOutputPort;
 import java.util.List;
+import java.util.UUID;
 
 public class UserPersistanceUsecase implements UserPersistanceInput {
     private final UserPersistanceOutput userPersistanceOutput;
@@ -27,6 +29,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
 
     private final PostS3Output postS3Output;
     private final VerificationEmailOutputPort verificationEmailOutputPort;
+    private final RemoveTrainingDayByTrainingIdAndUserIdOutputPort removeTrainingDayByTrainingIdAndUserIdOutputPort;
 
     public UserPersistanceUsecase(UserPersistanceOutput userPersistanceOutput,
                                   CommentOutput commentOutput,
@@ -34,7 +37,8 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
                                   FriendshipOutput friendshipOutput,
                                   FindUserOutput findUserOutput,
                                   PostS3Output postS3Output,
-                                  VerificationEmailOutputPort verificationEmailOutputPort
+                                  VerificationEmailOutputPort verificationEmailOutputPort,
+                                  RemoveTrainingDayByTrainingIdAndUserIdOutputPort removeTrainingDayByTrainingIdAndUserIdOutputPort
     ) {
         this.userPersistanceOutput = userPersistanceOutput;
         this.commentOutput = commentOutput;
@@ -43,6 +47,7 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         this.findUserOutput = findUserOutput;
         this.postS3Output = postS3Output;
         this.verificationEmailOutputPort = verificationEmailOutputPort;
+        this.removeTrainingDayByTrainingIdAndUserIdOutputPort = removeTrainingDayByTrainingIdAndUserIdOutputPort;
     }
 
     @Override
@@ -50,11 +55,9 @@ public class UserPersistanceUsecase implements UserPersistanceInput {
         User user = findUserOutput.findByEmail(email);
 
         commentOutput.deleteAllCommentByUserId(user.getId().getValue());
-
         postOutput.deleteAllPostsByUserId(user.getId().getValue());
-
         friendshipOutput.deleteAllFriendshipByUserId(user);
-
+        removeTrainingDayByTrainingIdAndUserIdOutputPort.deleteByUserId(UUID.fromString(user.getId().getValue()));
         postS3Output.deletePostPhotosByUserId(user.getId().getValue());
         verificationEmailOutputPort.deleteByEmail(user.getEmail().getValue());
 

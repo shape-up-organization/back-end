@@ -4,6 +4,7 @@ import br.com.shapeup.adapters.output.integration.friend.FriendshipAdapter;
 import br.com.shapeup.adapters.output.integration.post.PostAdapter;
 import br.com.shapeup.adapters.output.integration.post.PostS3Adapter;
 import br.com.shapeup.adapters.output.integration.post.comment.CommentAdapter;
+import br.com.shapeup.adapters.output.integration.quest.RemoveTrainingDayByTrainingIdAndUserIdAdapter;
 import br.com.shapeup.adapters.output.integration.user.FindUserAdapter;
 import br.com.shapeup.adapters.output.integration.user.UserPersistenceAdapter;
 import br.com.shapeup.adapters.output.integration.verification.VerificationEmailAdapter;
@@ -21,7 +22,8 @@ public class UserPersistenceConfig {
                                                          FriendshipAdapter friendshipAdapter,
                                                          FindUserAdapter findUserAdapter,
                                                          PostS3Adapter postS3Adapter,
-                                                         VerificationEmailAdapter verificationEmailAdapter) {
+                                                         VerificationEmailAdapter verificationEmailAdapter,
+                                                         RemoveTrainingDayByTrainingIdAndUserIdAdapter removeTrainingDayByTrainingIdAndUserIdAdapter) {
 
         return new UserPersistanceUsecase(userPersistenceAdapter,
                 commentAdapter,
@@ -29,6 +31,7 @@ public class UserPersistenceConfig {
                 friendshipAdapter,
                 findUserAdapter,
                 postS3Adapter,
-                verificationEmailAdapter);
+                verificationEmailAdapter,
+                removeTrainingDayByTrainingIdAndUserIdAdapter);
     }
 }

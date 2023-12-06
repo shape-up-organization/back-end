@@ -1,6 +1,7 @@
 package br.com.shapeup.adapters.output.repository.model.quest;
 
 import br.com.shapeup.adapters.output.repository.model.user.UserEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class TrainingDayEntity {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
